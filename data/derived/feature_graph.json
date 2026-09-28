@@ -1,0 +1,4266 @@
+{
+ "Use 24-hour format": [
+  {
+   "id": "DL-0001",
+   "op": "view",
+   "message": "Switch Time Format",
+   "appliance": false
+  }
+ ],
+ "Cursor area size": [
+  {
+   "id": "DL-0002",
+   "op": "view",
+   "message": "View Auto-Click Settings",
+   "appliance": false
+  }
+ ],
+ "Ignore slight cursor movements": [
+  {
+   "id": "DL-0003",
+   "op": "view",
+   "message": "View Auto-Click Settings",
+   "appliance": false
+  }
+ ],
+ "Set left click as default action": [
+  {
+   "id": "DL-0004",
+   "op": "view",
+   "message": "View Click Options",
+   "appliance": false
+  }
+ ],
+ "Time to take action": [
+  {
+   "id": "DL-0005",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Magnify keyboard while typing": [
+  {
+   "id": "DL-0006",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Mouse keys": [
+  {
+   "id": "DL-0007",
+   "op": "off",
+   "message": "Disable Mouse Keys",
+   "appliance": false
+  },
+  {
+   "id": "DL-0008",
+   "op": "on",
+   "message": "Enable Mouse Keys",
+   "appliance": false
+  }
+ ],
+ "Accessibility": [
+  {
+   "id": "DL-0009",
+   "op": "update",
+   "message": "Increase Accessibility Volume",
+   "appliance": false
+  }
+ ],
+ "Adapt sound": [
+  {
+   "id": "DL-0010",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  },
+  {
+   "id": "DL-0463",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Alarm": [
+  {
+   "id": "DL-0011",
+   "op": "update",
+   "message": "Increase Alarm Volume",
+   "appliance": false
+  }
+ ],
+ "Amplify ambient sound": [
+  {
+   "id": "DL-0012",
+   "op": "off",
+   "message": "Disable Sound Amplification",
+   "appliance": false
+  },
+  {
+   "id": "DL-0013",
+   "op": "on",
+   "message": "Enable Sound Amplification",
+   "appliance": false
+  }
+ ],
+ "Suggest actions and replies for notifications": [
+  {
+   "id": "DL-0014",
+   "op": "off",
+   "message": "Disable Suggest actions and replies for notifications",
+   "appliance": false
+  },
+  {
+   "id": "DL-0015",
+   "op": "on",
+   "message": "Enable Suggest actions and replies for notifications",
+   "appliance": false
+  }
+ ],
+ "Repeat notification alerts": [
+  {
+   "id": "DL-0016",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Corner actions": [
+  {
+   "id": "DL-0017",
+   "op": "off",
+   "message": "Disable Gesture Controls",
+   "appliance": false
+  },
+  {
+   "id": "DL-0018",
+   "op": "on",
+   "message": "Enable Gesture Controls",
+   "appliance": false
+  }
+ ],
+ "Auto Blocker": [
+  {
+   "id": "DL-0019",
+   "op": "view",
+   "message": "View Security Settings",
+   "appliance": false
+  }
+ ],
+ "Adaptive brightness": [
+  {
+   "id": "DL-0020",
+   "op": "off",
+   "message": "Disable Adaptive Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0021",
+   "op": "on",
+   "message": "Enable Adaptive Display",
+   "appliance": false
+  }
+ ],
+ "Auto factory reset": [
+  {
+   "id": "DL-0022",
+   "op": "view",
+   "message": "View Reset Options",
+   "appliance": false
+  }
+ ],
+ "Auto Hotspot": [
+  {
+   "id": "DL-0023",
+   "op": "view",
+   "message": "View Hotspot Settings",
+   "appliance": false
+  }
+ ],
+ "Auto update system configurations": [
+  {
+   "id": "DL-0024",
+   "op": "view",
+   "message": "View Update Settings",
+   "appliance": false
+  }
+ ],
+ "Auto sync personal data": [
+  {
+   "id": "DL-0025",
+   "op": "off",
+   "message": "Disable Auto-Sync",
+   "appliance": false
+  },
+  {
+   "id": "DL-0026",
+   "op": "on",
+   "message": "Enable Auto-Sync",
+   "appliance": false
+  }
+ ],
+ "Auto sync Secure Folder data": [
+  {
+   "id": "DL-0027",
+   "op": "off",
+   "message": "Disable Auto-Sync",
+   "appliance": false
+  },
+  {
+   "id": "DL-0028",
+   "op": "on",
+   "message": "Enable Auto-Sync",
+   "appliance": false
+  }
+ ],
+ "Auto sync business data": [
+  {
+   "id": "DL-0029",
+   "op": "off",
+   "message": "Disable Auto-Sync",
+   "appliance": false
+  },
+  {
+   "id": "DL-0030",
+   "op": "on",
+   "message": "Enable Auto-Sync",
+   "appliance": false
+  }
+ ],
+ "Automatic date and time": [
+  {
+   "id": "DL-0031",
+   "op": "off",
+   "message": "Disable Auto Time",
+   "appliance": false
+  },
+  {
+   "id": "DL-0032",
+   "op": "on",
+   "message": "Enable Auto Time",
+   "appliance": false
+  },
+  {
+   "id": "DL-0491",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Automatic time zone": [
+  {
+   "id": "DL-0033",
+   "op": "off",
+   "message": "Disable Auto Time",
+   "appliance": false
+  },
+  {
+   "id": "DL-0034",
+   "op": "on",
+   "message": "Enable Auto Time",
+   "appliance": false
+  },
+  {
+   "id": "DL-0493",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Dwell action": [
+  {
+   "id": "DL-0035",
+   "op": "off",
+   "message": "Disable Dwell Action",
+   "appliance": false
+  },
+  {
+   "id": "DL-0036",
+   "op": "on",
+   "message": "Enable Dwell Action",
+   "appliance": false
+  },
+  {
+   "id": "DL-0222",
+   "op": "off",
+   "message": "Disable Dwell Action",
+   "appliance": false
+  },
+  {
+   "id": "DL-0223",
+   "op": "on",
+   "message": "Enable Dwell Action",
+   "appliance": false
+  }
+ ],
+ "AI assistant": [
+  {
+   "id": "DL-0037",
+   "op": "update",
+   "message": "Increase Bixby Volume",
+   "appliance": false
+  }
+ ],
+ "Block USB connections while locked": [
+  {
+   "id": "DL-0038",
+   "op": "view",
+   "message": "View Security Settings",
+   "appliance": false
+  }
+ ],
+ "Eye comfort shield": [
+  {
+   "id": "DL-0039",
+   "op": "off",
+   "message": "Disable Eye Comfort Shield",
+   "appliance": false
+  },
+  {
+   "id": "DL-0040",
+   "op": "on",
+   "message": "Enable Eye Comfort Shield",
+   "appliance": false
+  }
+ ],
+ "Bluetooth scanning": [
+  {
+   "id": "DL-0041",
+   "op": "view",
+   "message": "View Bluetooth scanning",
+   "appliance": false
+  },
+  {
+   "id": "DL-0042",
+   "op": "off",
+   "message": "Disable Bluetooth",
+   "appliance": false
+  },
+  {
+   "id": "DL-0043",
+   "op": "on",
+   "message": "Enable Bluetooth",
+   "appliance": false
+  }
+ ],
+ "Bluetooth": [
+  {
+   "id": "DL-0044",
+   "op": "view",
+   "message": "View Bluetooth",
+   "appliance": false
+  },
+  {
+   "id": "DL-0494",
+   "op": "off",
+   "message": "Disable Bluetooth",
+   "appliance": false
+  },
+  {
+   "id": "DL-0495",
+   "op": "on",
+   "message": "Enable Bluetooth",
+   "appliance": false
+  }
+ ],
+ "Bold font": [
+  {
+   "id": "DL-0045",
+   "op": "view",
+   "message": "View Bold font",
+   "appliance": false
+  }
+ ],
+ "Bottom left": [
+  {
+   "id": "DL-0046",
+   "op": "view",
+   "message": "View Bottom left",
+   "appliance": false
+  }
+ ],
+ "Bottom right": [
+  {
+   "id": "DL-0047",
+   "op": "view",
+   "message": "View Bottom right",
+   "appliance": false
+  }
+ ],
+ "Bounce keys": [
+  {
+   "id": "DL-0048",
+   "op": "off",
+   "message": "Disable Bounce Keys",
+   "appliance": false
+  },
+  {
+   "id": "DL-0049",
+   "op": "on",
+   "message": "Enable Bounce Keys",
+   "appliance": false
+  }
+ ],
+ "Show brief pop-ups even while screen is off": [
+  {
+   "id": "DL-0050",
+   "op": "view",
+   "message": "View Show brief pop-ups even while screen is off",
+   "appliance": false
+  }
+ ],
+ "Hearing aid compatibility": [
+  {
+   "id": "DL-0051",
+   "op": "off",
+   "message": "Disable Hearing Aid",
+   "appliance": false
+  },
+  {
+   "id": "DL-0052",
+   "op": "on",
+   "message": "Enable Hearing Aid",
+   "appliance": false
+  }
+ ],
+ "Camera feedback": [
+  {
+   "id": "DL-0053",
+   "op": "off",
+   "message": "Disable Camera Feedback",
+   "appliance": false
+  },
+  {
+   "id": "DL-0054",
+   "op": "on",
+   "message": "Enable Camera Feedback",
+   "appliance": false
+  }
+ ],
+ "Camera flash notification": [
+  {
+   "id": "DL-0055",
+   "op": "off",
+   "message": "Disable Camera Feedback",
+   "appliance": false
+  },
+  {
+   "id": "DL-0056",
+   "op": "on",
+   "message": "Enable Camera Feedback",
+   "appliance": false
+  }
+ ],
+ "Show captions": [
+  {
+   "id": "DL-0057",
+   "op": "view",
+   "message": "View Show captions",
+   "appliance": false
+  }
+ ],
+ "Charging": [
+  {
+   "id": "DL-0058",
+   "op": "off",
+   "message": "Disable Charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0059",
+   "op": "on",
+   "message": "Enable Charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0060",
+   "op": "off",
+   "message": "Disable Charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0061",
+   "op": "on",
+   "message": "Enable Charging",
+   "appliance": false
+  }
+ ],
+ "Color inversion shortcut": [
+  {
+   "id": "DL-0062",
+   "op": "view",
+   "message": "View Color inversion shortcut",
+   "appliance": false
+  }
+ ],
+ "Voice Access": [
+  {
+   "id": "DL-0063",
+   "op": "off",
+   "message": "Disable Voice Access",
+   "appliance": false
+  },
+  {
+   "id": "DL-0064",
+   "op": "on",
+   "message": "Enable Voice Access",
+   "appliance": false
+  }
+ ],
+ "Amplify ambient sound shortcut": [
+  {
+   "id": "DL-0065",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Color filter shortcut": [
+  {
+   "id": "DL-0066",
+   "op": "view",
+   "message": "View Color filter shortcut",
+   "appliance": false
+  }
+ ],
+ "Bluetooth hearing aids shortcut": [
+  {
+   "id": "DL-0067",
+   "op": "view",
+   "message": "View Bluetooth hearing aids shortcut",
+   "appliance": false
+  }
+ ],
+ "High contrast fonts shortcut": [
+  {
+   "id": "DL-0068",
+   "op": "view",
+   "message": "View High contrast fonts shortcut",
+   "appliance": false
+  }
+ ],
+ "Magnifier shortcut": [
+  {
+   "id": "DL-0069",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Mute all sounds shortcut": [
+  {
+   "id": "DL-0070",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Relumino outline shortcut": [
+  {
+   "id": "DL-0071",
+   "op": "view",
+   "message": "View Relumino outline shortcut",
+   "appliance": false
+  }
+ ],
+ "Connected audio": [
+  {
+   "id": "DL-0072",
+   "op": "update",
+   "message": "Adjust Connected audio",
+   "appliance": false
+  }
+ ],
+ "Android personalization service": [
+  {
+   "id": "DL-0073",
+   "op": "view",
+   "message": "View Android personalization service",
+   "appliance": false
+  }
+ ],
+ "Continue on other devices": [
+  {
+   "id": "DL-0074",
+   "op": "off",
+   "message": "Disable Continue on other devices",
+   "appliance": false
+  },
+  {
+   "id": "DL-0075",
+   "op": "on",
+   "message": "Enable Continue on other devices",
+   "appliance": false
+  }
+ ],
+ "Notification pop-ups": [
+  {
+   "id": "DL-0076",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Color correction shortcut": [
+  {
+   "id": "DL-0077",
+   "op": "view",
+   "message": "View Color correction shortcut",
+   "appliance": false
+  }
+ ],
+ "Dark mode settings": [
+  {
+   "id": "DL-0078",
+   "op": "update",
+   "message": "Adjust Dark mode settings",
+   "appliance": false
+  }
+ ],
+ "Turn on now": [
+  {
+   "id": "DL-0079",
+   "op": "off",
+   "message": "Disable Turn on now",
+   "appliance": false
+  },
+  {
+   "id": "DL-0080",
+   "op": "on",
+   "message": "Enable Turn on now",
+   "appliance": false
+  }
+ ],
+ "Mobile data": [
+  {
+   "id": "DL-0081",
+   "op": "off",
+   "message": "Disable Mobile data",
+   "appliance": false
+  },
+  {
+   "id": "DL-0082",
+   "op": "on",
+   "message": "Enable Mobile data",
+   "appliance": false
+  }
+ ],
+ "Send diagnostic data": [
+  {
+   "id": "DL-0083",
+   "op": "view",
+   "message": "View Send diagnostic data",
+   "appliance": false
+  }
+ ],
+ "Dialing keypad": [
+  {
+   "id": "DL-0084",
+   "op": "off",
+   "message": "Disable Dialing keypad",
+   "appliance": false
+  },
+  {
+   "id": "DL-0085",
+   "op": "on",
+   "message": "Enable Dialing keypad",
+   "appliance": false
+  },
+  {
+   "id": "DL-0086",
+   "op": "off",
+   "message": "Disable Dialing keypad",
+   "appliance": false
+  },
+  {
+   "id": "DL-0087",
+   "op": "on",
+   "message": "Enable Dialing keypad",
+   "appliance": false
+  }
+ ],
+ "Double tap to turn on screen": [
+  {
+   "id": "DL-0088",
+   "op": "off",
+   "message": "Disable Double tap to turn on screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0089",
+   "op": "on",
+   "message": "Enable Double tap to turn on screen",
+   "appliance": false
+  }
+ ],
+ "Double tap to turn off screen": [
+  {
+   "id": "DL-0090",
+   "op": "off",
+   "message": "Disable Double tap to turn off screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0091",
+   "op": "on",
+   "message": "Enable Double tap to turn off screen",
+   "appliance": false
+  }
+ ],
+ "Easy mode": [
+  {
+   "id": "DL-0092",
+   "op": "view",
+   "message": "View Easy mode",
+   "appliance": false
+  }
+ ],
+ "Mute with gestures": [
+  {
+   "id": "DL-0093",
+   "op": "off",
+   "message": "Disable Gesture Controls",
+   "appliance": false
+  },
+  {
+   "id": "DL-0094",
+   "op": "on",
+   "message": "Enable Gesture Controls",
+   "appliance": false
+  }
+ ],
+ "Edge panels": [
+  {
+   "id": "DL-0095",
+   "op": "off",
+   "message": "Disable Edge panels",
+   "appliance": false
+  },
+  {
+   "id": "DL-0096",
+   "op": "on",
+   "message": "Enable Edge panels",
+   "appliance": false
+  }
+ ],
+ "Roaming clock": [
+  {
+   "id": "DL-0097",
+   "op": "off",
+   "message": "Disable Roaming clock",
+   "appliance": false
+  },
+  {
+   "id": "DL-0098",
+   "op": "on",
+   "message": "Enable Roaming clock",
+   "appliance": false
+  }
+ ],
+ "Touch and hold to edit": [
+  {
+   "id": "DL-0099",
+   "op": "view",
+   "message": "View Touch and hold to edit",
+   "appliance": false
+  }
+ ],
+ "Bluetooth tethering": [
+  {
+   "id": "DL-0100",
+   "op": "view",
+   "message": "View Bluetooth tethering",
+   "appliance": false
+  }
+ ],
+ "Do not disturb": [
+  {
+   "id": "DL-0101",
+   "op": "view",
+   "message": "View Do not disturb",
+   "appliance": false
+  },
+  {
+   "id": "DL-0505",
+   "op": "off",
+   "message": "Disable Do not disturb",
+   "appliance": false
+  },
+  {
+   "id": "DL-0506",
+   "op": "on",
+   "message": "Enable Do not disturb",
+   "appliance": false
+  }
+ ],
+ "Enhance pointer precision": [
+  {
+   "id": "DL-0102",
+   "op": "off",
+   "message": "Disable Enhance pointer precision",
+   "appliance": false
+  },
+  {
+   "id": "DL-0103",
+   "op": "on",
+   "message": "Enable Enhance pointer precision",
+   "appliance": false
+  }
+ ],
+ "Extra brightness": [
+  {
+   "id": "DL-0104",
+   "op": "off",
+   "message": "Disable Adaptive Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0105",
+   "op": "on",
+   "message": "Enable Adaptive Display",
+   "appliance": false
+  }
+ ],
+ "Old notifications": [
+  {
+   "id": "DL-0106",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Ads": [
+  {
+   "id": "DL-0107",
+   "op": "view",
+   "message": "View Ads",
+   "appliance": false
+  }
+ ],
+ "Background activities": [
+  {
+   "id": "DL-0108",
+   "op": "view",
+   "message": "View Background activities",
+   "appliance": false
+  }
+ ],
+ "Minimized notifications": [
+  {
+   "id": "DL-0109",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Floating notifications": [
+  {
+   "id": "DL-0110",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Full screen in Split screen view": [
+  {
+   "id": "DL-0111",
+   "op": "off",
+   "message": "Disable Full screen in Split screen view",
+   "appliance": false
+  },
+  {
+   "id": "DL-0112",
+   "op": "on",
+   "message": "Enable Full screen in Split screen view",
+   "appliance": false
+  }
+ ],
+ "Double press": [
+  {
+   "id": "DL-0113",
+   "op": "view",
+   "message": "View Double press",
+   "appliance": false
+  }
+ ],
+ "Long press": [
+  {
+   "id": "DL-0114",
+   "op": "view",
+   "message": "View Long press",
+   "appliance": false
+  }
+ ],
+ "Galaxy system app update": [
+  {
+   "id": "DL-0115",
+   "op": "view",
+   "message": "View Update Settings",
+   "appliance": false
+  }
+ ],
+ "More options": [
+  {
+   "id": "DL-0116",
+   "op": "view",
+   "message": "View More options",
+   "appliance": false
+  }
+ ],
+ "One-time password": [
+  {
+   "id": "DL-0117",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Hide content while locked": [
+  {
+   "id": "DL-0118",
+   "op": "view",
+   "message": "View Hide content while locked",
+   "appliance": false
+  }
+ ],
+ "High contrast keyboard": [
+  {
+   "id": "DL-0119",
+   "op": "off",
+   "message": "Disable High Contrast",
+   "appliance": false
+  },
+  {
+   "id": "DL-0120",
+   "op": "on",
+   "message": "Enable High Contrast",
+   "appliance": false
+  },
+  {
+   "id": "DL-0387",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Highlight buttons": [
+  {
+   "id": "DL-0121",
+   "op": "off",
+   "message": "Disable Highlight buttons",
+   "appliance": false
+  },
+  {
+   "id": "DL-0122",
+   "op": "on",
+   "message": "Enable Highlight buttons",
+   "appliance": false
+  }
+ ],
+ "Notifications on app icons": [
+  {
+   "id": "DL-0123",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Inactivity restart": [
+  {
+   "id": "DL-0124",
+   "op": "view",
+   "message": "View Inactivity restart",
+   "appliance": false
+  }
+ ],
+ "Touch sensitivity": [
+  {
+   "id": "DL-0125",
+   "op": "off",
+   "message": "Disable Touch sensitivity",
+   "appliance": false
+  },
+  {
+   "id": "DL-0126",
+   "op": "on",
+   "message": "Enable Touch sensitivity",
+   "appliance": false
+  }
+ ],
+ "Music Share": [
+  {
+   "id": "DL-0127",
+   "op": "off",
+   "message": "Disable Bluetooth",
+   "appliance": false
+  },
+  {
+   "id": "DL-0128",
+   "op": "on",
+   "message": "Enable Bluetooth",
+   "appliance": false
+  }
+ ],
+ "Sync with Samsung Cloud": [
+  {
+   "id": "DL-0129",
+   "op": "view",
+   "message": "View Sync Settings",
+   "appliance": false
+  }
+ ],
+ "Camera Share": [
+  {
+   "id": "DL-0130",
+   "op": "view",
+   "message": "View Camera Share",
+   "appliance": false
+  }
+ ],
+ "Storage Share": [
+  {
+   "id": "DL-0131",
+   "op": "view",
+   "message": "View Storage Share",
+   "appliance": false
+  }
+ ],
+ "Offline device lock": [
+  {
+   "id": "DL-0132",
+   "op": "view",
+   "message": "View Device Details",
+   "appliance": false
+  }
+ ],
+ "Primary mouse button": [
+  {
+   "id": "DL-0133",
+   "op": "view",
+   "message": "View Mouse Keys Settings",
+   "appliance": false
+  }
+ ],
+ "Remote lock": [
+  {
+   "id": "DL-0134",
+   "op": "view",
+   "message": "View Remote lock",
+   "appliance": false
+  }
+ ],
+ "Security policy update": [
+  {
+   "id": "DL-0135",
+   "op": "view",
+   "message": "View Update Settings",
+   "appliance": false
+  }
+ ],
+ "Show input method button on navigation bar": [
+  {
+   "id": "DL-0136",
+   "op": "off",
+   "message": "Disable Show input method button on navigation bar",
+   "appliance": false
+  },
+  {
+   "id": "DL-0137",
+   "op": "on",
+   "message": "Enable Show input method button on navigation bar",
+   "appliance": false
+  },
+  {
+   "id": "DL-0527",
+   "op": "view",
+   "message": "View Show input method button on navigation bar",
+   "appliance": false
+  }
+ ],
+ "Personal data intelligence": [
+  {
+   "id": "DL-0138",
+   "op": "view",
+   "message": "View Personal data intelligence",
+   "appliance": false
+  }
+ ],
+ "Tap to click": [
+  {
+   "id": "DL-0139",
+   "op": "view",
+   "message": "View Click Settings",
+   "appliance": false
+  }
+ ],
+ "Theft detection lock": [
+  {
+   "id": "DL-0140",
+   "op": "view",
+   "message": "View Theft detection lock",
+   "appliance": false
+  }
+ ],
+ "Touchpad scrolling direction": [
+  {
+   "id": "DL-0141",
+   "op": "view",
+   "message": "View Touchpad scrolling direction",
+   "appliance": false
+  }
+ ],
+ "Samsung Keyboard": [
+  {
+   "id": "DL-0142",
+   "op": "off",
+   "message": "Disable Samsung Keyboard",
+   "appliance": false
+  },
+  {
+   "id": "DL-0143",
+   "op": "on",
+   "message": "Enable Samsung Keyboard",
+   "appliance": false
+  },
+  {
+   "id": "DL-0144",
+   "op": "off",
+   "message": "Disable Samsung Keyboard",
+   "appliance": false
+  },
+  {
+   "id": "DL-0145",
+   "op": "on",
+   "message": "Enable Samsung Keyboard",
+   "appliance": false
+  }
+ ],
+ "Lift to wake": [
+  {
+   "id": "DL-0146",
+   "op": "off",
+   "message": "Disable Lift to wake",
+   "appliance": false
+  },
+  {
+   "id": "DL-0147",
+   "op": "on",
+   "message": "Enable Lift to wake",
+   "appliance": false
+  }
+ ],
+ "Location": [
+  {
+   "id": "DL-0148",
+   "op": "off",
+   "message": "Disable Location",
+   "appliance": false
+  },
+  {
+   "id": "DL-0149",
+   "op": "on",
+   "message": "Enable Location",
+   "appliance": false
+  }
+ ],
+ "Set time zone based on location": [
+  {
+   "id": "DL-0150",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Auto lock when screen turns off": [
+  {
+   "id": "DL-0151",
+   "op": "view",
+   "message": "View Auto lock when screen turns off",
+   "appliance": false
+  }
+ ],
+ "Lock network and security": [
+  {
+   "id": "DL-0152",
+   "op": "view",
+   "message": "View Lock network and security",
+   "appliance": false
+  }
+ ],
+ "Lock screen": [
+  {
+   "id": "DL-0153",
+   "op": "update",
+   "message": "Adjust Lock screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0528",
+   "op": "view",
+   "message": "View Lock screen",
+   "appliance": false
+  }
+ ],
+ "Show Lockdown mode option": [
+  {
+   "id": "DL-0154",
+   "op": "view",
+   "message": "View Show Lockdown mode option",
+   "appliance": false
+  }
+ ],
+ "Show alerting notifications only": [
+  {
+   "id": "DL-0155",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Move with cursor while typing": [
+  {
+   "id": "DL-0156",
+   "op": "view",
+   "message": "View Click Settings",
+   "appliance": false
+  }
+ ],
+ "Magnification shortcut": [
+  {
+   "id": "DL-0157",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Link to Windows": [
+  {
+   "id": "DL-0158",
+   "op": "off",
+   "message": "Disable Link to Windows",
+   "appliance": false
+  },
+  {
+   "id": "DL-0159",
+   "op": "on",
+   "message": "Enable Link to Windows",
+   "appliance": false
+  },
+  {
+   "id": "DL-0422",
+   "op": "off",
+   "message": "Disable Link to Windows",
+   "appliance": false
+  },
+  {
+   "id": "DL-0423",
+   "op": "on",
+   "message": "Enable Link to Windows",
+   "appliance": false
+  }
+ ],
+ "Media": [
+  {
+   "id": "DL-0160",
+   "op": "update",
+   "message": "Increase Media Volume",
+   "appliance": false
+  },
+  {
+   "id": "DL-0161",
+   "op": "update",
+   "message": "Increase Media Volume",
+   "appliance": false
+  }
+ ],
+ "Mono audio": [
+  {
+   "id": "DL-0162",
+   "op": "off",
+   "message": "Disable Grayscale",
+   "appliance": false
+  },
+  {
+   "id": "DL-0163",
+   "op": "on",
+   "message": "Enable Grayscale",
+   "appliance": false
+  }
+ ],
+ "Wheel scrolling speed": [
+  {
+   "id": "DL-0164",
+   "op": "update",
+   "message": "Adjust Speed",
+   "appliance": false
+  }
+ ],
+ "Multi control": [
+  {
+   "id": "DL-0165",
+   "op": "view",
+   "message": "View Multi control",
+   "appliance": false
+  }
+ ],
+ "Separate app sound": [
+  {
+   "id": "DL-0166",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Multi window for all apps": [
+  {
+   "id": "DL-0167",
+   "op": "off",
+   "message": "Disable Multi window for all apps",
+   "appliance": false
+  },
+  {
+   "id": "DL-0168",
+   "op": "on",
+   "message": "Enable Multi window for all apps",
+   "appliance": false
+  }
+ ],
+ "Navigation bar": [
+  {
+   "id": "DL-0169",
+   "op": "view",
+   "message": "View Navigation bar",
+   "appliance": false
+  }
+ ],
+ "Navigation gestures": [
+  {
+   "id": "DL-0170",
+   "op": "off",
+   "message": "Disable Gesture Controls",
+   "appliance": false
+  },
+  {
+   "id": "DL-0171",
+   "op": "on",
+   "message": "Enable Gesture Controls",
+   "appliance": false
+  }
+ ],
+ "Nearby device scanning": [
+  {
+   "id": "DL-0172",
+   "op": "view",
+   "message": "View Device Details",
+   "appliance": false
+  }
+ ],
+ "Read/write NFC tags": [
+  {
+   "id": "DL-0173",
+   "op": "off",
+   "message": "Disable Read/write NFC tags",
+   "appliance": false
+  },
+  {
+   "id": "DL-0174",
+   "op": "on",
+   "message": "Enable Read/write NFC tags",
+   "appliance": false
+  }
+ ],
+ "Default wallet app": [
+  {
+   "id": "DL-0175",
+   "op": "view",
+   "message": "View Default wallet app",
+   "appliance": false
+  }
+ ],
+ "NFC and contactless payments": [
+  {
+   "id": "DL-0176",
+   "op": "off",
+   "message": "Disable NFC and contactless payments",
+   "appliance": false
+  },
+  {
+   "id": "DL-0177",
+   "op": "on",
+   "message": "Enable NFC and contactless payments",
+   "appliance": false
+  }
+ ],
+ "App icon badges": [
+  {
+   "id": "DL-0178",
+   "op": "off",
+   "message": "Disable App icon badges",
+   "appliance": false
+  },
+  {
+   "id": "DL-0179",
+   "op": "on",
+   "message": "Enable App icon badges",
+   "appliance": false
+  },
+  {
+   "id": "DL-0451",
+   "op": "view",
+   "message": "View App icon badges",
+   "appliance": false
+  }
+ ],
+ "Notification history": [
+  {
+   "id": "DL-0180",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Notification pop-up style": [
+  {
+   "id": "DL-0181",
+   "op": "update",
+   "message": "Adjust Notification pop-up style",
+   "appliance": false
+  }
+ ],
+ "Notification sound": [
+  {
+   "id": "DL-0182",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  },
+  {
+   "id": "DL-0535",
+   "op": "update",
+   "message": "Adjust Volume",
+   "appliance": false
+  }
+ ],
+ "Notifications": [
+  {
+   "id": "DL-0183",
+   "op": "update",
+   "message": "Adjust Notifications",
+   "appliance": false
+  },
+  {
+   "id": "DL-0185",
+   "op": "update",
+   "message": "Adjust Notifications",
+   "appliance": false
+  },
+  {
+   "id": "DL-0501",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Notification vibration": [
+  {
+   "id": "DL-0184",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Palm swipe to capture": [
+  {
+   "id": "DL-0186",
+   "op": "off",
+   "message": "Disable Palm swipe to capture",
+   "appliance": false
+  },
+  {
+   "id": "DL-0187",
+   "op": "on",
+   "message": "Enable Palm swipe to capture",
+   "appliance": false
+  }
+ ],
+ "Palm touch to turn off screen": [
+  {
+   "id": "DL-0188",
+   "op": "off",
+   "message": "Disable Palm touch to turn off screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0189",
+   "op": "on",
+   "message": "Enable Palm touch to turn off screen",
+   "appliance": false
+  }
+ ],
+ "Maximum privacy protection": [
+  {
+   "id": "DL-0190",
+   "op": "off",
+   "message": "Disable Maximum privacy protection",
+   "appliance": false
+  },
+  {
+   "id": "DL-0191",
+   "op": "on",
+   "message": "Enable Maximum privacy protection",
+   "appliance": false
+  }
+ ],
+ "Call vibration": [
+  {
+   "id": "DL-0192",
+   "op": "view",
+   "message": "View Call vibration",
+   "appliance": false
+  }
+ ],
+ "Pointer speed": [
+  {
+   "id": "DL-0193",
+   "op": "view",
+   "message": "View Pointer speed",
+   "appliance": false
+  },
+  {
+   "id": "DL-0292",
+   "op": "view",
+   "message": "View Pointer speed",
+   "appliance": false
+  }
+ ],
+ "Lock instantly with Side key": [
+  {
+   "id": "DL-0194",
+   "op": "view",
+   "message": "View Lock instantly with Side key",
+   "appliance": false
+  }
+ ],
+ "Process data only on device": [
+  {
+   "id": "DL-0195",
+   "op": "off",
+   "message": "Disable Process data only on device",
+   "appliance": false
+  },
+  {
+   "id": "DL-0196",
+   "op": "on",
+   "message": "Enable Process data only on device",
+   "appliance": false
+  }
+ ],
+ "Camera access": [
+  {
+   "id": "DL-0197",
+   "op": "view",
+   "message": "View Camera access",
+   "appliance": false
+  }
+ ],
+ "Privacy display": [
+  {
+   "id": "DL-0198",
+   "op": "off",
+   "message": "Disable Privacy display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0199",
+   "op": "on",
+   "message": "Enable Privacy display",
+   "appliance": false
+  }
+ ],
+ "Microphone access": [
+  {
+   "id": "DL-0200",
+   "op": "view",
+   "message": "View Microphone access",
+   "appliance": false
+  }
+ ],
+ "Private DNS": [
+  {
+   "id": "DL-0201",
+   "op": "view",
+   "message": "View Private DNS",
+   "appliance": false
+  }
+ ],
+ "Extra dim shortcut": [
+  {
+   "id": "DL-0202",
+   "op": "view",
+   "message": "View Extra dim shortcut",
+   "appliance": false
+  }
+ ],
+ "Extra dim": [
+  {
+   "id": "DL-0203",
+   "op": "off",
+   "message": "Disable Extra dim",
+   "appliance": false
+  },
+  {
+   "id": "DL-0204",
+   "op": "on",
+   "message": "Enable Extra dim",
+   "appliance": false
+  }
+ ],
+ "Dim strobing": [
+  {
+   "id": "DL-0205",
+   "op": "off",
+   "message": "Disable Dim strobing",
+   "appliance": false
+  },
+  {
+   "id": "DL-0206",
+   "op": "on",
+   "message": "Enable Dim strobing",
+   "appliance": false
+  }
+ ],
+ "Call": [
+  {
+   "id": "DL-0207",
+   "op": "update",
+   "message": "Adjust Call",
+   "appliance": false
+  }
+ ],
+ "Ringtone": [
+  {
+   "id": "DL-0208",
+   "op": "update",
+   "message": "Adjust Ringtone",
+   "appliance": false
+  },
+  {
+   "id": "DL-0209",
+   "op": "view",
+   "message": "View Ringtone",
+   "appliance": false
+  }
+ ],
+ "Screen flash notification": [
+  {
+   "id": "DL-0210",
+   "op": "off",
+   "message": "Disable Screen flash notification",
+   "appliance": false
+  },
+  {
+   "id": "DL-0211",
+   "op": "on",
+   "message": "Enable Screen flash notification",
+   "appliance": false
+  }
+ ],
+ "Screen lock/unlock": [
+  {
+   "id": "DL-0212",
+   "op": "off",
+   "message": "Disable Screen lock/unlock",
+   "appliance": false
+  },
+  {
+   "id": "DL-0213",
+   "op": "on",
+   "message": "Enable Screen lock/unlock",
+   "appliance": false
+  }
+ ],
+ "Magnification type": [
+  {
+   "id": "DL-0214",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Screen mode": [
+  {
+   "id": "DL-0215",
+   "op": "view",
+   "message": "View Screen mode",
+   "appliance": false
+  }
+ ],
+ "Accidental touch protection": [
+  {
+   "id": "DL-0216",
+   "op": "off",
+   "message": "Disable Accidental touch protection",
+   "appliance": false
+  },
+  {
+   "id": "DL-0217",
+   "op": "on",
+   "message": "Enable Accidental touch protection",
+   "appliance": false
+  }
+ ],
+ "Allow apps to be pinned": [
+  {
+   "id": "DL-0218",
+   "op": "off",
+   "message": "Disable Allow apps to be pinned",
+   "appliance": false
+  },
+  {
+   "id": "DL-0219",
+   "op": "on",
+   "message": "Enable Allow apps to be pinned",
+   "appliance": false
+  }
+ ],
+ "Screen timeout": [
+  {
+   "id": "DL-0220",
+   "op": "update",
+   "message": "Adjust Timeout",
+   "appliance": false
+  }
+ ],
+ "Screen saver": [
+  {
+   "id": "DL-0221",
+   "op": "update",
+   "message": "Adjust Screen saver",
+   "appliance": false
+  }
+ ],
+ "Intensity": [
+  {
+   "id": "DL-0224",
+   "op": "view",
+   "message": "View Intensity",
+   "appliance": false
+  }
+ ],
+ "Turn on as scheduled": [
+  {
+   "id": "DL-0225",
+   "op": "view",
+   "message": "View Turn on as scheduled",
+   "appliance": false
+  }
+ ],
+ "Adaptive color tone": [
+  {
+   "id": "DL-0226",
+   "op": "off",
+   "message": "Disable Adaptive Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0227",
+   "op": "on",
+   "message": "Enable Adaptive Display",
+   "appliance": false
+  }
+ ],
+ "Motion smoothness": [
+  {
+   "id": "DL-0228",
+   "op": "update",
+   "message": "Adjust Motion smoothness",
+   "appliance": false
+  }
+ ],
+ "Screen zoom": [
+  {
+   "id": "DL-0229",
+   "op": "update",
+   "message": "Adjust Screen zoom",
+   "appliance": false
+  },
+  {
+   "id": "DL-0549",
+   "op": "view",
+   "message": "View Screen zoom",
+   "appliance": false
+  }
+ ],
+ "Super HDR": [
+  {
+   "id": "DL-0230",
+   "op": "off",
+   "message": "Disable Super HDR",
+   "appliance": false
+  },
+  {
+   "id": "DL-0231",
+   "op": "on",
+   "message": "Enable Super HDR",
+   "appliance": false
+  }
+ ],
+ "Brightness": [
+  {
+   "id": "DL-0232",
+   "op": "update",
+   "message": "Adjust Brightness",
+   "appliance": false
+  },
+  {
+   "id": "DL-0470",
+   "op": "view",
+   "message": "Brightness",
+   "appliance": false
+  }
+ ],
+ "White balance": [
+  {
+   "id": "DL-0233",
+   "op": "update",
+   "message": "Adjust White balance",
+   "appliance": false
+  }
+ ],
+ "Touch and hold delay": [
+  {
+   "id": "DL-0234",
+   "op": "view",
+   "message": "View Touch and hold delay",
+   "appliance": false
+  }
+ ],
+ "Set data limit": [
+  {
+   "id": "DL-0235",
+   "op": "off",
+   "message": "Disable Set data limit",
+   "appliance": false
+  },
+  {
+   "id": "DL-0236",
+   "op": "on",
+   "message": "Enable Set data limit",
+   "appliance": false
+  }
+ ],
+ "Set data warning": [
+  {
+   "id": "DL-0237",
+   "op": "off",
+   "message": "Disable Set data warning",
+   "appliance": false
+  },
+  {
+   "id": "DL-0238",
+   "op": "on",
+   "message": "Enable Set data warning",
+   "appliance": false
+  },
+  {
+   "id": "DL-0239",
+   "op": "off",
+   "message": "Disable Set data warning",
+   "appliance": false
+  },
+  {
+   "id": "DL-0240",
+   "op": "on",
+   "message": "Enable Set data warning",
+   "appliance": false
+  }
+ ],
+ "Show battery background": [
+  {
+   "id": "DL-0241",
+   "op": "off",
+   "message": "Disable Background Limit",
+   "appliance": false
+  },
+  {
+   "id": "DL-0242",
+   "op": "on",
+   "message": "Enable Background Limit",
+   "appliance": false
+  }
+ ],
+ "Show charging information": [
+  {
+   "id": "DL-0243",
+   "op": "off",
+   "message": "Disable Show charging information",
+   "appliance": false
+  },
+  {
+   "id": "DL-0244",
+   "op": "on",
+   "message": "Enable Show charging information",
+   "appliance": false
+  },
+  {
+   "id": "DL-0407",
+   "op": "off",
+   "message": "Disable Charging Feedback",
+   "appliance": false
+  },
+  {
+   "id": "DL-0408",
+   "op": "on",
+   "message": "Enable Always On Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0516",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Alert when clipboard accessed": [
+  {
+   "id": "DL-0245",
+   "op": "view",
+   "message": "View Alert when clipboard accessed",
+   "appliance": false
+  }
+ ],
+ "Show multi window menu with 1 window": [
+  {
+   "id": "DL-0246",
+   "op": "off",
+   "message": "Disable Show multi window menu with 1 window",
+   "appliance": false
+  },
+  {
+   "id": "DL-0247",
+   "op": "on",
+   "message": "Enable Show multi window menu with 1 window",
+   "appliance": false
+  }
+ ],
+ "Show app icon in notifications": [
+  {
+   "id": "DL-0248",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Manage notification categories for each app": [
+  {
+   "id": "DL-0249",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Make passwords visible": [
+  {
+   "id": "DL-0250",
+   "op": "view",
+   "message": "View Make passwords visible",
+   "appliance": false
+  }
+ ],
+ "Show snooze button": [
+  {
+   "id": "DL-0251",
+   "op": "view",
+   "message": "View Show snooze button",
+   "appliance": false
+  }
+ ],
+ "Show on-screen keyboard": [
+  {
+   "id": "DL-0252",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Slow keys": [
+  {
+   "id": "DL-0253",
+   "op": "off",
+   "message": "Disable Slow Keys",
+   "appliance": false
+  },
+  {
+   "id": "DL-0254",
+   "op": "on",
+   "message": "Enable Slow Keys",
+   "appliance": false
+  }
+ ],
+ "Alert when phone picked up": [
+  {
+   "id": "DL-0255",
+   "op": "off",
+   "message": "Disable Alert when phone picked up",
+   "appliance": false
+  },
+  {
+   "id": "DL-0256",
+   "op": "on",
+   "message": "Enable Alert when phone picked up",
+   "appliance": false
+  }
+ ],
+ "Prioritize real-time traffic": [
+  {
+   "id": "DL-0257",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Keep screen on while viewing": [
+  {
+   "id": "DL-0258",
+   "op": "off",
+   "message": "Disable Keep screen on while viewing",
+   "appliance": false
+  },
+  {
+   "id": "DL-0259",
+   "op": "on",
+   "message": "Enable Keep screen on while viewing",
+   "appliance": false
+  }
+ ],
+ "Sound mode": [
+  {
+   "id": "DL-0260",
+   "op": "update",
+   "message": "Adjust Volume",
+   "appliance": false
+  },
+  {
+   "id": "DL-0557",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Speak keyboard input aloud": [
+  {
+   "id": "DL-0261",
+   "op": "off",
+   "message": "Disable Speak keyboard input aloud",
+   "appliance": false
+  },
+  {
+   "id": "DL-0262",
+   "op": "on",
+   "message": "Enable Speak keyboard input aloud",
+   "appliance": false
+  },
+  {
+   "id": "DL-0393",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Phone speakers": [
+  {
+   "id": "DL-0263",
+   "op": "update",
+   "message": "Adjust Phone speakers",
+   "appliance": false
+  }
+ ],
+ "Status bar": [
+  {
+   "id": "DL-0264",
+   "op": "update",
+   "message": "Adjust Status bar",
+   "appliance": false
+  }
+ ],
+ "Sticky keys": [
+  {
+   "id": "DL-0265",
+   "op": "off",
+   "message": "Disable Slow Keys",
+   "appliance": false
+  },
+  {
+   "id": "DL-0266",
+   "op": "on",
+   "message": "Enable Slow Keys",
+   "appliance": false
+  }
+ ],
+ "Swipe for pop-up view": [
+  {
+   "id": "DL-0267",
+   "op": "off",
+   "message": "Disable Swipe for pop-up view",
+   "appliance": false
+  },
+  {
+   "id": "DL-0268",
+   "op": "on",
+   "message": "Enable Swipe for pop-up view",
+   "appliance": false
+  }
+ ],
+ "Swipe for split screen": [
+  {
+   "id": "DL-0269",
+   "op": "off",
+   "message": "Disable Swipe for split screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0270",
+   "op": "on",
+   "message": "Enable Swipe for split screen",
+   "appliance": false
+  }
+ ],
+ "System sound theme": [
+  {
+   "id": "DL-0271",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "System": [
+  {
+   "id": "DL-0272",
+   "op": "update",
+   "message": "Adjust System",
+   "appliance": false
+  },
+  {
+   "id": "DL-0273",
+   "op": "update",
+   "message": "Adjust System",
+   "appliance": false
+  }
+ ],
+ "Airplane mode": [
+  {
+   "id": "DL-0274",
+   "op": "off",
+   "message": "Disable Airplane mode",
+   "appliance": false
+  },
+  {
+   "id": "DL-0275",
+   "op": "on",
+   "message": "Enable Airplane mode",
+   "appliance": false
+  }
+ ],
+ "Audio description": [
+  {
+   "id": "DL-0276",
+   "op": "off",
+   "message": "Disable Audio description",
+   "appliance": false
+  },
+  {
+   "id": "DL-0277",
+   "op": "on",
+   "message": "Enable Audio description",
+   "appliance": false
+  }
+ ],
+ "High contrast fonts": [
+  {
+   "id": "DL-0278",
+   "op": "off",
+   "message": "Disable High Contrast",
+   "appliance": false
+  },
+  {
+   "id": "DL-0279",
+   "op": "on",
+   "message": "Enable High Contrast",
+   "appliance": false
+  }
+ ],
+ "Color inversion": [
+  {
+   "id": "DL-0280",
+   "op": "off",
+   "message": "Disable Color inversion",
+   "appliance": false
+  },
+  {
+   "id": "DL-0281",
+   "op": "on",
+   "message": "Enable Color inversion",
+   "appliance": false
+  }
+ ],
+ "Reduce transparency and blur": [
+  {
+   "id": "DL-0282",
+   "op": "off",
+   "message": "Disable Reduce transparency and blur",
+   "appliance": false
+  },
+  {
+   "id": "DL-0283",
+   "op": "on",
+   "message": "Enable Reduce transparency and blur",
+   "appliance": false
+  }
+ ],
+ "Relumino outline": [
+  {
+   "id": "DL-0284",
+   "op": "view",
+   "message": "View Relumino outline",
+   "appliance": false
+  }
+ ],
+ "Reduce animations": [
+  {
+   "id": "DL-0285",
+   "op": "off",
+   "message": "Disable Reduce animations",
+   "appliance": false
+  },
+  {
+   "id": "DL-0286",
+   "op": "on",
+   "message": "Enable Reduce animations",
+   "appliance": false
+  }
+ ],
+ "Top left": [
+  {
+   "id": "DL-0287",
+   "op": "view",
+   "message": "View Top left",
+   "appliance": false
+  }
+ ],
+ "Top right": [
+  {
+   "id": "DL-0288",
+   "op": "view",
+   "message": "View Top right",
+   "appliance": false
+  }
+ ],
+ "Circle to Search": [
+  {
+   "id": "DL-0289",
+   "op": "view",
+   "message": "View Circle to Search",
+   "appliance": false
+  }
+ ],
+ "Touch interactions": [
+  {
+   "id": "DL-0290",
+   "op": "off",
+   "message": "Disable Touch interactions",
+   "appliance": false
+  },
+  {
+   "id": "DL-0291",
+   "op": "on",
+   "message": "Enable Touch interactions",
+   "appliance": false
+  },
+  {
+   "id": "DL-0297",
+   "op": "off",
+   "message": "Disable Touch interactions",
+   "appliance": false
+  },
+  {
+   "id": "DL-0298",
+   "op": "on",
+   "message": "Enable Touch interactions",
+   "appliance": false
+  }
+ ],
+ "USB tethering": [
+  {
+   "id": "DL-0293",
+   "op": "view",
+   "message": "View USB Settings",
+   "appliance": false
+  }
+ ],
+ "offURL": [
+  {
+   "id": "DL-0294",
+   "op": "off",
+   "message": "Offurl",
+   "appliance": false
+  }
+ ],
+ "onURL": [
+  {
+   "id": "DL-0295",
+   "op": "on",
+   "message": "Onurl",
+   "appliance": false
+  }
+ ],
+ "Ultra-wideband (UWB)": [
+  {
+   "id": "DL-0296",
+   "op": "view",
+   "message": "View Ultra-wideband (UWB)",
+   "appliance": false
+  }
+ ],
+ "Vibrate while ringing": [
+  {
+   "id": "DL-0299",
+   "op": "off",
+   "message": "Disable Vibrate while ringing",
+   "appliance": false
+  },
+  {
+   "id": "DL-0300",
+   "op": "on",
+   "message": "Enable Vibrate while ringing",
+   "appliance": false
+  }
+ ],
+ "Vibration sound for incoming calls": [
+  {
+   "id": "DL-0301",
+   "op": "off",
+   "message": "Disable Sound Amplification",
+   "appliance": false
+  },
+  {
+   "id": "DL-0302",
+   "op": "on",
+   "message": "Enable Sound Amplification",
+   "appliance": false
+  }
+ ],
+ "Make pattern visible": [
+  {
+   "id": "DL-0303",
+   "op": "view",
+   "message": "View Make pattern visible",
+   "appliance": false
+  }
+ ],
+ "Use Volume buttons for media": [
+  {
+   "id": "DL-0304",
+   "op": "off",
+   "message": "Disable Use Volume buttons for media",
+   "appliance": false
+  },
+  {
+   "id": "DL-0305",
+   "op": "on",
+   "message": "Enable Use Volume buttons for media",
+   "appliance": false
+  }
+ ],
+ "Video effects": [
+  {
+   "id": "DL-0306",
+   "op": "view",
+   "message": "View Video effects",
+   "appliance": false
+  }
+ ],
+ "Call waiting tone": [
+  {
+   "id": "DL-0307",
+   "op": "update",
+   "message": "Adjust Call waiting tone",
+   "appliance": false
+  }
+ ],
+ "Wi-Fi scanning": [
+  {
+   "id": "DL-0308",
+   "op": "view",
+   "message": "View WiFi Settings",
+   "appliance": false
+  },
+  {
+   "id": "DL-0309",
+   "op": "off",
+   "message": "Disable WiFi",
+   "appliance": false
+  },
+  {
+   "id": "DL-0310",
+   "op": "on",
+   "message": "Enable WiFi",
+   "appliance": false
+  }
+ ],
+ "Mobile Hotspot": [
+  {
+   "id": "DL-0311",
+   "op": "off",
+   "message": "Disable WiFi",
+   "appliance": false
+  },
+  {
+   "id": "DL-0312",
+   "op": "on",
+   "message": "Enable WiFi",
+   "appliance": false
+  }
+ ],
+ "Wi-Fi": [
+  {
+   "id": "DL-0313",
+   "op": "view",
+   "message": "View WiFi Settings",
+   "appliance": false
+  },
+  {
+   "id": "DL-0573",
+   "op": "off",
+   "message": "Disable WiFi",
+   "appliance": false
+  },
+  {
+   "id": "DL-0574",
+   "op": "on",
+   "message": "Enable WiFi",
+   "appliance": false
+  }
+ ],
+ "Hide app icon badges": [
+  {
+   "id": "DL-0314",
+   "op": "view",
+   "message": "View Hide app icon badges",
+   "appliance": false
+  }
+ ],
+ "Hide full screen notifications": [
+  {
+   "id": "DL-0315",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Hide from notification panel": [
+  {
+   "id": "DL-0316",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Don't show pop-up notifications": [
+  {
+   "id": "DL-0317",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Hide status bar icons": [
+  {
+   "id": "DL-0318",
+   "op": "view",
+   "message": "View Hide status bar icons",
+   "appliance": false
+  }
+ ],
+ "Alarms": [
+  {
+   "id": "DL-0319",
+   "op": "view",
+   "message": "View Alarm Settings",
+   "appliance": false
+  }
+ ],
+ "Calendar events": [
+  {
+   "id": "DL-0320",
+   "op": "view",
+   "message": "View Calendar events",
+   "appliance": false
+  }
+ ],
+ "Media sound": [
+  {
+   "id": "DL-0321",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Reminders": [
+  {
+   "id": "DL-0322",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Repeat callers": [
+  {
+   "id": "DL-0323",
+   "op": "view",
+   "message": "View Repeat callers",
+   "appliance": false
+  }
+ ],
+ "Touch sounds": [
+  {
+   "id": "DL-0324",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Transparency": [
+  {
+   "id": "DL-0325",
+   "op": "update",
+   "message": "Adjust Transparency",
+   "appliance": false
+  }
+ ],
+ "Show as edge icon": [
+  {
+   "id": "DL-0326",
+   "op": "off",
+   "message": "Disable Show as edge icon",
+   "appliance": false
+  },
+  {
+   "id": "DL-0327",
+   "op": "on",
+   "message": "Enable Show as edge icon",
+   "appliance": false
+  }
+ ],
+ "Replace swipe with single tap": [
+  {
+   "id": "DL-0328",
+   "op": "off",
+   "message": "Disable Replace swipe with single tap",
+   "appliance": false
+  },
+  {
+   "id": "DL-0329",
+   "op": "on",
+   "message": "Enable Replace swipe with single tap",
+   "appliance": false
+  }
+ ],
+ "Speak usage hints": [
+  {
+   "id": "DL-0330",
+   "op": "view",
+   "message": "View Speak usage hints",
+   "appliance": false
+  }
+ ],
+ "Capital letters": [
+  {
+   "id": "DL-0331",
+   "op": "view",
+   "message": "View Capital letters",
+   "appliance": false
+  }
+ ],
+ "Count repeated symbols": [
+  {
+   "id": "DL-0332",
+   "op": "view",
+   "message": "View Count repeated symbols",
+   "appliance": false
+  }
+ ],
+ "Speak element IDs": [
+  {
+   "id": "DL-0333",
+   "op": "view",
+   "message": "View Speak element IDs",
+   "appliance": false
+  }
+ ],
+ "Speak text formatting": [
+  {
+   "id": "DL-0334",
+   "op": "view",
+   "message": "View Speak text formatting",
+   "appliance": false
+  }
+ ],
+ "Use pitch changes": [
+  {
+   "id": "DL-0335",
+   "op": "view",
+   "message": "View Use pitch changes",
+   "appliance": false
+  }
+ ],
+ "Keyboard echo: On-screen keyboard": [
+  {
+   "id": "DL-0336",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Keyboard echo: Physical keyboard": [
+  {
+   "id": "DL-0337",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Speak letters with examples": [
+  {
+   "id": "DL-0338",
+   "op": "view",
+   "message": "View Speak letters with examples",
+   "appliance": false
+  }
+ ],
+ "Speak punctuation and symbols": [
+  {
+   "id": "DL-0339",
+   "op": "view",
+   "message": "View Speak punctuation and symbols",
+   "appliance": false
+  }
+ ],
+ "Speak notifications when screen is off": [
+  {
+   "id": "DL-0340",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Sound feedback": [
+  {
+   "id": "DL-0341",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Sound feedback volume": [
+  {
+   "id": "DL-0342",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Speak container info": [
+  {
+   "id": "DL-0343",
+   "op": "view",
+   "message": "View Speak container info",
+   "appliance": false
+  }
+ ],
+ "Speak element type": [
+  {
+   "id": "DL-0344",
+   "op": "view",
+   "message": "View Speak element type",
+   "appliance": false
+  }
+ ],
+ "Speak window names": [
+  {
+   "id": "DL-0345",
+   "op": "view",
+   "message": "View Speak window names",
+   "appliance": false
+  }
+ ],
+ "Display speech output": [
+  {
+   "id": "DL-0346",
+   "op": "view",
+   "message": "View Display speech output",
+   "appliance": false
+  }
+ ],
+ "Audio ducking": [
+  {
+   "id": "DL-0347",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Always speak number of list items": [
+  {
+   "id": "DL-0348",
+   "op": "view",
+   "message": "View Always speak number of list items",
+   "appliance": false
+  }
+ ],
+ "Choose a preset": [
+  {
+   "id": "DL-0349",
+   "op": "view",
+   "message": "View Reset Options",
+   "appliance": false
+  }
+ ],
+ "When to show": [
+  {
+   "id": "DL-0350",
+   "op": "view",
+   "message": "View When to show",
+   "appliance": false
+  }
+ ],
+ "Erase background": [
+  {
+   "id": "DL-0351",
+   "op": "view",
+   "message": "View Erase background",
+   "appliance": false
+  }
+ ],
+ "Show Now bar": [
+  {
+   "id": "DL-0352",
+   "op": "view",
+   "message": "View Show Now bar",
+   "appliance": false
+  }
+ ],
+ "Show Lock screen wallpaper": [
+  {
+   "id": "DL-0353",
+   "op": "view",
+   "message": "View Show Lock screen wallpaper",
+   "appliance": false
+  }
+ ],
+ "Color palette": [
+  {
+   "id": "DL-0354",
+   "op": "view",
+   "message": "View Color palette",
+   "appliance": false
+  }
+ ],
+ "Dim wallpaper when Dark mode is on": [
+  {
+   "id": "DL-0355",
+   "op": "view",
+   "message": "View Dim wallpaper when Dark mode is on",
+   "appliance": false
+  }
+ ],
+ "Create links using": [
+  {
+   "id": "DL-0356",
+   "op": "view",
+   "message": "View Create links using",
+   "appliance": false
+  }
+ ],
+ "Show available devices on share panel": [
+  {
+   "id": "DL-0357",
+   "op": "view",
+   "message": "View Device Details",
+   "appliance": false
+  }
+ ],
+ "Who can share with you": [
+  {
+   "id": "DL-0358",
+   "op": "view",
+   "message": "View Who can share with you",
+   "appliance": false
+  }
+ ],
+ "Allow sharing over internet": [
+  {
+   "id": "DL-0359",
+   "op": "view",
+   "message": "View Allow sharing over internet",
+   "appliance": false
+  }
+ ],
+ "Share with Apple devices": [
+  {
+   "id": "DL-0360",
+   "op": "view",
+   "message": "View Device Details",
+   "appliance": false
+  }
+ ],
+ "Delete after sharing": [
+  {
+   "id": "DL-0361",
+   "op": "off",
+   "message": "Disable Delete after sharing",
+   "appliance": false
+  },
+  {
+   "id": "DL-0362",
+   "op": "on",
+   "message": "Enable Delete after sharing",
+   "appliance": false
+  }
+ ],
+ "Hide status and navigation bars": [
+  {
+   "id": "DL-0363",
+   "op": "off",
+   "message": "Disable Hide status and navigation bars",
+   "appliance": false
+  },
+  {
+   "id": "DL-0364",
+   "op": "on",
+   "message": "Enable Hide status and navigation bars",
+   "appliance": false
+  }
+ ],
+ "Only record top screen in Flex mode": [
+  {
+   "id": "DL-0365",
+   "op": "off",
+   "message": "Disable Only record top screen in Flex mode",
+   "appliance": false
+  },
+  {
+   "id": "DL-0366",
+   "op": "on",
+   "message": "Enable Only record top screen in Flex mode",
+   "appliance": false
+  }
+ ],
+ "Save original screenshots": [
+  {
+   "id": "DL-0367",
+   "op": "off",
+   "message": "Disable Save original screenshots",
+   "appliance": false
+  },
+  {
+   "id": "DL-0368",
+   "op": "on",
+   "message": "Enable Save original screenshots",
+   "appliance": false
+  }
+ ],
+ "Selfie video size": [
+  {
+   "id": "DL-0369",
+   "op": "view",
+   "message": "View Selfie video size",
+   "appliance": false
+  }
+ ],
+ "Audio to record": [
+  {
+   "id": "DL-0370",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Video quality": [
+  {
+   "id": "DL-0371",
+   "op": "view",
+   "message": "View Video quality",
+   "appliance": false
+  }
+ ],
+ "Format": [
+  {
+   "id": "DL-0372",
+   "op": "view",
+   "message": "View Format",
+   "appliance": false
+  }
+ ],
+ "Show toolbar after capturing": [
+  {
+   "id": "DL-0373",
+   "op": "off",
+   "message": "Disable Show toolbar after capturing",
+   "appliance": false
+  },
+  {
+   "id": "DL-0374",
+   "op": "on",
+   "message": "Enable Show toolbar after capturing",
+   "appliance": false
+  }
+ ],
+ "Show taps and touches": [
+  {
+   "id": "DL-0375",
+   "op": "off",
+   "message": "Disable Show taps and touches",
+   "appliance": false
+  },
+  {
+   "id": "DL-0376",
+   "op": "on",
+   "message": "Enable Show taps and touches",
+   "appliance": false
+  }
+ ],
+ "Backspace speed": [
+  {
+   "id": "DL-0377",
+   "op": "view",
+   "message": "View Backspace speed",
+   "appliance": false
+  }
+ ],
+ "Auto capitalize": [
+  {
+   "id": "DL-0378",
+   "op": "view",
+   "message": "View Auto capitalize",
+   "appliance": false
+  }
+ ],
+ "Double tap space bar to add period": [
+  {
+   "id": "DL-0379",
+   "op": "view",
+   "message": "View Double tap space bar to add period",
+   "appliance": false
+  }
+ ],
+ "Suggest emojis": [
+  {
+   "id": "DL-0380",
+   "op": "view",
+   "message": "View Suggest emojis",
+   "appliance": false
+  }
+ ],
+ "Suggest stickers": [
+  {
+   "id": "DL-0381",
+   "op": "view",
+   "message": "View Suggest stickers",
+   "appliance": false
+  }
+ ],
+ "Galaxy Avatar": [
+  {
+   "id": "DL-0382",
+   "op": "view",
+   "message": "View Galaxy Avatar",
+   "appliance": false
+  }
+ ],
+ "Emoji pairs": [
+  {
+   "id": "DL-0383",
+   "op": "view",
+   "message": "View Emoji pairs",
+   "appliance": false
+  }
+ ],
+ "Preloaded and downloaded stickers": [
+  {
+   "id": "DL-0384",
+   "op": "view",
+   "message": "View Preloaded and downloaded stickers",
+   "appliance": false
+  }
+ ],
+ "Number keys": [
+  {
+   "id": "DL-0385",
+   "op": "view",
+   "message": "View Number keys",
+   "appliance": false
+  }
+ ],
+ "Alternative characters": [
+  {
+   "id": "DL-0386",
+   "op": "view",
+   "message": "View Alternative characters",
+   "appliance": false
+  }
+ ],
+ "Keyboard swipe controls": [
+  {
+   "id": "DL-0388",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Multilanguage text prediction": [
+  {
+   "id": "DL-0389",
+   "op": "view",
+   "message": "View Multilanguage text prediction",
+   "appliance": false
+  }
+ ],
+ "Keep symbol panel open": [
+  {
+   "id": "DL-0390",
+   "op": "view",
+   "message": "View Keep symbol panel open",
+   "appliance": false
+  }
+ ],
+ "Predict phrases": [
+  {
+   "id": "DL-0391",
+   "op": "view",
+   "message": "View Predict phrases",
+   "appliance": false
+  }
+ ],
+ "Save screenshots to clipboard": [
+  {
+   "id": "DL-0392",
+   "op": "view",
+   "message": "View Save screenshots to clipboard",
+   "appliance": false
+  }
+ ],
+ "Keyboard touch and hold delay": [
+  {
+   "id": "DL-0394",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Touch and hold space bar": [
+  {
+   "id": "DL-0395",
+   "op": "view",
+   "message": "View Touch and hold space bar",
+   "appliance": false
+  }
+ ],
+ "Keyboard toolbar": [
+  {
+   "id": "DL-0396",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Adaptive battery": [
+  {
+   "id": "DL-0397",
+   "op": "off",
+   "message": "Disable Adaptive Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0398",
+   "op": "on",
+   "message": "Enable Adaptive Display",
+   "appliance": false
+  }
+ ],
+ "Adaptive power saving": [
+  {
+   "id": "DL-0399",
+   "op": "off",
+   "message": "Disable Adaptive Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0400",
+   "op": "on",
+   "message": "Enable Adaptive Display",
+   "appliance": false
+  }
+ ],
+ "Auto dim screen": [
+  {
+   "id": "DL-0401",
+   "op": "off",
+   "message": "Disable Auto dim screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0402",
+   "op": "on",
+   "message": "Enable Auto dim screen",
+   "appliance": false
+  }
+ ],
+ "Fast charging": [
+  {
+   "id": "DL-0403",
+   "op": "off",
+   "message": "Disable Fast charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0404",
+   "op": "on",
+   "message": "Enable Fast charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0514",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Fast wireless charging": [
+  {
+   "id": "DL-0405",
+   "op": "off",
+   "message": "Disable Fast wireless charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0406",
+   "op": "on",
+   "message": "Enable Fast wireless charging",
+   "appliance": false
+  },
+  {
+   "id": "DL-0515",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Battery protection": [
+  {
+   "id": "DL-0409",
+   "op": "off",
+   "message": "Disable Battery protection",
+   "appliance": false
+  },
+  {
+   "id": "DL-0410",
+   "op": "on",
+   "message": "Enable Battery protection",
+   "appliance": false
+  },
+  {
+   "id": "DL-0517",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Power saving": [
+  {
+   "id": "DL-0411",
+   "op": "off",
+   "message": "Disable Power saving",
+   "appliance": false
+  },
+  {
+   "id": "DL-0412",
+   "op": "on",
+   "message": "Enable Power saving",
+   "appliance": false
+  },
+  {
+   "id": "DL-0519",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Wireless power sharing": [
+  {
+   "id": "DL-0413",
+   "op": "off",
+   "message": "Disable Wireless power sharing",
+   "appliance": false
+  },
+  {
+   "id": "DL-0414",
+   "op": "on",
+   "message": "Enable Wireless power sharing",
+   "appliance": false
+  }
+ ],
+ "Sleep time protection": [
+  {
+   "id": "DL-0415",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Put unused apps to sleep": [
+  {
+   "id": "DL-0416",
+   "op": "off",
+   "message": "Disable Put unused apps to sleep",
+   "appliance": false
+  },
+  {
+   "id": "DL-0417",
+   "op": "on",
+   "message": "Enable Put unused apps to sleep",
+   "appliance": false
+  },
+  {
+   "id": "DL-0544",
+   "op": "view",
+   "message": "View Put unused apps to sleep",
+   "appliance": false
+  }
+ ],
+ "Performance profile": [
+  {
+   "id": "DL-0418",
+   "op": "update",
+   "message": "Adjust Performance profile",
+   "appliance": false
+  }
+ ],
+ "Restart on schedule": [
+  {
+   "id": "DL-0419",
+   "op": "view",
+   "message": "View Restart on schedule",
+   "appliance": false
+  }
+ ],
+ "Show Device care on Apps screen": [
+  {
+   "id": "DL-0420",
+   "op": "off",
+   "message": "Disable Show Device care on Apps screen",
+   "appliance": false
+  },
+  {
+   "id": "DL-0421",
+   "op": "on",
+   "message": "Enable Show Device care on Apps screen",
+   "appliance": false
+  }
+ ],
+ "Air view": [
+  {
+   "id": "DL-0424",
+   "op": "off",
+   "message": "Disable Air view",
+   "appliance": false
+  },
+  {
+   "id": "DL-0425",
+   "op": "on",
+   "message": "Enable Air view",
+   "appliance": false
+  }
+ ],
+ "Warn if S Pen is left behind": [
+  {
+   "id": "DL-0426",
+   "op": "off",
+   "message": "Disable Warn if S Pen is left behind",
+   "appliance": false
+  },
+  {
+   "id": "DL-0427",
+   "op": "on",
+   "message": "Enable Warn if S Pen is left behind",
+   "appliance": false
+  }
+ ],
+ "Quick notes": [
+  {
+   "id": "DL-0428",
+   "op": "off",
+   "message": "Disable Quick notes",
+   "appliance": false
+  },
+  {
+   "id": "DL-0429",
+   "op": "on",
+   "message": "Enable Quick notes",
+   "appliance": false
+  }
+ ],
+ "S Pen to text": [
+  {
+   "id": "DL-0430",
+   "op": "off",
+   "message": "Disable S Pen to text",
+   "appliance": false
+  },
+  {
+   "id": "DL-0431",
+   "op": "on",
+   "message": "Enable S Pen to text",
+   "appliance": false
+  }
+ ],
+ "Show Air command icon": [
+  {
+   "id": "DL-0432",
+   "op": "off",
+   "message": "Disable Show Air command icon",
+   "appliance": false
+  },
+  {
+   "id": "DL-0433",
+   "op": "on",
+   "message": "Enable Show Air command icon",
+   "appliance": false
+  }
+ ],
+ "Open Air command with Pen button": [
+  {
+   "id": "DL-0434",
+   "op": "off",
+   "message": "Disable Open Air command with Pen button",
+   "appliance": false
+  },
+  {
+   "id": "DL-0435",
+   "op": "on",
+   "message": "Enable Open Air command with Pen button",
+   "appliance": false
+  }
+ ],
+ "Allow multiple S Pens": [
+  {
+   "id": "DL-0436",
+   "op": "off",
+   "message": "Disable Allow multiple S Pens",
+   "appliance": false
+  },
+  {
+   "id": "DL-0437",
+   "op": "on",
+   "message": "Enable Allow multiple S Pens",
+   "appliance": false
+  }
+ ],
+ "Screen off memos": [
+  {
+   "id": "DL-0438",
+   "op": "off",
+   "message": "Disable Screen off memos",
+   "appliance": false
+  },
+  {
+   "id": "DL-0439",
+   "op": "on",
+   "message": "Enable Screen off memos",
+   "appliance": false
+  }
+ ],
+ "Sounds": [
+  {
+   "id": "DL-0440",
+   "op": "off",
+   "message": "Disable Sound Amplification",
+   "appliance": false
+  },
+  {
+   "id": "DL-0441",
+   "op": "on",
+   "message": "Enable Sound Amplification",
+   "appliance": false
+  }
+ ],
+ "Vibrations": [
+  {
+   "id": "DL-0442",
+   "op": "off",
+   "message": "Disable Vibrations",
+   "appliance": false
+  },
+  {
+   "id": "DL-0443",
+   "op": "on",
+   "message": "Enable Vibrations",
+   "appliance": false
+  }
+ ],
+ "When S Pen is removed": [
+  {
+   "id": "DL-0444",
+   "op": "update",
+   "message": "Adjust When S Pen is removed",
+   "appliance": false
+  }
+ ],
+ "Expand Now brief without unlocking": [
+  {
+   "id": "DL-0445",
+   "op": "off",
+   "message": "Disable Expand Now brief without unlocking",
+   "appliance": false
+  },
+  {
+   "id": "DL-0446",
+   "op": "on",
+   "message": "Enable Expand Now brief without unlocking",
+   "appliance": false
+  }
+ ],
+ "Now nudge": [
+  {
+   "id": "DL-0447",
+   "op": "off",
+   "message": "Disable Now nudge",
+   "appliance": false
+  },
+  {
+   "id": "DL-0448",
+   "op": "on",
+   "message": "Enable Now nudge",
+   "appliance": false
+  }
+ ],
+ "Folder grid": [
+  {
+   "id": "DL-0449",
+   "op": "view",
+   "message": "View Folder grid",
+   "appliance": false
+  }
+ ],
+ "Add new apps to Home screen": [
+  {
+   "id": "DL-0450",
+   "op": "view",
+   "message": "View Add new apps to Home screen",
+   "appliance": false
+  }
+ ],
+ "Show Apps screen button on Home screen": [
+  {
+   "id": "DL-0452",
+   "op": "view",
+   "message": "View Show Apps screen button on Home screen",
+   "appliance": false
+  }
+ ],
+ "Apps screen grid": [
+  {
+   "id": "DL-0453",
+   "op": "view",
+   "message": "View Apps screen grid",
+   "appliance": false
+  }
+ ],
+ "Home screen grid": [
+  {
+   "id": "DL-0454",
+   "op": "view",
+   "message": "View Home screen grid",
+   "appliance": false
+  }
+ ],
+ "Home screen layout": [
+  {
+   "id": "DL-0455",
+   "op": "view",
+   "message": "View Home screen layout",
+   "appliance": false
+  }
+ ],
+ "Show app labels on Home screen": [
+  {
+   "id": "DL-0456",
+   "op": "view",
+   "message": "View Show app labels on Home screen",
+   "appliance": false
+  }
+ ],
+ "Lock Home screen layout": [
+  {
+   "id": "DL-0457",
+   "op": "off",
+   "message": "Disable Lock Home screen layout",
+   "appliance": false
+  },
+  {
+   "id": "DL-0458",
+   "op": "on",
+   "message": "Enable Lock Home screen layout",
+   "appliance": false
+  },
+  {
+   "id": "DL-0543",
+   "op": "view",
+   "message": "View Lock Home screen layout",
+   "appliance": false
+  }
+ ],
+ "Add media page to Home screen": [
+  {
+   "id": "DL-0459",
+   "op": "view",
+   "message": "View Add media page to Home screen",
+   "appliance": false
+  }
+ ],
+ "Swipe down for notification panel": [
+  {
+   "id": "DL-0460",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Rotate to landscape mode": [
+  {
+   "id": "DL-0461",
+   "op": "view",
+   "message": "View Rotate to landscape mode",
+   "appliance": false
+  }
+ ],
+ "Show labels for featured widgets": [
+  {
+   "id": "DL-0462",
+   "op": "view",
+   "message": "View Show labels for featured widgets",
+   "appliance": false
+  }
+ ],
+ "Dolby Atmos": [
+  {
+   "id": "DL-0464",
+   "op": "off",
+   "message": "Disable Dolby Atmos",
+   "appliance": false
+  },
+  {
+   "id": "DL-0465",
+   "op": "on",
+   "message": "Enable Dolby Atmos",
+   "appliance": false
+  }
+ ],
+ "UHQ upscaler": [
+  {
+   "id": "DL-0466",
+   "op": "view",
+   "message": "View UHQ upscaler",
+   "appliance": false
+  }
+ ],
+ "Loudness normalization": [
+  {
+   "id": "DL-0467",
+   "op": "view",
+   "message": "View Loudness normalization",
+   "appliance": false
+  }
+ ],
+ "Air Conditioner Mode Status": [
+  {
+   "id": "DL-0468",
+   "op": "view",
+   "message": "Set Air Conditioner Mode",
+   "appliance": true
+  }
+ ],
+ "Refrigerator Auto Open Door Status": [
+  {
+   "id": "DL-0469",
+   "op": "view",
+   "message": "Refrigerator Auto Open Door Status",
+   "appliance": true
+  }
+ ],
+ "Screen Timeout": [
+  {
+   "id": "DL-0471",
+   "op": "view",
+   "message": "Check Screen Timeout",
+   "appliance": false
+  }
+ ],
+ "Current Setting": [
+  {
+   "id": "DL-0472",
+   "op": "view",
+   "message": "Check Current Setting",
+   "appliance": false
+  }
+ ],
+ "Refrigerator Temperature Settings Status": [
+  {
+   "id": "DL-0473",
+   "op": "view",
+   "message": "Refrigerator Temperature Settings Status",
+   "appliance": true
+  }
+ ],
+ "Battery Drain": [
+  {
+   "id": "DL-0474",
+   "op": "view",
+   "message": "Diagnose Battery Drain",
+   "appliance": false
+  }
+ ],
+ "Slow Performance": [
+  {
+   "id": "DL-0475",
+   "op": "view",
+   "message": "Diagnose Slow Performance",
+   "appliance": false
+  }
+ ],
+ "Overheating": [
+  {
+   "id": "DL-0476",
+   "op": "view",
+   "message": "Diagnose Overheating",
+   "appliance": false
+  }
+ ],
+ "Diagnose battery status": [
+  {
+   "id": "DL-0477",
+   "op": "view",
+   "message": "View Diagnose battery status",
+   "appliance": false
+  }
+ ],
+ "Diagnose device status with Samsung Members App": [
+  {
+   "id": "DL-0478",
+   "op": "view",
+   "message": "View Device Details",
+   "appliance": false
+  }
+ ],
+ "Restart the device when needed": [
+  {
+   "id": "DL-0479",
+   "op": "off",
+   "message": "Disable Auto Restart",
+   "appliance": false
+  },
+  {
+   "id": "DL-0480",
+   "op": "on",
+   "message": "Enable Auto Restart",
+   "appliance": false
+  }
+ ],
+ "App notifications": [
+  {
+   "id": "DL-0481",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Always On Display": [
+  {
+   "id": "DL-0482",
+   "op": "off",
+   "message": "Disable Always On Display",
+   "appliance": false
+  },
+  {
+   "id": "DL-0483",
+   "op": "on",
+   "message": "Enable Always On Display",
+   "appliance": false
+  }
+ ],
+ "Real-time data priority processing": [
+  {
+   "id": "DL-0484",
+   "op": "view",
+   "message": "View Timeout Settings",
+   "appliance": false
+  }
+ ],
+ "Wireless emergency alerts": [
+  {
+   "id": "DL-0485",
+   "op": "view",
+   "message": "View Wireless emergency alerts",
+   "appliance": false
+  }
+ ],
+ "Audio Format": [
+  {
+   "id": "DL-0486",
+   "op": "update",
+   "message": "Adjust Audio Format",
+   "appliance": true
+  }
+ ],
+ "Sort and filter notifications": [
+  {
+   "id": "DL-0487",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "Auto Screen Dim": [
+  {
+   "id": "DL-0488",
+   "op": "off",
+   "message": "Disable Auto Screen Dim",
+   "appliance": true
+  },
+  {
+   "id": "DL-0489",
+   "op": "on",
+   "message": "Enable Auto Screen Dim",
+   "appliance": true
+  }
+ ],
+ "Auto sync data": [
+  {
+   "id": "DL-0490",
+   "op": "view",
+   "message": "View Sync Settings",
+   "appliance": false
+  }
+ ],
+ "Turn Wi-Fi on automatically": [
+  {
+   "id": "DL-0492",
+   "op": "view",
+   "message": "View WiFi Settings",
+   "appliance": false
+  }
+ ],
+ "Adjust Brightness": [
+  {
+   "id": "DL-0496",
+   "op": "view",
+   "message": "View Adjust Brightness",
+   "appliance": false
+  }
+ ],
+ "Brightness Optimization": [
+  {
+   "id": "DL-0497",
+   "op": "off",
+   "message": "Enable Adaptive Display",
+   "appliance": true
+  },
+  {
+   "id": "DL-0498",
+   "op": "on",
+   "message": "Enable Adaptive Display",
+   "appliance": true
+  }
+ ],
+ "Change language shortcut": [
+  {
+   "id": "DL-0499",
+   "op": "view",
+   "message": "View Change language shortcut",
+   "appliance": false
+  }
+ ],
+ "Offline finding": [
+  {
+   "id": "DL-0500",
+   "op": "view",
+   "message": "View Offline finding",
+   "appliance": false
+  }
+ ],
+ "Dynamic Contrast": [
+  {
+   "id": "DL-0502",
+   "op": "update",
+   "message": "Adjust Contrast",
+   "appliance": true
+  }
+ ],
+ "Emergency contacts": [
+  {
+   "id": "DL-0503",
+   "op": "view",
+   "message": "View Emergency contacts",
+   "appliance": false
+  }
+ ],
+ "Ethernet tethering": [
+  {
+   "id": "DL-0504",
+   "op": "view",
+   "message": "View Ethernet tethering",
+   "appliance": false
+  }
+ ],
+ "Energy Saving Solution": [
+  {
+   "id": "DL-0507",
+   "op": "off",
+   "message": "Disable Energy Saving Solution",
+   "appliance": true
+  },
+  {
+   "id": "DL-0508",
+   "op": "on",
+   "message": "Enable Energy Saving Solution",
+   "appliance": true
+  }
+ ],
+ "Enhanced comfort": [
+  {
+   "id": "DL-0509",
+   "op": "view",
+   "message": "View Enhanced comfort",
+   "appliance": false
+  }
+ ],
+ "Side button": [
+  {
+   "id": "DL-0510",
+   "op": "view",
+   "message": "View Side button",
+   "appliance": false
+  }
+ ],
+ "Anynet+": [
+  {
+   "id": "DL-0511",
+   "op": "off",
+   "message": "Disable Anynet+",
+   "appliance": true
+  },
+  {
+   "id": "DL-0512",
+   "op": "on",
+   "message": "Enable Anynet+",
+   "appliance": true
+  }
+ ],
+ "Intelligent Wi-Fi": [
+  {
+   "id": "DL-0513",
+   "op": "view",
+   "message": "View WiFi Settings",
+   "appliance": false
+  }
+ ],
+ "Select to show remaining battery capacity": [
+  {
+   "id": "DL-0518",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Ringtone sync": [
+  {
+   "id": "DL-0520",
+   "op": "view",
+   "message": "View Sync Settings",
+   "appliance": false
+  }
+ ],
+ "Enhanced data protection": [
+  {
+   "id": "DL-0521",
+   "op": "off",
+   "message": "Disable Enhanced data protection",
+   "appliance": false
+  },
+  {
+   "id": "DL-0522",
+   "op": "on",
+   "message": "Enable Enhanced data protection",
+   "appliance": false
+  }
+ ],
+ "Brighten screen": [
+  {
+   "id": "DL-0523",
+   "op": "view",
+   "message": "View Brighten screen",
+   "appliance": false
+  }
+ ],
+ "Require open eyes": [
+  {
+   "id": "DL-0524",
+   "op": "view",
+   "message": "View Require open eyes",
+   "appliance": false
+  }
+ ],
+ "Samsung account security": [
+  {
+   "id": "DL-0525",
+   "op": "view",
+   "message": "View Samsung account security",
+   "appliance": false
+  }
+ ],
+ "Screenshots and screen recordings": [
+  {
+   "id": "DL-0526",
+   "op": "view",
+   "message": "View Screenshots and screen recordings",
+   "appliance": false
+  }
+ ],
+ "Mobile networks": [
+  {
+   "id": "DL-0529",
+   "op": "view",
+   "message": "View Mobile networks",
+   "appliance": false
+  }
+ ],
+ "Detect suspicious networks": [
+  {
+   "id": "DL-0530",
+   "op": "view",
+   "message": "View Detect suspicious networks",
+   "appliance": false
+  }
+ ],
+ "Motion Lighting": [
+  {
+   "id": "DL-0531",
+   "op": "off",
+   "message": "Disable Motion Lighting",
+   "appliance": true
+  },
+  {
+   "id": "DL-0532",
+   "op": "on",
+   "message": "Enable Motion Lighting",
+   "appliance": true
+  }
+ ],
+ "Acceleration reflected in cursor movement": [
+  {
+   "id": "DL-0533",
+   "op": "view",
+   "message": "View Mouse Keys Settings",
+   "appliance": false
+  }
+ ],
+ "Connected devices": [
+  {
+   "id": "DL-0534",
+   "op": "view",
+   "message": "View Device Details",
+   "appliance": false
+  }
+ ],
+ "Wi-Fi network notifications": [
+  {
+   "id": "DL-0536",
+   "op": "view",
+   "message": "View Notification Settings",
+   "appliance": false
+  }
+ ],
+ "One-handed mode": [
+  {
+   "id": "DL-0537",
+   "op": "view",
+   "message": "View One-handed mode",
+   "appliance": false
+  }
+ ],
+ "Device Performance": [
+  {
+   "id": "DL-0538",
+   "op": "view",
+   "message": "Optimize Device Performance",
+   "appliance": false
+  }
+ ],
+ "More security settings": [
+  {
+   "id": "DL-0539",
+   "op": "view",
+   "message": "View More security settings",
+   "appliance": false
+  }
+ ],
+ "Picture Mode": [
+  {
+   "id": "DL-0540",
+   "op": "update",
+   "message": "Adjust Picture Mode",
+   "appliance": true
+  }
+ ],
+ "Back up data (Samsung Cloud)": [
+  {
+   "id": "DL-0541",
+   "op": "off",
+   "message": "Disable Back up data (Samsung Cloud)",
+   "appliance": false
+  },
+  {
+   "id": "DL-0542",
+   "op": "on",
+   "message": "Enable Back up data (Samsung Cloud)",
+   "appliance": false
+  }
+ ],
+ "Quick Share": [
+  {
+   "id": "DL-0545",
+   "op": "view",
+   "message": "View Quick Share",
+   "appliance": false
+  }
+ ],
+ "Automatic security risk blocking": [
+  {
+   "id": "DL-0546",
+   "op": "view",
+   "message": "View Security Settings",
+   "appliance": false
+  }
+ ],
+ "Allow this phone to be found": [
+  {
+   "id": "DL-0547",
+   "op": "view",
+   "message": "View Allow this phone to be found",
+   "appliance": false
+  }
+ ],
+ "Show unlock transition effect": [
+  {
+   "id": "DL-0548",
+   "op": "view",
+   "message": "View Show unlock transition effect",
+   "appliance": false
+  }
+ ],
+ "Send last location": [
+  {
+   "id": "DL-0550",
+   "op": "view",
+   "message": "View Send last location",
+   "appliance": false
+  }
+ ],
+ "Fingerprint unlock": [
+  {
+   "id": "DL-0551",
+   "op": "view",
+   "message": "View Fingerprint unlock",
+   "appliance": false
+  }
+ ],
+ "Show battery percentage": [
+  {
+   "id": "DL-0552",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Add eSIM": [
+  {
+   "id": "DL-0553",
+   "op": "view",
+   "message": "View Add eSIM",
+   "appliance": false
+  }
+ ],
+ "SIM manager": [
+  {
+   "id": "DL-0554",
+   "op": "off",
+   "message": "Disable SIM manager",
+   "appliance": false
+  },
+  {
+   "id": "DL-0555",
+   "op": "on",
+   "message": "Enable SIM manager",
+   "appliance": false
+  }
+ ],
+ "Sound quality and effects": [
+  {
+   "id": "DL-0556",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "System sound": [
+  {
+   "id": "DL-0558",
+   "op": "view",
+   "message": "View Sound Settings",
+   "appliance": false
+  }
+ ],
+ "Temporary mute": [
+  {
+   "id": "DL-0559",
+   "op": "view",
+   "message": "View Temporary mute",
+   "appliance": false
+  }
+ ],
+ "Battery": [
+  {
+   "id": "DL-0560",
+   "op": "view",
+   "message": "Check Battery Performance",
+   "appliance": false
+  }
+ ],
+ "Home screen": [
+  {
+   "id": "DL-0561",
+   "op": "view",
+   "message": "View Home screen",
+   "appliance": false
+  }
+ ],
+ "Sound Mode": [
+  {
+   "id": "DL-0562",
+   "op": "update",
+   "message": "Adjust Volume",
+   "appliance": true
+  }
+ ],
+ "Vibration intensity": [
+  {
+   "id": "DL-0563",
+   "op": "update",
+   "message": "Adjust Vibration intensity",
+   "appliance": false
+  }
+ ],
+ "System vibration": [
+  {
+   "id": "DL-0564",
+   "op": "view",
+   "message": "View System vibration",
+   "appliance": false
+  }
+ ],
+ "Keyboard": [
+  {
+   "id": "DL-0565",
+   "op": "view",
+   "message": "View Magnification Settings",
+   "appliance": false
+  }
+ ],
+ "Voice Wake-up": [
+  {
+   "id": "DL-0566",
+   "op": "off",
+   "message": "Disable Voice Wake-up",
+   "appliance": true
+  },
+  {
+   "id": "DL-0567",
+   "op": "on",
+   "message": "Enable Voice Wake-up",
+   "appliance": true
+  }
+ ],
+ "Voice Guide": [
+  {
+   "id": "DL-0568",
+   "op": "off",
+   "message": "Disable Voice Guide",
+   "appliance": true
+  },
+  {
+   "id": "DL-0569",
+   "op": "on",
+   "message": "Enable Voice Guide",
+   "appliance": true
+  }
+ ],
+ "Volume": [
+  {
+   "id": "DL-0570",
+   "op": "view",
+   "message": "View Volume Settings",
+   "appliance": false
+  }
+ ],
+ "Hotspot 2.0": [
+  {
+   "id": "DL-0571",
+   "op": "view",
+   "message": "View WiFi Settings",
+   "appliance": false
+  }
+ ],
+ "Switch to mobile data": [
+  {
+   "id": "DL-0572",
+   "op": "view",
+   "message": "View WiFi Settings",
+   "appliance": false
+  }
+ ],
+ "Calls and messages": [
+  {
+   "id": "DL-0575",
+   "op": "update",
+   "message": "Enable Zen Mode",
+   "appliance": false
+  }
+ ],
+ "Check Samsung Care+ subscription": [
+  {
+   "id": "DL-0576",
+   "op": "view",
+   "message": "View Check Samsung Care+ subscription",
+   "appliance": false
+  }
+ ],
+ "Check warranty period": [
+  {
+   "id": "DL-0577",
+   "op": "view",
+   "message": "View Warranty Details",
+   "appliance": false
+  }
+ ]
+}

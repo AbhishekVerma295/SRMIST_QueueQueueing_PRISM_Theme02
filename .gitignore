@@ -1,0 +1,23 @@
+# secrets
+.env
+
+# Samsung-provided documents (employee watermark / DRM) — never publish
+/*.pdf
+*_FAQ_*
+*Submission.pptx
+
+# local scratch, caches, envs
+.tmp/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.cache/
+models_cache/
+
+# editor
+.vscode/
+.idea/
+
+# generated at build time (Docker rebuilds it)
+data/derived/cache.sqlite

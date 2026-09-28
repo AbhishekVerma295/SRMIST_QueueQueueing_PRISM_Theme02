@@ -1,0 +1,11 @@
+.venv
+.tmp
+.git
+.env
+models_cache
+**/__pycache__
+.pytest_cache
+*.pdf
+*.pptx
+*.docx
+data/derived/cache.sqlite

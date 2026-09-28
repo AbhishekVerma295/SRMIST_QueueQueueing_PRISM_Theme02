@@ -1,0 +1,10 @@
+services:
+  troubleshoot:
+    build: .
+    image: smart-guided-troubleshooting:latest
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
