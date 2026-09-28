@@ -54,8 +54,8 @@ python -m pytest -q                # contract + API tests
 ```
 
 ## Repository layout
-`app/` engine · `starter_kit/` kit files (unchanged) · `data/derived/` generated index and cache · `scripts/` build/warm/results/labelling · `eval/` evaluation and gold labels · `tests/` · `ui/` · `Dockerfile`, `docker-compose.yml`
+`app/` engine · `starter_kit/Theme 2/` official kit (unchanged) · `data/derived/` generated index and cache · `scripts/` build/warm/results/labelling · `eval/` evaluation and gold labels · `tests/` · `ui/` · `Dockerfile`, `docker-compose.yml`
 
 ## Notes
-- `starter_kit/` is the kit version that most public participant repos agree on (see `starter_kit/SOURCE.md`).
+- `starter_kit/Theme 2/` is the official Theme 2 kit (brand-neutral: `voiceassist://` deeplinks, TechCorp/Nexa device names). See `starter_kit/SOURCE.md`.
 - `sample_output.json` has descriptions of 8 and 12 words. We follow the spec's rule of exactly 5–7 words starting with "It will".

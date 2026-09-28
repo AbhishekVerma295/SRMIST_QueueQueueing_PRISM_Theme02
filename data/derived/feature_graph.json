@@ -299,7 +299,7 @@
   {
    "id": "DL-0037",
    "op": "update",
-   "message": "Increase Bixby Volume",
+   "message": "Increase VoiceAssist Volume",
    "appliance": false
   }
  ],
@@ -731,17 +731,17 @@
    "appliance": false
   }
  ],
- "Edge panels": [
+ "Quick Access panels": [
   {
    "id": "DL-0095",
    "op": "off",
-   "message": "Disable Edge panels",
+   "message": "Disable Quick Access panels",
    "appliance": false
   },
   {
    "id": "DL-0096",
    "op": "on",
-   "message": "Enable Edge panels",
+   "message": "Enable Quick Access panels",
    "appliance": false
   }
  ],
@@ -893,7 +893,7 @@
    "appliance": false
   }
  ],
- "Galaxy system app update": [
+ "Nexa system app update": [
   {
    "id": "DL-0115",
    "op": "view",
@@ -1003,7 +1003,7 @@
    "appliance": false
   }
  ],
- "Sync with Samsung Cloud": [
+ "Sync with TechCorp Cloud": [
   {
    "id": "DL-0129",
    "op": "view",
@@ -1111,29 +1111,29 @@
    "appliance": false
   }
  ],
- "Samsung Keyboard": [
+ "TechCorp Keyboard": [
   {
    "id": "DL-0142",
    "op": "off",
-   "message": "Disable Samsung Keyboard",
+   "message": "Disable TechCorp Keyboard",
    "appliance": false
   },
   {
    "id": "DL-0143",
    "op": "on",
-   "message": "Enable Samsung Keyboard",
+   "message": "Enable TechCorp Keyboard",
    "appliance": false
   },
   {
    "id": "DL-0144",
    "op": "off",
-   "message": "Disable Samsung Keyboard",
+   "message": "Disable TechCorp Keyboard",
    "appliance": false
   },
   {
    "id": "DL-0145",
    "op": "on",
-   "message": "Enable Samsung Keyboard",
+   "message": "Enable TechCorp Keyboard",
    "appliance": false
   }
  ],
@@ -2971,11 +2971,11 @@
    "appliance": false
   }
  ],
- "Galaxy Avatar": [
+ "Nexa Avatar": [
   {
    "id": "DL-0382",
    "op": "view",
-   "message": "View Galaxy Avatar",
+   "message": "View Nexa Avatar",
    "appliance": false
   }
  ],
@@ -3283,17 +3283,17 @@
    "appliance": false
   }
  ],
- "Warn if S Pen is left behind": [
+ "Warn if Stylus Pen is left behind": [
   {
    "id": "DL-0426",
    "op": "off",
-   "message": "Disable Warn if S Pen is left behind",
+   "message": "Disable Warn if Stylus Pen is left behind",
    "appliance": false
   },
   {
    "id": "DL-0427",
    "op": "on",
-   "message": "Enable Warn if S Pen is left behind",
+   "message": "Enable Warn if Stylus Pen is left behind",
    "appliance": false
   }
  ],
@@ -3311,17 +3311,17 @@
    "appliance": false
   }
  ],
- "S Pen to text": [
+ "Stylus Pen to text": [
   {
    "id": "DL-0430",
    "op": "off",
-   "message": "Disable S Pen to text",
+   "message": "Disable Stylus Pen to text",
    "appliance": false
   },
   {
    "id": "DL-0431",
    "op": "on",
-   "message": "Enable S Pen to text",
+   "message": "Enable Stylus Pen to text",
    "appliance": false
   }
  ],
@@ -3353,17 +3353,17 @@
    "appliance": false
   }
  ],
- "Allow multiple S Pens": [
+ "Allow multiple Stylus Pens": [
   {
    "id": "DL-0436",
    "op": "off",
-   "message": "Disable Allow multiple S Pens",
+   "message": "Disable Allow multiple Stylus Pens",
    "appliance": false
   },
   {
    "id": "DL-0437",
    "op": "on",
-   "message": "Enable Allow multiple S Pens",
+   "message": "Enable Allow multiple Stylus Pens",
    "appliance": false
   }
  ],
@@ -3409,11 +3409,11 @@
    "appliance": false
   }
  ],
- "When S Pen is removed": [
+ "When Stylus Pen is removed": [
   {
    "id": "DL-0444",
    "op": "update",
-   "message": "Adjust When S Pen is removed",
+   "message": "Adjust When Stylus Pen is removed",
    "appliance": false
   }
  ],
@@ -3655,7 +3655,7 @@
    "appliance": false
   }
  ],
- "Diagnose device status with Samsung Members App": [
+ "Diagnose device status with TechCorp Members App": [
   {
    "id": "DL-0478",
    "op": "view",
@@ -3921,11 +3921,11 @@
    "appliance": false
   }
  ],
- "Samsung account security": [
+ "TechCorp account security": [
   {
    "id": "DL-0525",
    "op": "view",
-   "message": "View Samsung account security",
+   "message": "View TechCorp account security",
    "appliance": false
   }
  ],
@@ -4023,17 +4023,17 @@
    "appliance": true
   }
  ],
- "Back up data (Samsung Cloud)": [
+ "Back up data (TechCorp Cloud)": [
   {
    "id": "DL-0541",
    "op": "off",
-   "message": "Disable Back up data (Samsung Cloud)",
+   "message": "Disable Back up data (TechCorp Cloud)",
    "appliance": false
   },
   {
    "id": "DL-0542",
    "op": "on",
-   "message": "Enable Back up data (Samsung Cloud)",
+   "message": "Enable Back up data (TechCorp Cloud)",
    "appliance": false
   }
  ],
@@ -4247,11 +4247,11 @@
    "appliance": false
   }
  ],
- "Check Samsung Care+ subscription": [
+ "Check TechCorp Care+ subscription": [
   {
    "id": "DL-0576",
    "op": "view",
-   "message": "View Check Samsung Care+ subscription",
+   "message": "View Check TechCorp Care+ subscription",
    "appliance": false
   }
  ],

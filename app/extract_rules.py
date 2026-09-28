@@ -30,7 +30,7 @@ SETTINGS_PATH_RE = re.compile(
 )
 PATH_STEP_RE = re.compile(r"(?:>|,\s*(?:and\s+)?(?:then\s+)?tap|\bthen\s+tap|\btap(?: on)?|\bselect)\s+(?:the\s+)?(?:switch next to\s+)?(?P<item>[A-Z0-9][\w'&/+-]*(?:\s+[\w'&/+-]+){0,5}?)(?=\s*(?:,|>|\.|$| and | then | to | if ))")
 DISRUPTIVE_RE = re.compile(r"(?i)\b(force(?:d)? (?:a )?restart|restart|reboot|power (?:it )?off and (?:back )?on|turn (?:it|the device|your device) off and (?:back )?on|safe mode|factory (?:data )?reset|reset (?:all )?settings|reset network|software update|update the software|firmware|wipe cache|remove the battery)\b")
-ESCALATION_RE = re.compile(r"(?i)\b(service cent(?:er|re)|contact (?:us|samsung|support|the manufacturer|your)|samsung support|repair service|schedule a repair|walk-in|technician|require service|requires service|visit (?:a|an|the)\b)")
+ESCALATION_RE = re.compile(r"(?i)\b(service cent(?:er|re)|contact (?:us|samsung|techcorp|customer|support|the manufacturer|your)|(?:samsung|techcorp|customer) support|repair service|schedule a repair|walk-in|technician|require service|requires service|visit (?:a|an|the)\b)")
 TOGGLE_ON_RE = re.compile(r"(?i)\b(turn on|turned on|enable|switch on|activate|tap the switch(?:es)? next to|toggle on)\b")
 TOGGLE_OFF_RE = re.compile(r"(?i)\b(turn off|disable|switch off|deactivate|toggle off)\b")
 ADJUST_RE = re.compile(r"(?i)\b(adjust|increase|decrease|lower|raise|set)\b")
@@ -156,7 +156,7 @@ OPEN_SETTINGS_RE = re.compile(r"(?i)^(?:please\s+)?(?:navigate to and open|open|
 UI_STEP_RE = re.compile(r"(?i)^(?:tap|select|swipe|toggle|choose|slide|drag|enter|scroll)\b")
 TAP_ITEM_RE = re.compile(r"(?i)^(?:tap|select|choose)\s+(?:on\s+)?(?:the\s+)?(?P<item>[A-Z0-9][^.,]{0,60}?)(?:\s+(?:to|and|then|from|under|at)\b.*|,.*)?\.?$")
 CRITICAL_HEADING_RE = re.compile(r"(?i)\b(restart\w*|reboot\w*|safe mode|factory|reset\w*|software updates?|update (?:the|your) (?:software|device)|firmware)\b")
-ESCALATION_STEP = "Contact Samsung Support or visit an authorized Samsung Service Center."
+ESCALATION_STEP = "Contact Customer Support or visit an authorized Service Center."   # wording of the official sample_output
 SWITCH_RE = re.compile(r"(?i)switch(?:es)? next to\s+(?P<feat>[A-Z][^.,]{1,50}?)(?=\s+(?:or|to|and|if)\b|[.,]|$)")
 
 

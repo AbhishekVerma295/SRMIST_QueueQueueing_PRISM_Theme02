@@ -72,7 +72,7 @@ class Catalog:
         self.entries: list[Entry] = []
         self.dummy: dict | None = None
         for raw in kit.deeplinks():
-            if raw.get("deeplink") == config.DUMMY_DEEPLINK:
+            if raw.get("id") == "DL-DUMMY" or str(raw.get("deeplink", "")).endswith("://dummy_positive"):
                 self.dummy = raw
                 continue
             feat = _feature_of(raw)
@@ -80,7 +80,8 @@ class Catalog:
             e.feature_tokens = set(tokens(feat))
             self.entries.append(e)
         self.searchable = [e for e in self.entries if not e.appliance]
-        self.valid_uris = {e.raw["deeplink"] for e in self.entries} | {config.DUMMY_DEEPLINK}
+        self.dummy_uri = self.dummy["deeplink"] if self.dummy else config.DUMMY_DEEPLINK
+        self.valid_uris = {e.raw["deeplink"] for e in self.entries} | {self.dummy_uri}
         self.by_uri = {e.raw["deeplink"]: e for e in self.entries}
         self._bm25 = BM25Okapi([tokens(e.feature + " " + e.feature + " " + e.search_text) or ["_"] for e in self.searchable])
         self._emb = self._load_or_build_embeddings()
@@ -143,7 +144,11 @@ class Catalog:
             scored.append((score, e, float(dense[i]), coverage, mismatch))
         scored.sort(key=lambda t: (-t[0], t[1].id))
         best = scored[0]
-        accepted = (not best[4]) and ((best[3] >= config.MAP_MIN_COVERAGE and best[2] >= 0.6) or best[2] >= config.MAP_MIN_DENSE)
+        # word order matters: "Screen lock" (security) is not "Lock screen" (notifications) although the tokens match
+        feat, tgt = best[1].feature.lower(), target.lower().strip()
+        phrase_ok = feat in tgt or tgt in feat
+        lexical_ok = best[3] >= config.MAP_MIN_COVERAGE and best[2] >= 0.6 and (phrase_ok or best[2] >= 0.85)
+        accepted = (not best[4]) and (lexical_ok or best[2] >= max(config.MAP_MIN_DENSE, 0.85 if not phrase_ok else 0.0))
         cands = [{"id": s[1].id, "message": s[1].raw.get("message"), "score": round(s[0], 3), "dense": round(s[2], 3), "coverage": round(s[3], 2)} for s in scored[:5]]
         return Match(best[1], best[0], best[2], best[3], accepted, cands)
 

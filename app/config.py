@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
 
-KIT_DIR = Path(os.getenv("KIT_DIR", ROOT / "starter_kit"))
+KIT_DIR = Path(os.getenv("KIT_DIR", ROOT / "starter_kit" / "Theme 2"))   # official Theme 2 kit
 DERIVED_DIR = Path(os.getenv("DERIVED_DIR", ROOT / "data" / "derived"))
 MODEL_CACHE = Path(os.getenv("MODEL_CACHE", ROOT / "models_cache"))
 EMBED_MODEL = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
@@ -18,7 +18,7 @@ INPUT_PATH = KIT_DIR / "input.txt"
 SCHEMA_PATH = KIT_DIR / "schema.py"
 CACHE_DB = Path(os.getenv("CACHE_DB", DERIVED_DIR / "cache.sqlite"))
 
-DUMMY_DEEPLINK = "bixby://dummy_positive"
+DUMMY_DEEPLINK = "voiceassist://dummy_positive"   # fallback only; the catalog's own placeholder entry wins
 
 # Deeplink mapping gates
 MAP_MIN_COVERAGE = float(os.getenv("MAP_MIN_COVERAGE", "0.75"))  # share of feature tokens found in the step text

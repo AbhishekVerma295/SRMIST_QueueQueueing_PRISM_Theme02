@@ -7,9 +7,10 @@
 4. Never commit the Samsung PDFs or DRM files (`*.pdf` at the root, `*_FAQ_*`, the Submission template). They carry an employee watermark. Only our own deck goes in `docs/`.
 
 ## Plan & status
+- Team: **SRMIST_QueueQueueing**. GitHub repo: `SRMIST_QueueQueueing_PRISM_Theme02`. PPT/PDF file name: `SRMIST_QueueQueueing`. Release tag: `PRISM_GENAI_HACKATHON_Y2026`.
 - Full plan: `PLAN_Theme2_Submission.md`. Deadline **30 Sep 2026, 11:59 PM**; target submit by 6 PM.
-- **Status (27 Sep):** Phase 1 done. The offline rules pipeline works end to end, 41 tests pass, and `results.jsonl` + `metrics.md` v0 are generated. Still open: the Docker build test (Docker Desktop was not running) and human review of `eval/gold/d1_draft.json` → `d1_gold.json`. Next is Phase 2 (LLM enrichment + extraction; the vague no-SIIS line "touch doesn't work on certain parts" should hit the cached touchscreen plan).
-- Starter kit: `starter_kit/`. This is the majority copy from public repos, not the official kit; see `starter_kit/SOURCE.md`. **Never edit these files.** Derived data goes in `data/derived/`.
+- **Status (28 Sep):** Phase 1 done on the OFFICIAL kit. Offline rules pipeline end to end; 42 tests pass; `results.jsonl` + `metrics.md` regenerated; gold labels `eval/gold/d1_gold.json` written (Claude-annotated, human spot-check pending). Gates 100%, deeplink relevance 2.00/2, deeplink precision 100%, abstention 95%. Still open: Docker build test (start Docker Desktop), LLM key (Gemini AI Studio). Next: Phase 2 (LLM enrichment + extraction; offline relevance is coarse, e.g. row_16 abstains, rows 3/11/17 keep an irrelevant Screen-lock action).
+- Starter kit: **official** kit in `starter_kit/Theme 2/` (see `starter_kit/SOURCE.md`). **Never edit these files.** Derived data goes in `data/derived/`. `starter_kit/_unofficial_public_copy/` is superseded and gitignored.
 
 ## Theme 02 contract (automated gates; enforce in code, never only in prompts)
 - `POST /v1/troubleshoot` body `{query, siis_response?}`. `siis_response` may be a **string or `{title, content}` object**.
@@ -25,7 +26,7 @@
   - steps imperative, one interaction each, no URLs
   - `category`: `auto` (settings screen via deeplink), `manual` (physical/service; **must have no actionable deeplink**), `critical` (restart, reset, safe mode, update; **always ordered last**)
   - `actionableDeeplink` / `validationDeeplink` are **copied verbatim from a catalog entry** (deeplink, description, message, originalType / validation fields)
-  - `bixby://dummy_positive` only for a real Settings screen that is missing from the catalog
+  - `voiceassist://dummy_positive` (read from the catalog's `DL-DUMMY` entry, never hardcoded) only for a real Settings screen missing from the catalog; its description and message are 5–7 words naming the concrete screen
 - Never: web URLs (`http`, `https`, `www.`, markdown links) in any field; invented deeplinks; matching on the masked URI string (match on description / message / qna_description / originalType); steps not supported by the SIIS text.
 - No viable solution in the reference text → `contexts: []` + `meta.fallback = "no_match"`. No SIIS and no cache hit → `contexts: []` + `meta.fallback = "no_siis_context"`.
 - Same input or same-meaning input → same plan (deterministic).
@@ -34,4 +35,4 @@
 ## Engineering conventions
 - Python 3.12 (`.venv`), FastAPI, Pydantic v2. CPU only; the service must run with **no LLM key** (offline rules mode) and never return a 500 with a non-JSON body.
 - Every rule above has a pytest test in `tests/`. Run `python -m pytest -q` before saying something works.
-- Kit facts: `input.txt` has 20 lines; line 17 holds 3 complaints (multi-intent). SIIS rows are matched to input lines by fuzzy text match. The catalog includes `DL-DUMMY` and SmartThings appliance entries (ignore those for phones).
+- Kit facts: brand-neutral names (TechCorp, Nexa X1, Data Transfer, VoiceAssist, Customer Support). Never inject Samsung/Galaxy/Bixby wording into outputs (a test checks this). `input.txt` has 20 lines; line 17 holds 3 complaints (multi-intent). SIIS rows are matched to input lines by fuzzy text match. The catalog includes `DL-DUMMY` and SmartThings appliance entries (ignore those for phones).

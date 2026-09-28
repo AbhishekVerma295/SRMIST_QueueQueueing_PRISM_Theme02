@@ -108,4 +108,4 @@ def check_envelope(env: dict) -> list[str]:
 
 
 def is_dummy(link: dict | None) -> bool:
-    return bool(link) and link.get("deeplink") == config.DUMMY_DEEPLINK
+    return bool(link) and link.get("deeplink") == catalog_mod.get().dummy_uri

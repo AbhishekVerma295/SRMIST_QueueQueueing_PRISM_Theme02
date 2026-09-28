@@ -73,7 +73,7 @@ def test_valid_goal_passes():
     (lambda g: g["actions"][0].update(description="It will turn on the touch sensitivity feature now"), "description"),
     (lambda g: g["actions"][0].update(actionName="enable touch sensitivity"), "Title Case"),
     (lambda g: g["actions"].reverse(), "after a critical"),
-    (lambda g: g["actions"][0]["stepGroups"][0]["actionableDeeplink"].update(deeplink="bixby://masked/act/0000000000"), "not in catalog"),
+    (lambda g: g["actions"][0]["stepGroups"][0]["actionableDeeplink"].update(deeplink="voiceassist://masked/act/0000000000"), "not in catalog"),
     (lambda g: g["actions"][0]["stepGroups"][0]["actionableDeeplink"].update(message="Made up"), "verbatim"),
     (lambda g: g["actions"][1].update(category="manual") or g["actions"][1]["stepGroups"][0].update(actionableDeeplink=g["actions"][0]["stepGroups"][0]["actionableDeeplink"]), "manual action carries"),
     (lambda g: g["actions"][1]["stepGroups"][0]["steps"].append("Visit samsung.com/support."), "URL leak"),
@@ -85,4 +85,5 @@ def test_validator_catches_each_violation(mutate, needle):
 
 
 def test_dummy_deeplink_is_valid_catalog_uri():
-    assert config.DUMMY_DEEPLINK in catalog.get().valid_uris
+    cat = catalog.get()
+    assert cat.dummy_uri == "voiceassist://dummy_positive" and cat.dummy_uri in cat.valid_uris

@@ -13,7 +13,7 @@ from .text import normalize, sentence_case, title_case
 # id, regex, goal topic, title (2-3 words, sentence case), domain, noun phrase, request type
 SYMPTOMS = [
     ("screen_damage", r"crack|shatter|broken (?:screen|glass|display)|bleeding|screen (?:is )?broken", "Screen Damage", "Screen display damage", "Display", "a cracked screen", "Troubleshooting"),
-    ("touch", r"touch(?:screen)?\b[^.]{0,40}\b(?:doesn't|does not|not|isn't|won't|stopped|lag|delay|unresponsive)|inputs? (?:are )?delayed|ghost touch|respond(?:ing)? to touch|touch responsiveness|unresponsive (?:touch|screen)", "Touchscreen", "Touchscreen response issues", "Display", "an unresponsive touchscreen", "Troubleshooting"),
+    ("touch", r"touch(?:screen)?\b[^.]{0,40}\b(?:doesn't|does not|not|isn't|won't|stopped|lag|delay|unresponsive)|screen (?:does not|doesn't|won't) respond|inputs? (?:are )?delayed|ghost touch|respond(?:ing)? to touch|touch responsiveness|unresponsive (?:touch|screen)", "Touchscreen", "Touchscreen response issues", "Display", "an unresponsive touchscreen", "Troubleshooting"),
     ("flicker", r"flicker|flash(?:es|ing)?\b|blink", "Screen Flicker", "Screen flickering issue", "Display", "a flickering screen", "Troubleshooting"),
     ("distortion", r"half (?:black|dark)|one side of the (?:display|screen)|lines on|distort|green line|pink line|colou?r(?:ed)? lines", "Display Distortion", "Distorted screen display", "Display", "a distorted display", "Troubleshooting"),
     ("screen_size", r"screen (?:stays )?small|doesn't fill|does not fill|not full screen|expand it to full size|full size", "Display Size", "Screen size settings", "Display", "a screen that does not fill the display", "Configuration"),
@@ -24,18 +24,18 @@ SYMPTOMS = [
     ("overheating", r"overheat|too hot|heats up|getting hot|gets hot", "Overheating", "Device overheating issue", "Performance", "overheating", "Troubleshooting"),
     ("slow", r"\bslow\b|laggy|\blags?\b|freez|hangs?\b|stutter|sluggish", "Slow Performance", "Slow device performance", "Performance", "slow performance", "Troubleshooting"),
     ("camera", r"camera|photos?\b|pictures?\b|blurry", "Camera", "Camera quality issues", "Camera", "camera problems", "Troubleshooting"),
-    ("transfer", r"smart switch|transfer(?:ring)? (?:my )?data|qr code", "Data Transfer", "Smart Switch transfer", "Performance", "a failing data transfer", "Troubleshooting"),
+    ("transfer", r"smart switch|data transfer|transfer(?:ring)? (?:my )?data|qr code", "Data Transfer", "Smart Switch transfer", "Performance", "a failing data transfer", "Troubleshooting"),
     ("email", r"e-?mail|gmail|outlook", "Email Access", "Email access issues", "Connectivity", "email loading problems", "Troubleshooting"),
     ("rotation", r"rotat", "Screen Rotation", "Screen rotation issues", "Display", "a screen that won't rotate", "Troubleshooting"),
     ("navigation", r"swipe|gesture|navigation bar", "Swipe Navigation", "Swipe navigation settings", "Display", "swipe gesture problems", "Troubleshooting"),
 ]
 _SYMPTOM_RES = [(s, re.compile(s[1], re.IGNORECASE)) for s in SYMPTOMS]
 
-DEVICE_RE = re.compile(
-    r"\b(?:Samsung\s+)?Galaxy\s+(?:Z\s+)?(?:Flip|Fold|Tab|Note|S|A|M)(?![a-z])\s?\d{0,2}(?:\s?(?:Ultra|Plus|FE|\+))?(?:/[A-Z]?\d{2})?"
-    r"|\bSamsung\s+(?:S\*+|[A-Z]\d{2,4}[A-Z]?)(?:\s+Ultra)?",
-    re.IGNORECASE,
-)
+# Brand-agnostic model name right after "my": "TechCorp A15G", "Nexa Fold X1 Ultra", "Galaxy S22", "TechCorp Nexa A14/A15".
+# A token counts if it is capitalised or contains a digit; the name stops at the first plain lower-case word.
+_TOKEN = r"(?:[A-Z][\w*+/-]*|[A-Za-z]*\d[\w*+/-]*)"
+DEVICE_RE = re.compile(rf"\b[Mm]y\s+(?P<model>{_TOKEN}(?:\s+{_TOKEN}){{0,4}})")
+GENERIC_DEVICE_RE = re.compile(r"(?i)\bmy\s+(?:new\s+|old\s+)?(tablet|smartphone|phone|device)\b")
 TRIGGER_RE = re.compile(r"\b(after|when|whenever|while|every time)\s+([^,.;]{3,70})", re.IGNORECASE)
 NUMBERED_RE = re.compile(r'(?:^|\s)\d+\.\s*"?(.+?)"?(?=\s+\d+\.\s|$)')
 
@@ -84,17 +84,27 @@ def symptoms_of(text: str) -> list[tuple]:
     return [s for s, rx in _SYMPTOM_RES if rx.search(text)]
 
 
+def _device_of(q: str) -> str:
+    """Model name of the complaining device, or a generic noun ('tablet', 'smartphone')."""
+    first_my = re.search(r"(?i)\bmy\s+(\S+)", q)
+    if first_my and not first_my.group(1)[:1].isupper() and not any(c.isdigit() for c in first_my.group(1)):
+        g = GENERIC_DEVICE_RE.search(q)          # "My tablet screen ... from my Nexa X1 phone" -> the tablet
+        return g.group(1).lower() if g else ("tablet" if re.search(r"(?i)tablet", q) else "smartphone")
+    m = DEVICE_RE.search(q)
+    if m:
+        return normalize(m.group("model"))
+    return "tablet" if re.search(r"(?i)\btablet", q) else "smartphone"
+
+
 def enrich(query: str, siis_title: str | None = None) -> Enriched:
     q = clean_query(query)
-    dev = DEVICE_RE.search(q)
-    device = normalize(dev.group(0)) if dev else ("Galaxy tablet" if re.search(r"(?i)tablet", q) else "Galaxy phone")
-    e = Enriched(raw=query, text=q, device=device)
+    e = Enriched(raw=query, text=q, device=_device_of(q))
     found = symptoms_of(q)
     if found:
         e.symptom_ids = [s[0] for s in found]
         _, _, e.topic, e.title, e.domain, e.phrase, e.request_type = found[0]
     elif siis_title:
-        core = re.split(r"(?i)\s+(?:on|for|with)\s+(?:a|an|the|your)?\s*(?:samsung|galaxy)", siis_title)[0]
+        core = re.split(r"(?i)\s+(?:on|for|with|to)\s+(?:a|an|the|your)?\s*(?:samsung|galaxy|techcorp|nexa|smartphone|phone|tablet)", siis_title)[0]
         core_words = core.split()[:3]
         e.topic = title_case(" ".join(core_words))
         e.title = sentence_case(" ".join(w.lower() for w in core_words[:3])) if len(core_words) >= 2 else sentence_case(core + " issue")
@@ -120,6 +130,7 @@ def _typo(text: str) -> str:
 def variations(e: Enriched) -> list[str]:
     dev, phrase = e.device, e.phrase
     bare = re.sub(r"^(?:a|an)\s+", "", phrase)
+    kind = "tablet" if "tablet" in (dev + " " + e.text).lower() else "phone"
     first_clause = re.split(r"[,;—]| so | and I ", e.text)[0].strip()
     kw = " ".join(dict.fromkeys(w for w in re.findall(r"[a-z0-9]+", (dev + " " + bare).lower()) if w not in {"a", "the", "that", "does", "not"}))
     cands = [
@@ -130,8 +141,8 @@ def variations(e: Enriched) -> list[str]:
         _typo(e.text),                                                                        # typo-inclusive
         f"Why does my {dev} have {phrase}?",
         first_clause if first_clause.lower() != e.text.lower() else f"{dev}: {bare}",
-        f"How do I fix {phrase} on my Samsung {('tablet' if 'tab' in (dev + e.text).lower() else 'phone')}?",
-        f"Troubleshooting {bare} on a Galaxy device",
+        f"How do I fix {phrase} on my {kind}?",
+        f"Troubleshooting {bare} on a {('tablet' if kind == 'tablet' else 'smartphone')}",
         f"{sentence_case(bare)} again?? need help asap",
     ]
     out: list[str] = []

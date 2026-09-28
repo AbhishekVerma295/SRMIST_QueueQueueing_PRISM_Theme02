@@ -1,5 +1,15 @@
 # Samsung PRISM GenAI Hackathon 2026 (3rd Ed.) — Theme 02 Winning Plan
 
+## Status — 28 Sep 2026 (read this first)
+| Item | State |
+|---|---|
+| Phase 0 | Registration/deadline: user-confirmed 30 Sep. **Official kit received and in use.** FAQ v4 + PPT template still DRM-locked |
+| Phase 1 | **Done** on the official kit: API, validators, catalog resolver, rules extraction, cache, 42 tests, results.jsonl, metrics.md v0, gold labels D1 |
+| Metrics (20 official lines, offline mode) | Gates 100% (schema, rules, 0 URL leaks, catalog validity, auto links) · deeplink relevance 2.00/2 · deeplink precision 100% · abstention 95% · cache P95 25 ms · cold P95 ~0.25 s · $0 |
+| Open from Phase 1 | Docker build test (Docker Desktop must be running) · human spot-check of `eval/gold/d1_gold.json` |
+| Needed from user | Gemini API key (Google AI Studio) in `.env` → unblocks Phase 2 · GitHub repo created (user runs all git commands) |
+| **Next** | Phase 2: LLM enrichment + grounded extraction (fixes coarse offline relevance: row_16 abstains; rows 3/11/17 keep an irrelevant Screen-lock action on a dummy link), L2 canonical cache, paraphrase set D3, held-out D2, step-accuracy judge |
+
 ## 0. Context
 - **Theme 02 – Smart Guided Troubleshooting Engine.** Goal: be in the **Top 15 (9 Oct)** → final demo 15 Oct → win (internship/PPO, worklet, ₹1.5L pool).
 - **No ideation round this year.** The "first submission" IS the full build: working repo + Docker + ≤5-min video + PPT, via Google Form. User confirms deadline **30 Sep** (the deck said 25 Sep) and says the team is registered. Get both confirmed in writing (Phase 0).
@@ -26,8 +36,9 @@
 - **Targets:** schema-valid ≥99% · rule compliance ≥95% · auto actions with a deeplink ≥90% · paraphrase cache hit ≥80% · cache P95 ≤300 ms · cold P95 ≤8 s · cost per query tracked.
 - **Required artifacts:** `results.jsonl` (one Appendix-B line per input query) and `metrics.md` (Appendix C template, including the 3-way ablation: full-LLM mapping / hybrid BM25+dense / pure rules).
 
-## 3. Starter kit (team doesn't have it yet; format as seen in public participant repos)
-- **Kit obtained 26 Sep** (majority version across 16 public repos; see `starter_kit/SOURCE.md`). `input.txt` has **20 lines**, almost all **Display**; line 17 packs **3 complaints** (cracked fold / dead touch zones / can hardly see) and is a built-in **multi-intent** test. `siis_responses.json` has 20 rows `{id, original_query, siis_response:{title, content}}`, one per line. Match lines to SIIS rows with fuzzy matching, since the query text differs slightly. The catalog also has `DL-DUMMY` (dummy_positive), 3 "Diagnose battery/performance/overheating" entries and some SmartThings appliance noise. About **6 rows have a mismatched SIIS** (these test abstention). Six rows share the "Blank or black display" text.
+## 3. Starter kit (OFFICIAL kit received 28 Sep, in `starter_kit/Theme 2/`)
+- **Official kit is brand-neutral:** `voiceassist://masked/...` deeplinks, placeholder `voiceassist://dummy_positive`, TechCorp/Nexa device names, Data Transfer (= Smart Switch), Customer Support. Same structure and DL ids as the public copy. The DL-DUMMY entry asks for a 5–7 word description/message naming the concrete screen.
+- (Superseded: 26 Sep majority copy from public repos, now in `starter_kit/_unofficial_public_copy/`.) `input.txt` has **20 lines**, almost all **Display**; line 17 packs **3 complaints** (cracked fold / dead touch zones / can hardly see) and is a built-in **multi-intent** test. `siis_responses.json` has 20 rows `{id, original_query, siis_response:{title, content}}`, one per line. Match lines to SIIS rows with fuzzy matching, since the query text differs slightly. The catalog also has `DL-DUMMY` (dummy_positive), 3 "Diagnose battery/performance/overheating" entries and some SmartThings appliance noise. About **6 rows have a mismatched SIIS** (these test abstention). Six rows share the "Blank or black display" text.
 - `deeplinks.json` 578 entries: `id, deeplink (…/act/…), description, message, originalType (onClickURL|onURL|offURL|updateURL), control_type, qna_description, validation{deeplink (…/val/…), key, resultType, condition, value}`. On/off pairs share one validation key.
 - `sample_output.json` includes a verbatim `validationDeeplink`, but its descriptions are 8 and 12 words, which **breaks the spec's 5–7 rule**. We follow the spec and note it in the README.
 - **Design consequences:** accept `siis_response` as a **string or `{title, content}`** (otherwise the judges' harness may get 422 errors). Hidden tests likely cover **Battery/Camera/Performance** too, so we generalise instead of fitting the 20 rows. The shipped cache holds only plans built from official kit text; synthetic data stays eval-only.

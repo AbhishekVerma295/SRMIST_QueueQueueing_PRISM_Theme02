@@ -1,4 +1,5 @@
 .venv
+starter_kit/_unofficial_public_copy
 .tmp
 .git
 .env

@@ -2,7 +2,8 @@
 
 - Deeplink mapping: settings actions resolve their most specific screen/feature in the catalog; the
   entry is copied verbatim (actionable + validation). A real Settings screen missing from the catalog
-  gets bixby://dummy_positive. Manual actions never carry a deeplink.
+  gets the catalog's dummy_positive placeholder (description/message written as 5-7 words naming the
+  concrete screen, as the catalog's DL-DUMMY entry instructs). Manual actions never carry a deeplink.
 - Ordering by disruption: auto -> manual -> escalation -> critical (restart < safe mode < update < reset).
 - Every text field is forced into the contract programmatically (casing, 5-7 word "It will" descriptions,
   no URLs, one interaction per step).
@@ -14,7 +15,7 @@ from . import catalog as catalog_mod
 from . import config
 from .enrich_rules import Enriched
 from .extract_rules import IRAction
-from .text import ensure_period, fit_description, has_url, scrub_urls, title_case
+from .text import ensure_period, fit_description, fit_words, has_url, scrub_urls, title_case
 
 CRITICAL_ORDER = {"restart": 0, "force_restart": 1, "safe_mode": 2, "software_update": 3, "reset_settings": 4, "factory_reset": 5}
 CRITICAL_NAME = {
@@ -47,7 +48,7 @@ MANUAL_DESC = [
     (r"light|shutter|camera|video", "It will reduce flicker in your videos"),
     (r"rotat|orientation", "It will restore automatic screen rotation"),
 ]
-ESCALATION_NAME = "Contact Samsung Service Center"
+ESCALATION_NAME = "Contact Customer Support"
 ESCALATION_DESC = "It will get your device professionally repaired"
 
 
@@ -74,7 +75,7 @@ def _trim_phrase(text: str, max_words: int) -> str:
     """Cuts at a natural break (comma, 'and', 'to', '(') and never ends on a small word."""
     text = re.split(r",|\(|\?|:|\s+(?:and|then|but|so|if|while|when)\s+", text.strip())[0]
     words = text.split()[:max_words]
-    while len(words) > 2 and words[-1].lower() in {"a", "an", "the", "and", "or", "of", "to", "for", "on", "in", "with", "your", "but"}:
+    while len(words) > 2 and words[-1].lower() in {"a", "an", "the", "and", "or", "of", "to", "for", "in", "with", "your", "but"}:
         words.pop()
     return " ".join(words)
 
@@ -119,8 +120,10 @@ def compile_action(a: IRAction, cat: "catalog_mod.Catalog") -> CompiledAction | 
         else:
             parent = a.path[-2] if len(a.path) > 1 else "Settings"
             target = _short_target(a.target)
-            actionable = {"deeplink": config.DUMMY_DEEPLINK, "description": f"Open {target} settings under {parent}",
-                          "message": f"Open {target} in {parent} settings", "originalType": "placeholder"}
+            actionable = {"deeplink": cat.dummy_uri,
+                          "description": fit_words(f"Open the {target} settings screen under {parent}", 5, 7),
+                          "message": fit_words(f"Open {target} in {parent} settings", 5, 7),
+                          "originalType": (cat.dummy or {}).get("originalType", "placeholder")}
             confidence = 0.45
         category = "auto"
         name = _action_name_for_settings(a)
@@ -162,7 +165,7 @@ def compile_goal(e: Enriched, actions: list[IRAction], doc_relevance: float, max
         if c is None:
             continue
         link = (c.data["stepGroups"][0]["actionableDeeplink"] or {}).get("deeplink")
-        if link and link != config.DUMMY_DEEPLINK:
+        if link and link != cat.dummy_uri:
             if link in seen_links:          # One Action = One Screen: same screen already covered
                 continue
             seen_links.add(link)

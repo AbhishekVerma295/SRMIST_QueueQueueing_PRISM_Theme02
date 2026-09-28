@@ -40,7 +40,7 @@ def gates(envs: list[dict]) -> dict:
     links = [sg["actionableDeeplink"]["deeplink"] for g in goals for a in g["actions"] for sg in a["stepGroups"] if sg.get("actionableDeeplink")]
     autos = [a for g in goals for a in g["actions"] if a["category"] == "auto"]
     auto_ok = sum(1 for a in autos if all(sg.get("actionableDeeplink") and sg["actionableDeeplink"]["deeplink"] in cat.valid_uris for sg in a["stepGroups"]))
-    dummy = sum(1 for link in links if link == config.DUMMY_DEEPLINK)
+    dummy = sum(1 for link in links if link == cat.dummy_uri)
     return {
         "lines": len(envs), "plans": sum(1 for e in envs if e["response"]["contexts"]), "goals": len(goals),
         "actions": sum(len(g["actions"]) for g in goals), "auto_actions": len(autos),
@@ -62,7 +62,7 @@ def gold_scores(envs: list[dict]) -> dict | None:
     by_id = {e.id: e for e in cat.entries}
     id_of = {e.raw["deeplink"]: e.id for e in cat.entries}
     by_query = {e["query"]: e for e in envs}
-    rel_scores, abst_ok = [], 0
+    rel_scores, abst_ok, spurious, emitted = [], 0, 0, 0
     for g in gold:
         env = by_query.get(g["query"])
         if env is None:
@@ -70,6 +70,10 @@ def gold_scores(envs: list[dict]) -> dict | None:
         got_plan = bool(env["response"]["contexts"])
         abst_ok += got_plan == g["relevant"]
         got_ids = {id_of.get((sg.get("actionableDeeplink") or {}).get("deeplink")) for c in env["response"]["contexts"] for a in c["actions"] for sg in a["stepGroups"]}
+        allowed = {i for exp in g["expected_actions"] for i in [exp.get("deeplink_id"), *exp.get("acceptable_deeplink_ids", [])] if i}
+        real = {i for i in got_ids if i}                       # catalog links the engine emitted (dummy has no id)
+        emitted += len(real)
+        spurious += len(real - allowed)                        # links gold does not expect for this complaint
         for exp in g["expected_actions"]:
             if not exp.get("deeplink_id") or exp["deeplink_id"] == "DL-DUMMY":
                 continue
@@ -79,7 +83,8 @@ def gold_scores(envs: list[dict]) -> dict | None:
             else:   # same feature (e.g. on/off twin or same validation key) = partial credit
                 feats = {by_id[i].feature for i in ok_ids if i in by_id}
                 rel_scores.append(1 if any(by_id[i].feature in feats for i in got_ids if i in by_id) else 0)
-    return {"rows": len(gold), "abstention_accuracy": abst_ok / len(gold), "deeplink_relevance": (sum(rel_scores) / len(rel_scores)) if rel_scores else None, "deeplinks_scored": len(rel_scores)}
+    return {"rows": len(gold), "abstention_accuracy": abst_ok / len(gold), "link_precision": (1 - spurious / emitted) if emitted else None,
+            "spurious_links": spurious, "emitted_links": emitted, "deeplink_relevance": (sum(rel_scores) / len(rel_scores)) if rel_scores else None, "deeplinks_scored": len(rel_scores)}
 
 
 def latency() -> dict:
@@ -120,7 +125,7 @@ def main() -> None:
 ---
 
 ## 1. Schema & Rule Compliance
-Evaluated on the official input lines. Held-out scenarios arrive in Phase 2.
+Evaluated on the 20 official input lines (official Theme 2 kit). Held-out scenarios arrive in Phase 2.
 
 | Metric | Target | Measured Value |
 | :--- | :--- | :--- |
@@ -139,6 +144,7 @@ Plans: {g['plans']}/{g['lines']} lines · goals {g['goals']} · actions {g['acti
 | :--- | :--- | :--- |
 | Step accuracy (completeness, correctness, ordering) | 0.0 - 3.0 | TBD (Phase 2 judge) |
 | Deeplink relevance (exact target screen vs. parent menu) | 0.0 - 2.0 | {f"{gs['deeplink_relevance']:.2f} ({gs['deeplinks_scored']} links, {gs['rows']} reviewed rows)" if gs and gs['deeplink_relevance'] is not None else 'TBD (gold labels pending)'} |
+| Deeplink precision (emitted catalog links that gold expects) | 0 - 100% | {f"{gs['link_precision'] * 100:.1f}% ({gs['spurious_links']} spurious of {gs['emitted_links']})" if gs and gs['link_precision'] is not None else 'TBD'} |
 | Abstention accuracy (no_match when the reference text doesn't fit) | 0 - 100% | {fmt(gs['abstention_accuracy']) if gs else 'TBD (gold labels pending)'} |
 
 ---
@@ -175,7 +181,8 @@ Plans: {g['plans']}/{g['lines']} lines · goals {g['goals']} · actions {g['acti
 * Offline rules mode decides relevance with small-embedding similarity. It abstains on the clearly mismatched reference texts but is coarse. The LLM path (Phase 2) replaces it.
 * Contract rule "critical actions last" puts service-centre escalation before restarts/resets.
 * input.txt line 17 holds three complaints. Each becomes its own intent; intents that yield an identical plan are merged.
-* The starter kit is the majority copy from public participant repos (see starter_kit/SOURCE.md), not the official distribution.
+* Gold labels (eval/gold/d1_gold.json) were written from the reference texts by one annotator (Claude); a human spot-check is pending.
+* Offline relevance is coarse: row_16 (charger-triggered flashing) abstains although the blank-display article partly fits; the LLM path should fix this.
 """
     (ROOT / "metrics.md").write_text(md, encoding="utf-8")
     print(md)

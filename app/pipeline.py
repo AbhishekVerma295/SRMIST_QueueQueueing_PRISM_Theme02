@@ -59,12 +59,15 @@ def plan_intent(intent: str, content: str, title: str, trace: dict) -> dict | No
     ir, _ = extract(content)
     cleaned = clean_siis(content)
     doc_rel = float(max(_relevance(qv, [title or cleaned[:120], cleaned[:600]])))
-    symptom_match = bool({s[0] for s in symptoms_of(title)} & set(e.symptom_ids))
+    # symptom evidence: the title names the complaint's symptom, or the body mentions it at least twice
+    body_hits = sum(len(re.findall(s[1], cleaned, re.IGNORECASE)) for s in symptoms_of(e.text))
+    symptom_match = bool({s[0] for s in symptoms_of(title)} & set(e.symptom_ids)) or body_hits >= 2
     if symptom_match:
         doc_rel = max(doc_rel, 0.75)          # reference title names the same symptom
     item = {"intent": intent, "topic": e.topic, "doc_relevance": round(doc_rel, 3), "symptom_match": symptom_match, "actions": []}
     trace.setdefault("intents", []).append(item)
-    if doc_rel < config.DOC_MIN_RELEVANCE or not ir:
+    needed = config.DOC_MIN_RELEVANCE if symptom_match else max(config.DOC_MIN_RELEVANCE, 0.70)
+    if doc_rel < needed or not ir:
         item["decision"] = "no_match"
         return None
     rels = _relevance(qv, [f"{a.heading}. {' '.join(a.steps[:3])}" for a in ir])
@@ -83,7 +86,7 @@ def plan_intent(intent: str, content: str, title: str, trace: dict) -> dict | No
     return goal
 
 
-def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache: bool = True) -> dict:
+def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache: bool = True, lookup: bool = True) -> dict:
     t0 = time.perf_counter()
     query = (query or "")[: config.MAX_QUERY_CHARS]
     content, title = coerce_siis(siis_response)
@@ -91,12 +94,14 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
     trace: dict = {}
     cache = get_cache()
 
-    if use_cache:
+    if use_cache and lookup:
         hit, how, sim = cache.lookup(query, s_hash)
         trace["cache"] = {"how": how, "similarity": round(sim, 3)}
         if hit:
             env = copy.deepcopy(hit)
             env["query"] = query
+            if how != "exact":   # variations must paraphrase *this* query, not the cached one (rules mode: ~1 ms)
+                env["query_variations"] = variations(enrich(split_intents(query)[0], title))
             env["meta"] = {"latency_ms": int(round((time.perf_counter() - t0) * 1000)), "cache_hit": True, "model": hit["meta"].get("model", MODEL_NAME), "cost_usd": 0.0}
             if hit["meta"].get("fallback"):
                 env["meta"]["fallback"] = hit["meta"]["fallback"]

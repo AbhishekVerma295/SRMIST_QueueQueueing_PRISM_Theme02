@@ -21,3 +21,6 @@ models_cache/
 
 # generated at build time (Docker rebuilds it)
 data/derived/cache.sqlite
+
+# superseded unofficial kit copy (kept locally for reference only)
+starter_kit/_unofficial_public_copy/

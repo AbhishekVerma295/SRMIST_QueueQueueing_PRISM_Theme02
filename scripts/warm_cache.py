@@ -16,7 +16,7 @@ def main() -> None:
     for q in kit.input_queries():
         row = kit.match_siis(q)
         if row:
-            pipeline.troubleshoot(q, row["siis_response"], use_cache=True)
+            pipeline.troubleshoot(q, row["siis_response"], use_cache=True, lookup=False)   # store every official line
     print(f"cache entries: {len(cache)}  keys: {len(cache.key_ids)}  -> {cache.path}")
 
 

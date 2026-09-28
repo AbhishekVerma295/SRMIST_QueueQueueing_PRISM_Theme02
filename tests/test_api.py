@@ -1,4 +1,5 @@
 """End-to-end API tests against the Theme 02 contract."""
+import json
 import pytest
 from fastapi.testclient import TestClient
 
@@ -81,7 +82,7 @@ def test_every_official_input_line_is_contract_valid():
 
 
 def test_multi_intent_line_splits_into_intents():
-    line = next(q for q in kit.input_queries() if q.startswith('1. "My Galaxy Z Flip 7'))
+    line = next(q for q in kit.input_queries() if q.startswith('1. "My Nexa Fold X1'))
     env = pipeline.troubleshoot(line, kit.match_siis(line)["siis_response"], debug=True, use_cache=False)
     assert len(env["trace"]["intents"]) == 3
 
@@ -91,3 +92,21 @@ def test_deterministic_cold_path():
     a = pipeline.troubleshoot(r["original_query"], r["siis_response"], use_cache=False)
     b = pipeline.troubleshoot(r["original_query"], r["siis_response"], use_cache=False)
     assert a["response"] == b["response"] and a["query_variations"] == b["query_variations"]
+
+
+def test_official_kit_outputs_stay_brand_neutral_and_dummy_text_is_5_to_7_words():
+    """The official kit is de-branded (TechCorp / Nexa / VoiceAssist); we must not inject real brand names,
+    and the DL-DUMMY entry asks for a 5-7 word description/message naming the concrete screen."""
+    from app import catalog
+    dummy = catalog.get().dummy_uri
+    for q in kit.input_queries():
+        row = kit.match_siis(q)
+        env = pipeline.troubleshoot(q, row["siis_response"] if row else None, use_cache=False)
+        blob = json.dumps(env["response"]) + " ".join(env["query_variations"])
+        for word in ("Samsung", "Galaxy", "bixby://", "Bixby"):
+            assert word not in blob, (word, q[:50])
+        for c in env["response"]["contexts"]:
+            for a in c["actions"]:
+                link = a["stepGroups"][0].get("actionableDeeplink")
+                if link and link["deeplink"] == dummy:
+                    assert 5 <= len(link["description"].split()) <= 7 and 5 <= len(link["message"].split()) <= 7, link
