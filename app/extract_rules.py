@@ -49,6 +49,7 @@ class IRAction:
     op: str | None = None                          # on | off | view | update
     critical_kind: str | None = None
     toggle: str | None = None                      # feature whose switch is flipped, e.g. "Swipe for split screen"
+    benefit: str | None = None                     # LLM path: short "what it achieves" phrase for the description
 
     @property
     def target(self) -> str | None:

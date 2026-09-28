@@ -109,11 +109,42 @@ def latency() -> dict:
     return {"cold": cold, "exact": exact}
 
 
+def paraphrases(envs: list[dict]) -> dict | None:
+    """D3: unseen hand-written paraphrases (no siis_response) against the pre-warmed cache.
+    Correct hit = same plan title(s) as the source line; negatives must not hit."""
+    path = ROOT / "eval" / "datasets" / "d3_paraphrases.json"
+    if not path.exists():
+        return None
+    d3 = json.loads(path.read_text(encoding="utf-8"))
+    by_row = {}
+    for e in envs:
+        row = kit.match_siis(e["query"])
+        if row and e["response"]["contexts"]:
+            by_row[row["id"]] = [c["title"] for c in e["response"]["contexts"]]
+    pos = [p for p in d3["positives"] if p["row_id"] in by_row]
+    hits = correct = 0
+    ms, misses = [], []
+    for p in pos:
+        t = time.perf_counter()
+        env = pipeline.troubleshoot(p["text"], None)
+        ms.append((time.perf_counter() - t) * 1000)
+        if env["meta"]["cache_hit"]:
+            hits += 1
+            got = [c["title"] for c in env["response"]["contexts"]]
+            correct += got == by_row[p["row_id"]] or bool(set(got) & set(by_row[p["row_id"]]))
+        else:
+            misses.append(p["text"])
+    false_hits = [n for n in d3["negatives"] if pipeline.troubleshoot(n, None)["meta"]["cache_hit"]]
+    return {"n": len(pos), "hit_rate": hits / len(pos), "correct_rate": correct / len(pos), "ms": ms,
+            "negatives": len(d3["negatives"]), "false_hits": false_hits, "misses": misses}
+
+
 def main() -> None:
     envs = [json.loads(line) for line in (ROOT / "results.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
     g = gates(envs)
     gs = gold_scores(envs)
     lat = latency()
+    para = paraphrases(envs)
     fmt = lambda x: f"{x * 100:.1f}%"  # noqa: E731
     p = lambda xs, q: f"{pct(xs, q):.0f}" if xs else "n/a"  # noqa: E731
     md = f"""# System Performance Metrics & Evaluation Report
@@ -153,7 +184,7 @@ Plans: {g['plans']}/{g['lines']} lines · goals {g['goals']} · actions {g['acti
 | Execution Path | Target (P95) | P50 (ms) | P95 (ms) |
 | :--- | :--- | :--- | :--- |
 | Cache hit - exact query match (N={len(lat['exact'])}) | <= 300 ms | {p(lat['exact'], 50)} | {p(lat['exact'], 95)} |
-| Cache hit - unseen semantic paraphrase | <= 300 ms | TBD (Phase 2 paraphrase set) | TBD |
+| Cache hit - unseen semantic paraphrase (N={len(para['ms']) if para else 0}, D3, no siis) | <= 300 ms | {p(para['ms'], 50) if para else 'n/a'} | {p(para['ms'], 95) if para else 'n/a'} |
 | Cold query - full pipeline extraction & mapping (N={len(lat['cold'])}) | <= 8000 ms | {p(lat['cold'], 50)} | {p(lat['cold'], 95)} |
 
 ---
@@ -163,7 +194,8 @@ Plans: {g['plans']}/{g['lines']} lines · goals {g['goals']} · actions {g['acti
 | :--- | :--- | :--- |
 | Cold query average inference cost | Tracked | $0.00 (offline rules mode, no LLM calls) |
 | Cache hit inference cost | $0.00 | $0.00 |
-| Semantic cache hit rate (on unseen paraphrases) | >= 80% | TBD (Phase 2) |
+| Semantic cache hit rate (on unseen paraphrases) | >= 80% | {fmt(para['hit_rate']) + ' hit, ' + fmt(para['correct_rate']) + ' correct plan (' + str(para['n']) + ' hand-written paraphrases)' if para else 'TBD'} |
+| False hits on unrelated complaints | 0 | {str(len(para['false_hits'])) + ' of ' + str(para['negatives']) if para else 'TBD'} |
 | Cost derivation method | - | (prompt tokens + completion tokens) x rate |
 
 ---
@@ -184,6 +216,10 @@ Plans: {g['plans']}/{g['lines']} lines · goals {g['goals']} · actions {g['acti
 * Gold labels (eval/gold/d1_gold.json) were written from the reference texts by one annotator (Claude); a human spot-check is pending.
 * Offline relevance is coarse: row_16 (charger-triggered flashing) abstains although the blank-display article partly fits; the LLM path should fix this.
 """
+    if para and para["misses"]:
+        md += "\n**Paraphrase misses (D3):** " + "; ".join(repr(m) for m in para["misses"]) + "\n"
+    if para and para["false_hits"]:
+        md += "\n**False hits (D3 negatives):** " + "; ".join(repr(m) for m in para["false_hits"]) + "\n"
     (ROOT / "metrics.md").write_text(md, encoding="utf-8")
     print(md)
 

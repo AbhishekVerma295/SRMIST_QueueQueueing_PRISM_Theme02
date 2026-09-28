@@ -12,13 +12,13 @@ from .text import normalize, sentence_case, title_case
 
 # id, regex, goal topic, title (2-3 words, sentence case), domain, noun phrase, request type
 SYMPTOMS = [
-    ("screen_damage", r"crack|shatter|broken (?:screen|glass|display)|bleeding|screen (?:is )?broken", "Screen Damage", "Screen display damage", "Display", "a cracked screen", "Troubleshooting"),
+    ("screen_damage", r"crack|shatter|smash|broken (?:screen|glass|display)|bleeding|screen (?:is )?broken", "Screen Damage", "Screen display damage", "Display", "a cracked screen", "Troubleshooting"),
     ("touch", r"touch(?:screen)?\b[^.]{0,40}\b(?:doesn't|does not|not|isn't|won't|stopped|lag|delay|unresponsive)|screen (?:does not|doesn't|won't) respond|inputs? (?:are )?delayed|ghost touch|respond(?:ing)? to touch|touch responsiveness|unresponsive (?:touch|screen)", "Touchscreen", "Touchscreen response issues", "Display", "an unresponsive touchscreen", "Troubleshooting"),
     ("flicker", r"flicker|flash(?:es|ing)?\b|blink", "Screen Flicker", "Screen flickering issue", "Display", "a flickering screen", "Troubleshooting"),
-    ("distortion", r"half (?:black|dark)|one side of the (?:display|screen)|lines on|distort|green line|pink line|colou?r(?:ed)? lines", "Display Distortion", "Distorted screen display", "Display", "a distorted display", "Troubleshooting"),
+    ("distortion", r"half (?:black|dark)|one side of the (?:display|screen)|lines on|(?:screen|display|image|picture)[^.]{0,40}distort|distort[^.]{0,40}(?:screen|display|image)|green line|pink line|colou?r(?:ed)? lines", "Display Distortion", "Distorted screen display", "Display", "a distorted display", "Troubleshooting"),
     ("screen_size", r"screen (?:stays )?small|doesn't fill|does not fill|not full screen|expand it to full size|full size", "Display Size", "Screen size settings", "Display", "a screen that does not fill the display", "Configuration"),
     ("floating_button", r"floating (?:circle|button|icon|bubble)|hovers on my screen", "Assistant Menu", "Floating button settings", "Accessibility", "a floating shortcut button", "Configuration"),
-    ("black_screen", r"black|blank|dark|no display|nothing (?:is )?(?:visible|on the screen)|won't turn on|doesn't display|can hardly see|hardly see anything|white screen|blue (?:\(or black\) )?screen|no image", "Black Screen", "Blank screen display", "Display", "a blank or black screen", "Troubleshooting"),
+    ("black_screen", r"\bblack\b|\bblank\b|\bdark\b(?!\s*(?:mode|theme))|no display|nothing (?:is )?(?:visible|on the screen)|won't turn on|doesn't display|can hardly see|hardly see anything|white screen|blue (?:\(or black\) )?screen|no image", "Black Screen", "Blank screen display", "Display", "a blank or black screen", "Troubleshooting"),
     ("battery_drain", r"battery (?:dies|drain|drains|draining|runs out)|battery[^.]{0,20}fast|charge doesn't last|battery life", "Battery Drain", "Battery fast drain", "Battery", "fast battery drain", "Troubleshooting"),
     ("charging", r"not charging|won't charge|charging (?:slow|slowly|issue|problem)|charges slowly", "Charging", "Charging problems", "Battery", "charging problems", "Troubleshooting"),
     ("overheating", r"overheat|too hot|heats up|getting hot|gets hot", "Overheating", "Device overheating issue", "Performance", "overheating", "Troubleshooting"),

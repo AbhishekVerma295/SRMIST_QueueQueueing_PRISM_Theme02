@@ -6,7 +6,7 @@ import time
 import numpy as np
 
 from . import cache as cache_mod
-from . import config, embed, validators
+from . import config, embed, llm, llm_stages, validators
 from .compile import compile_goal
 from .enrich_rules import enrich, split_intents, symptoms_of, variations
 from .extract_rules import clean_siis, extract
@@ -111,22 +111,55 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
 
     intents = split_intents(query)
     primary = enrich(intents[0], title)
-    qvars = variations(primary)
+
+    # L2: look up the normalised complaint (catches vague or oddly phrased inputs, e.g. no-SIIS one-liners)
+    if use_cache and lookup and primary.canonical.lower() != query.lower():
+        hit, how, sim = cache.lookup(primary.canonical, s_hash)
+        trace["cache_l2"] = {"how": how, "similarity": round(sim, 3), "key": primary.canonical}
+        if hit:
+            env = copy.deepcopy(hit)
+            env["query"] = query
+            env["query_variations"] = variations(primary)
+            env["meta"] = {"latency_ms": int(round((time.perf_counter() - t0) * 1000)), "cache_hit": True, "model": hit["meta"].get("model", MODEL_NAME), "cost_usd": 0.0}
+            if hit["meta"].get("fallback"):
+                env["meta"]["fallback"] = hit["meta"]["fallback"]
+            if debug:
+                env["trace"] = trace
+            return env
+
     if not content:
-        env = _envelope(query, qvars, [], t0, False, MODEL_NAME, "no_siis_context")
+        env = _envelope(query, variations(primary), [], t0, False, MODEL_NAME, "no_siis_context")
         if debug:
             env["trace"] = trace
         return env
 
-    contexts = []
-    for intent in intents:
-        goal = plan_intent(intent, content, title, trace)
-        if not goal:
-            continue
-        names = [a["actionName"] for a in goal["actions"]]
-        # skip a second intent that yields the same title or exactly the same actions as an earlier one
-        if all(goal["title"] != c["title"] and names != [a["actionName"] for a in c["actions"]] for c in contexts):
-            contexts.append(goal)
+    model, cost, canonical_keys = MODEL_NAME, 0.0, [primary.canonical]
+    contexts: list[dict] = []
+    extracted = None
+    qvars = None
+    if llm.enabled():
+        usage, (llm_canonical, llm_vars), extracted = llm_stages.run_parallel(query, content, title, trace)
+        cost = usage.cost_usd
+        trace["llm"] = {"calls": usage.calls, "tokens_in": usage.tokens_in, "tokens_out": usage.tokens_out, "ms": round(usage.ms), "errors": usage.errors}
+        qvars = llm_stages.complete_variations(query, llm_vars, primary)
+        if llm_canonical:
+            canonical_keys.append(llm_canonical)
+        if extracted is not None:
+            model = f"{llm.model_name()}+bge-small-en-v1.5"
+            for e, actions, rel in extracted:
+                if rel == "no" or not actions:
+                    continue
+                goal = compile_goal(e, actions, 0.9 if rel == "yes" else 0.7, MAX_ACTIONS)
+                if goal:
+                    _add_context(contexts, goal)
+    if extracted is None:                     # no key, or the LLM call failed: offline rules path
+        if llm.enabled():
+            model = MODEL_NAME + " (llm fallback)"
+        for intent in intents:
+            goal = plan_intent(intent, content, title, trace)
+            if goal:
+                _add_context(contexts, goal)
+    qvars = qvars or variations(primary)
 
     # final gate: drop any context that still violates the contract (should not happen)
     safe = []
@@ -136,10 +169,19 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
             trace.setdefault("gate_rejections", []).append(problems)
         else:
             safe.append(g)
-    env = _envelope(query, qvars, safe, t0, False, MODEL_NAME, None if safe else "no_match")
-    if use_cache and config.CACHE_WRITE and safe:
-        keys = [primary.canonical, *qvars]
-        cache.store(query, s_hash, {k: env[k] for k in ("query_variations", "response", "meta")}, keys, primary.symptom_ids, tier="auto")
+    env = _envelope(query, qvars, safe, t0, False, model, None if safe else "no_match")
+    env["meta"]["cost_usd"] = cost
+    if use_cache and config.CACHE_WRITE and (safe or extracted is not None):
+        keys = [*canonical_keys, *qvars]
+        tier = "auto" if safe and all(g["score"] >= 0.5 for g in safe) else "provisional"
+        cache.store(query, s_hash, {k: env[k] for k in ("query_variations", "response", "meta")}, keys, primary.symptom_ids, tier=tier)
     if debug:
         env["trace"] = trace
     return env
+
+
+def _add_context(contexts: list[dict], goal: dict) -> None:
+    """Adds a goal unless an earlier one has the same title or exactly the same actions (multi-intent merge)."""
+    names = [a["actionName"] for a in goal["actions"]]
+    if all(goal["title"] != c["title"] and names != [a["actionName"] for a in c["actions"]] for c in contexts):
+        contexts.append(goal)

@@ -142,7 +142,8 @@ def compile_action(a: IRAction, cat: "catalog_mod.Catalog") -> CompiledAction | 
     elif a.kind == "escalation":
         category, name, desc, level = "manual", ESCALATION_NAME, fit_description(ESCALATION_DESC), (2, 0)
     else:
-        category, name, desc, level = "manual", _manual_name(a), fit_description(_manual_desc(a)), (1, 0)
+        desc_body = a.benefit if a.benefit else _manual_desc(a)
+        category, name, desc, level = "manual", _manual_name(a), fit_description(desc_body), (1, 0)
     data = {
         "actionName": name,
         "description": desc,
