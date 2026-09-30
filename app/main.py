@@ -68,6 +68,26 @@ async def troubleshoot(request: Request):
         return JSONResponse(_error_envelope(body["query"], "internal_error", t0), status_code=500)
 
 
+@app.get("/v1/kb/search")
+def kb_search(q: str = ""):
+    """Demo helper (not part of the Theme 02 contract): best-matching knowledge-base articles for a complaint."""
+    from . import kb
+    if not q.strip():
+        return {"results": []}
+    return {"results": kb.search(q[:2000])}
+
+
+@app.get("/v1/samples")
+def samples():
+    """Demo helper (not part of the Theme 02 contract): official input lines with their reference texts."""
+    from . import kit
+    out = []
+    for q in kit.input_queries():
+        row = kit.match_siis(q)
+        out.append({"id": (row or {}).get("id"), "query": q, "siis_response": (row or {}).get("siis_response")})
+    return {"samples": out}
+
+
 @app.get("/")
 def root():
     index = UI_DIR / "index.html"

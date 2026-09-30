@@ -37,6 +37,7 @@ class Usage:
     tokens_out: int = 0
     ms: float = 0.0
     errors: list = field(default_factory=list)
+    model: str | None = None        # model that actually answered (after fallbacks)
 
     @property
     def cost_usd(self) -> float:
@@ -46,6 +47,10 @@ class Usage:
 _client: httpx.Client | None = None
 _model_lock = threading.Lock()
 _resolved_model: str | None = None
+_chain: list[str] = []          # fallback order of models (Gemini), best first
+_sticky: str | None = None      # last model that answered; tried first next time
+BUDGET_S = float(os.getenv("LLM_BUDGET_S", "7.0"))   # total time for one logical call incl. retries/fallbacks
+RETRYABLE = {404, 408, 429, 500, 502, 503, 504}
 
 
 def enabled() -> bool:
@@ -74,11 +79,14 @@ def model_name() -> str:
                     r = _http().get(f"{GEMINI_BASE}/models", headers={"x-goog-api-key": API_KEY}, params={"pageSize": 200})
                     names = [m["name"].split("/", 1)[1] for m in r.json().get("models", [])
                              if "generateContent" in m.get("supportedGenerationMethods", [])]
+                    # prefer the newest *versioned* models (reproducible) over moving aliases like "-latest";
+                    # Flash-Lite first (cheaper, higher free quota), then Flash as fallbacks
                     for pref in ("flash-lite", "flash"):
-                        cands = sorted((n for n in names if pref in n and "preview" not in n and "image" not in n and "tts" not in n), reverse=True)
-                        if cands:
-                            _resolved_model = cands[0]
-                            break
+                        versioned = sorted(((float(m.group(1)), n) for n in names
+                                            if (m := re.fullmatch(rf"gemini-(\d+(?:\.\d+)?)-{pref}", n))), reverse=True)
+                        _chain.extend(n for _, n in versioned[:3])
+                    if _chain:
+                        _resolved_model = _chain[0]
                 except Exception as exc:  # network issues: keep the alias
                     log.warning("model discovery failed: %s", exc)
     return _resolved_model
@@ -90,6 +98,69 @@ def _parse_json(text: str):
     return json.loads(text)
 
 
+_dead: set = set()              # models that returned 404 (unavailable) or a quota 429 this process: skip them
+
+
+def _candidates() -> list[str]:
+    model_name()                                   # populates the discovery chain once
+    order = ([MODEL] if MODEL else []) + ([_sticky] if _sticky else []) + _chain + ([_resolved_model] if _resolved_model else [])
+    return [m for m in dict.fromkeys(m for m in order if m) if m not in _dead]
+
+
+def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_tokens: int, t0: float):
+    """Tries models in fallback order until one answers, within BUDGET_S. Thinking is minimised on Gemini 3.x."""
+    global _sticky
+    last_err = "no model available"
+    # each model gets a few tries with backoff on 503 "high demand" (transient), bounded by the time budget
+    attempts = [(m, k) for m in _candidates() for k in range(3 if BUDGET_S >= 20 else 1)]
+    for model, k in attempts:
+        if model in _dead:
+            continue
+        remaining = BUDGET_S - (time.perf_counter() - t0)
+        if remaining < 1.0:
+            break
+        if k > 0:
+            time.sleep(min(2.0 * k, max(0.0, remaining - 1.0)))
+            remaining = BUDGET_S - (time.perf_counter() - t0)
+        gc = {"temperature": 0, "seed": 7, "maxOutputTokens": max_tokens,
+              "responseMimeType": "application/json", "responseSchema": schema}
+        if re.match(r"gemini-3", model):
+            gc["thinkingConfig"] = {"thinkingLevel": "minimal"}
+        body = {"systemInstruction": {"parts": [{"text": system}]},
+                "contents": [{"role": "user", "parts": [{"text": user}]}], "generationConfig": gc}
+        try:
+            r = _http().post(f"{GEMINI_BASE}/models/{model}:generateContent", headers={"x-goog-api-key": API_KEY},
+                             json=body, timeout=max(1.0, remaining))
+            if r.status_code == 400 and "thinking" in r.text.lower():      # model rejects the thinking setting
+                gc.pop("thinkingConfig", None)
+                r = _http().post(f"{GEMINI_BASE}/models/{model}:generateContent", headers={"x-goog-api-key": API_KEY},
+                                 json=body, timeout=max(1.0, remaining))
+            if r.status_code in RETRYABLE:
+                last_err = f"{model}: HTTP {r.status_code}"
+                usage.errors.append(last_err)
+                if r.status_code == 404 or (r.status_code == 429 and "quota" in r.text.lower()):
+                    _dead.add(model)                  # unavailable / daily quota spent: stop trying it
+                continue
+            r.raise_for_status()
+            data = r.json()
+            parts = data["candidates"][0].get("content", {}).get("parts", [])
+            text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
+            meta = data.get("usageMetadata", {})
+            usage.tokens_in += int(meta.get("promptTokenCount", 0))
+            usage.tokens_out += int(meta.get("candidatesTokenCount", 0)) + int(meta.get("thoughtsTokenCount", 0))
+            usage.calls += 1
+            usage.model = model
+            _sticky = model
+            return _parse_json(text)
+        except (httpx.TimeoutException, httpx.TransportError) as exc:
+            last_err = f"{model}: {type(exc).__name__}"
+            usage.errors.append(last_err)
+        except (KeyError, IndexError, ValueError) as exc:                 # empty/blocked/non-JSON answer
+            last_err = f"{model}: bad response {type(exc).__name__}"
+            usage.errors.append(last_err)
+    raise RuntimeError(last_err)
+
+
 def call_json(system: str, user: str, schema: dict, usage: Usage, max_tokens: int = 2048) -> dict | None:
     """One JSON-mode call. Returns the parsed object, or None on any failure (caller falls back)."""
     if not enabled():
@@ -97,19 +168,7 @@ def call_json(system: str, user: str, schema: dict, usage: Usage, max_tokens: in
     t = time.perf_counter()
     try:
         if PROVIDER == "gemini":
-            body = {
-                "systemInstruction": {"parts": [{"text": system}]},
-                "contents": [{"role": "user", "parts": [{"text": user}]}],
-                "generationConfig": {"temperature": 0, "seed": 7, "maxOutputTokens": max_tokens,
-                                     "responseMimeType": "application/json", "responseSchema": schema},
-            }
-            r = _http().post(f"{GEMINI_BASE}/models/{model_name()}:generateContent", headers={"x-goog-api-key": API_KEY}, json=body)
-            r.raise_for_status()
-            data = r.json()
-            text = "".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"])
-            meta = data.get("usageMetadata", {})
-            usage.tokens_in += int(meta.get("promptTokenCount", 0))
-            usage.tokens_out += int(meta.get("candidatesTokenCount", 0))
+            return _gemini_json(system, user, schema, usage, max_tokens, t)
         else:
             base = BASE_URL or "https://api.openai.com/v1"
             body = {"model": model_name(), "temperature": 0, "seed": 7, "max_tokens": max_tokens,

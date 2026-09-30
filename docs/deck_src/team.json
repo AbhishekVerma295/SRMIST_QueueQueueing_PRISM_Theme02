@@ -1,0 +1,29 @@
+{
+  "team": "SRMIST_QueueQueueing",
+  "college": "SRM Institute of Science and Technology",
+  "repo": "https://github.com/AbhishekVerma295/SRMIST_QueueQueueing_PRISM_Theme02",
+  "video": "",
+  "members": [
+    {
+      "name": "Abhinav Kumar",
+      "reg": "RA2411003010993",
+      "email": "ak8045@srmist.edu.in",
+      "primary": true
+    },
+    {
+      "name": "Abhishek Verma",
+      "reg": "RA2411003012011",
+      "email": "av8372@srmist.edu.in"
+    },
+    {
+      "name": "Ayushi Paul",
+      "reg": "RA2411003010997",
+      "email": "ap1547@srmist.edu.in"
+    },
+    {
+      "name": "Ketki Gonnade",
+      "reg": "RA2411003010739",
+      "email": "kg0184@srmist.edu.in"
+    }
+  ]
+}

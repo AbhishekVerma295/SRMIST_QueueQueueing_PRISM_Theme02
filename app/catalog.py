@@ -140,7 +140,9 @@ class Catalog:
             elif op_hint == "update":
                 op_bonus = 0.15 if e.op == "update" else 0.0
             rrf = 1 / (60 + rank_b[i]) + 1 / (60 + rank_d[i])
-            score = 10 * rrf + 0.6 * coverage + 0.2 * precision + 0.4 * float(dense[i]) + op_bonus
+            feat_l, tgt_l = e.feature.lower(), target.lower().strip()
+            phrase_bonus = 0.3 if feat_l and (feat_l in tgt_l or tgt_l in feat_l) else 0.0   # exact phrase evidence
+            score = 10 * rrf + 0.6 * coverage + 0.2 * precision + 0.4 * float(dense[i]) + op_bonus + phrase_bonus
             scored.append((score, e, float(dense[i]), coverage, mismatch))
         scored.sort(key=lambda t: (-t[0], t[1].id))
         best = scored[0]

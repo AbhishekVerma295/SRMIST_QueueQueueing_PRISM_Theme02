@@ -1,0 +1,26 @@
+[
+ {
+  "name": "Variant A: Hybrid BM25 + Dense Embedding Retrieval",
+  "step_accuracy": 2.53641975308642,
+  "deeplink_relevance": 1.7647058823529411,
+  "precision": 1.0,
+  "p95_ms": 137.1629000059329,
+  "cost_per_query": 0.0,
+  "map_calls": 0,
+  "map_failed": 0,
+  "auto_actions": 20,
+  "dummy": 5
+ },
+ {
+  "name": "Variant B: Pure Rules-Based Deeplink Mapping",
+  "step_accuracy": 2.53641975308642,
+  "deeplink_relevance": 1.2941176470588236,
+  "precision": 0.5789473684210527,
+  "p95_ms": 120.4934000124922,
+  "cost_per_query": 0.0,
+  "map_calls": 0,
+  "map_failed": 0,
+  "auto_actions": 20,
+  "dummy": 1
+ }
+]

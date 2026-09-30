@@ -28,7 +28,9 @@ MAP_MIN_DENSE = float(os.getenv("MAP_MIN_DENSE", "0.80"))        # cosine needed
 DOC_MIN_RELEVANCE = float(os.getenv("DOC_MIN_RELEVANCE", "0.69"))
 
 # Semantic cache
-CACHE_MIN_SIM = float(os.getenv("CACHE_MIN_SIM", "0.86"))
+CACHE_MIN_SIM = float(os.getenv("CACHE_MIN_SIM", "0.86"))                        # query symptom known, entry has none
+CACHE_MIN_SIM_SYMPTOM = float(os.getenv("CACHE_MIN_SIM_SYMPTOM", "0.82"))        # query and entry share a symptom
+CACHE_MIN_SIM_NO_SYMPTOM = float(os.getenv("CACHE_MIN_SIM_NO_SYMPTOM", "0.88"))  # no recognisable symptom in the query
 CACHE_WRITE = os.getenv("CACHE_WRITE", "1") == "1"
 
 MAX_QUERY_CHARS = 2000

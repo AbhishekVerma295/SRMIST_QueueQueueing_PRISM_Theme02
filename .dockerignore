@@ -9,4 +9,3 @@ models_cache
 *.pdf
 *.pptx
 *.docx
-data/derived/cache.sqlite

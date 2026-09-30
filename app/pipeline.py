@@ -114,7 +114,7 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
 
     # L2: look up the normalised complaint (catches vague or oddly phrased inputs, e.g. no-SIIS one-liners)
     if use_cache and lookup and primary.canonical.lower() != query.lower():
-        hit, how, sim = cache.lookup(primary.canonical, s_hash)
+        hit, how, sim = cache.lookup(primary.canonical, s_hash, rerank_query=query)
         trace["cache_l2"] = {"how": how, "similarity": round(sim, 3), "key": primary.canonical}
         if hit:
             env = copy.deepcopy(hit)
@@ -145,7 +145,7 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
         if llm_canonical:
             canonical_keys.append(llm_canonical)
         if extracted is not None:
-            model = f"{llm.model_name()}+bge-small-en-v1.5"
+            model = f"{usage.model or llm.model_name()}+bge-small-en-v1.5"
             for e, actions, rel in extracted:
                 if rel == "no" or not actions:
                     continue

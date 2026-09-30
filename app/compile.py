@@ -90,10 +90,11 @@ def _manual_name(a: IRAction) -> str:
 
 
 def _manual_desc(a: IRAction) -> str:
-    blob = (a.heading + " " + " ".join(a.steps)).lower()
-    for pat, desc in MANUAL_DESC:
-        if re.search(pat, blob):
-            return desc
+    # the heading names the action's purpose best ("Charger Issues"); steps are only a fallback
+    for blob in (a.heading.lower(), " ".join(a.steps).lower()):
+        for pat, desc in MANUAL_DESC:
+            if re.search(pat, blob):
+                return desc
     return "It will help resolve the issue"
 
 

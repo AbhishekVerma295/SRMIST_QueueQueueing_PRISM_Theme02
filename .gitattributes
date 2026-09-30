@@ -1,0 +1,7 @@
+# Keep LF line endings in the repo (scripts run inside the Linux Docker image)
+* text=auto eol=lf
+*.npy binary
+*.sqlite binary
+*.png binary
+*.pdf binary
+*.pptx binary

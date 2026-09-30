@@ -38,14 +38,17 @@ ENRICH_SCHEMA = {
 EXTRACT_SYSTEM = """You turn a reference troubleshooting article into structured, grounded troubleshooting plans.
 You receive a customer complaint and the article split into numbered sentences [S1], [S2], ... (headings shown as '##').
 1. Split the complaint into its distinct problems (usually one; a numbered list or "X and Y" can hold several).
-2. For each problem decide if the article contains a viable fix: "yes", "partial" (some sections apply) or "no".
-3. For relevant problems list at most 6 actions, most useful first, using ONLY article sentences that address THIS problem. Skip unrelated sections.
+2. For each problem decide if the article contains a viable fix FOR THE USER'S OWN DEVICE: "yes", "partial" (some sections apply) or "no".
+   Advice about a different device or setup (for example a TV, a PC, a camera recording, another app) does not count as a fix.
+3. For relevant problems include EVERY article section that applies to THIS problem (up to 6 actions), in the article's order.
+   Do not drop applicable checks such as charging, powering on or contacting support. Skip sections that are unrelated.
 Action rules:
 - One action = one screen or one physical activity. Steps on the same Settings screen belong to one action.
 - kind: "settings" (done in a Settings screen), "manual" (physical checks, cleaning, charging, using another device/app),
   "escalation" (contact support / service center / repair), "critical" (restart, force restart, safe mode, software update, reset, factory reset).
 - settings_path: the Settings menu path exactly as the article names it, without "Settings" itself, e.g. ["Display", "Touch sensitivity"]. Empty unless kind is settings or a critical action done in Settings.
-- toggle: the switch being turned on/off, if any, else "". op: on | off | view | update | none.
+- toggle: the NAME of the switch being turned on/off (e.g. "Touch sensitivity"), NOT the words on/off; "" if none.
+- op: on (turn a switch on) | off (turn it off) | view (just open a screen / choose an option) | update (adjust a slider/value) | none.
 - steps: short imperative instructions, ONE interaction each (split "tap A, then tap B" into two), copied or minimally rewritten from the article. Every step lists the sentence numbers it comes from in cites. Never add steps, tips, links or knowledge that are not in the article.
 - name: 2-6 word Title Case action name. benefit: 3-5 word phrase saying what it achieves (e.g. "turn on touch sensitivity").
 4. topic: 1-3 word Title Case name of the problem (e.g. "Touchscreen", "Black Screen"). title: 2-3 words, sentence case (e.g. "Touchscreen response issues"). request_type: "Troubleshooting" for faults, "Configuration" for how-to/preference requests.
@@ -160,10 +163,18 @@ def llm_extract(query: str, content: str, title: str, usage: llm.Usage, trace: d
                 ck = "restart"
             path = [normalize(p) for p in a.get("settings_path", []) if normalize(p) and normalize(p).lower() != "settings"]
             op = a.get("op") if a.get("op") in ("on", "off", "view", "update") else ("view" if path else None)
+            toggle = normalize(a.get("toggle", "")) or None
+            if toggle and toggle.lower() in ("on", "off", "enable", "disable", "enabled", "disabled"):
+                op, toggle = ("off" if toggle.lower().startswith(("off", "disable")) else "on"), None   # model put the state in 'toggle'
+            name = normalize(a.get("name", ""))
+            if kind == "settings" and op in ("on", "off") and not toggle:
+                # the switch is named in the action ("Enable Touch Sensitivity"); use it as the most specific target
+                feat = re.sub(r"(?i)^(enable|disable|turn (?:on|off)|switch (?:on|off)|activate|deactivate)\s+", "", name).strip()
+                if feat and feat.lower() != name.lower() and (not path or feat.lower() != path[-1].lower()):
+                    toggle = feat
             ir = IRAction(kind=kind if kind in ("settings", "manual", "escalation", "critical") else "manual",
-                          heading=normalize(a.get("name", "")), steps=steps, cites=sorted(set(cites)),
-                          path=path, op=op, critical_kind=ck if kind == "critical" else None,
-                          toggle=normalize(a.get("toggle", "")) or None)
+                          heading=name, steps=steps, cites=sorted(set(cites)),
+                          path=path, op=op, critical_kind=ck if kind == "critical" else None, toggle=toggle)
             if ir.kind == "settings" and not ir.path and not ir.toggle:
                 ir.kind = "manual"                       # a Settings action must name its screen
             ir.benefit = normalize(a.get("benefit", "")) or None
@@ -177,11 +188,24 @@ def llm_extract(query: str, content: str, title: str, usage: llm.Usage, trace: d
 def run_parallel(query: str, content: str | None, title: str, trace: dict) -> tuple[llm.Usage, tuple, list | None]:
     """Runs enrichment and extraction concurrently (latency ~= one call)."""
     usage = llm.Usage()
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        f_en = pool.submit(llm_enrich, query, usage)
+    pool = ThreadPoolExecutor(max_workers=2)
+    try:
+        en_usage = llm.Usage()                                   # separate: it may finish after we return
+        f_en = pool.submit(llm_enrich, query, en_usage)
         f_ex = pool.submit(llm_extract, query, content, title, usage, trace) if content else None
-        enriched = f_en.result()
         extracted = f_ex.result() if f_ex else None
+        # enrichment is optional: wait only briefly after the plan is ready, else use rules variations
+        try:
+            enriched = f_en.result(timeout=0.5 if f_ex else llm.BUDGET_S)
+            usage.calls += en_usage.calls
+            usage.tokens_in += en_usage.tokens_in
+            usage.tokens_out += en_usage.tokens_out
+            usage.errors += en_usage.errors
+        except Exception:
+            enriched = (None, None)
+            trace["llm_enrich"] = "skipped (not ready in time)"
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
     return usage, enriched, extracted
 
 

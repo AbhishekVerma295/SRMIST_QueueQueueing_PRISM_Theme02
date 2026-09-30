@@ -1,0 +1,104 @@
+{
+ "_readme": "D2: held-out scenarios outside the Display-heavy official kit (Battery, Display, Performance, Camera). Reference texts were written by the team in the style of the kit's SIIS articles (not copied from any vendor page). Gold deeplink ids come from starter_kit/Theme 2/deeplinks.json. Two cases pair a complaint with an unrelated article and must abstain. Written 28 Sep 2026; never used for tuning.",
+ "cases": [
+  {"id": "d2_b1", "domain": "Battery", "relevant": true,
+   "query": "My Nexa X1 battery drains really fast since the last software update, it barely lasts half a day.",
+   "siis_response": {"title": "Battery drains quickly on smartphone or tablet",
+    "content": "## Step 1: Turn on Power saving\nPower saving limits background activity and lowers performance slightly to extend battery life. To turn it on, go to Settings, tap Battery, and then tap the switch next to Power saving.\n## Step 2: Put unused apps to sleep\nApps you rarely use can keep running in the background and drain the battery. Go to Settings, tap Battery, tap Background usage limits, and then tap the switch next to Put unused apps to sleep.\n## Step 3: Restart your device\nAfter a software update, a restart can finish pending optimisation. Press and hold the Side button, then tap Restart. Tap Restart again to confirm.\n## Step 4: Contact Customer Support\nIf the battery still drains quickly, contact Customer Support to have the battery checked."},
+   "expected_actions": [
+    {"name": "Enable Power Saving", "category": "auto", "deeplink_id": "DL-0412", "acceptable_deeplink_ids": ["DL-0519"], "required": true},
+    {"name": "Enable Put Unused Apps to Sleep", "category": "auto", "deeplink_id": "DL-0417", "acceptable_deeplink_ids": ["DL-0544"], "required": true},
+    {"name": "Contact Customer Support", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false},
+    {"name": "Restart Your Device", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true}]},
+
+  {"id": "d2_b2", "domain": "Battery", "relevant": true,
+   "query": "phone takes forever to charge now, like 4 hours with the original charger",
+   "siis_response": {"title": "Smartphone charges slowly",
+    "content": "## Check the charger and cable\nInspect the charger and USB cable for damage and try a different original charger and cable. Remove any case that may block the charging port, and gently clean the port with a dry soft brush.\n## Turn on Fast charging\nFast charging only works when it is turned on. Go to Settings, tap Battery, tap Charging settings, and then tap the switch next to Fast charging.\n## Avoid using the phone while charging\nUsing demanding apps while charging generates heat and slows charging. Close games and video apps while the phone charges."},
+   "expected_actions": [
+    {"name": "Enable Fast Charging", "category": "auto", "deeplink_id": "DL-0404", "acceptable_deeplink_ids": ["DL-0514"], "required": true},
+    {"name": "Check the Charger and Cable", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Avoid Using the Phone While Charging", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2_b3", "domain": "Battery", "relevant": true,
+   "query": "How do I stop my tablet from charging to 100% every night? I want to protect the battery.",
+   "siis_response": {"title": "Protect your battery on smartphone or tablet",
+    "content": "## Use Battery protection\nKeeping the battery at 100% for long periods can shorten its lifespan. Battery protection stops charging at a lower level. Go to Settings, tap Battery, and then tap the switch next to Battery protection.\n## Charge in a cool place\nAvoid charging the device in direct sunlight or under a pillow, because heat reduces battery lifespan."},
+   "expected_actions": [
+    {"name": "Enable Battery Protection", "category": "auto", "deeplink_id": "DL-0410", "acceptable_deeplink_ids": ["DL-0517"], "required": true},
+    {"name": "Charge in a Cool Place", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2_d1", "domain": "Display", "relevant": true,
+   "query": "my eyes hurt when i use my phone at night, the screen feels too harsh and blue",
+   "siis_response": {"title": "Reduce eye strain on your smartphone",
+    "content": "## Turn on Eye comfort shield\nEye comfort shield reduces blue light to make the screen easier on your eyes at night. Go to Settings, tap Display, and then tap the switch next to Eye comfort shield.\n## Lower the brightness\nSwipe down from the top of the screen to open the Quick settings panel, and then drag the brightness slider to the left.\n## Take regular breaks\nLook away from the screen for 20 seconds every 20 minutes."},
+   "expected_actions": [
+    {"name": "Enable Eye Comfort Shield", "category": "auto", "deeplink_id": "DL-0040", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Lower the Brightness", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": ["DL-0232", "DL-0496"], "required": true},
+    {"name": "Take Regular Breaks", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2_d2", "domain": "Display", "relevant": true,
+   "query": "Scrolling on my Nexa X1 looks choppy and not smooth at all.",
+   "siis_response": {"title": "Screen does not look smooth when scrolling",
+    "content": "## Adjust Motion smoothness\nA higher refresh rate makes scrolling and animations look smoother. Go to Settings, tap Display, tap Motion smoothness, and then select Adaptive.\n## Turn off Power saving\nPower saving can limit the refresh rate. Go to Settings, tap Battery, and then tap the switch next to Power saving to turn it off."},
+   "expected_actions": [
+    {"name": "Adjust Motion Smoothness", "category": "auto", "deeplink_id": "DL-0228", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Disable Power Saving", "category": "auto", "deeplink_id": "DL-0411", "acceptable_deeplink_ids": ["DL-0519"], "required": true}]},
+
+  {"id": "d2_d3", "domain": "Display", "relevant": true,
+   "query": "the screen switches off way too quickly while i'm reading",
+   "siis_response": {"title": "Screen turns off too quickly",
+    "content": "## Change Screen timeout\nThe screen turns off after a set period of inactivity. Go to Settings, tap Display, tap Screen timeout, and then choose a longer duration.\n## Check Power saving\nPower saving may shorten the screen timeout. Go to Settings, tap Battery, and then tap the switch next to Power saving to turn it off."},
+   "expected_actions": [
+    {"name": "Adjust Screen Timeout", "category": "auto", "deeplink_id": "DL-0220", "acceptable_deeplink_ids": ["DL-0471"], "required": true},
+    {"name": "Disable Power Saving", "category": "auto", "deeplink_id": "DL-0411", "acceptable_deeplink_ids": ["DL-0519"], "required": false}]},
+
+  {"id": "d2_p1", "domain": "Performance", "relevant": true,
+   "query": "My phone has become really slow and laggy, apps take ages to open.",
+   "siis_response": {"title": "Smartphone is slow or lagging",
+    "content": "## Optimise your device\nDevice care can close background apps and free up memory in one tap. Go to Settings, tap Device care, and then tap Optimize now.\n## Put unused apps to sleep\nGo to Settings, tap Battery, tap Background usage limits, and then tap the switch next to Put unused apps to sleep.\n## Restart your device\nPress and hold the Side button, then tap Restart. Tap Restart again to confirm.\n## Free up storage\nDelete files and apps you no longer need, because a nearly full storage slows the device down."},
+   "expected_actions": [
+    {"name": "Optimize Device Performance", "category": "auto", "deeplink_id": "DL-0538", "acceptable_deeplink_ids": ["DL-0475"], "required": true},
+    {"name": "Enable Put Unused Apps to Sleep", "category": "auto", "deeplink_id": "DL-0417", "acceptable_deeplink_ids": ["DL-0544"], "required": false},
+    {"name": "Free Up Storage", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false},
+    {"name": "Restart Your Device", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true}]},
+
+  {"id": "d2_p2", "domain": "Performance", "relevant": true,
+   "query": "Can my phone restart itself automatically at night so it stays fast?",
+   "siis_response": {"title": "Schedule automatic restarts",
+    "content": "## Turn on Restart on schedule\nRestarting regularly keeps the device running smoothly. Go to Settings, tap Device care, tap Auto optimization, and then tap Restart on schedule. Choose the days and time for the restart."},
+   "expected_actions": [
+    {"name": "Open Restart on Schedule Settings", "category": "auto", "deeplink_id": "DL-0419", "acceptable_deeplink_ids": ["DL-0480"], "required": true}]},
+
+  {"id": "d2_p3", "domain": "Performance", "relevant": true,
+   "query": "my phone gets extremely hot when i play games for a while",
+   "siis_response": {"title": "Smartphone overheats while gaming",
+    "content": "## Remove the case\nA thick case traps heat. Remove the case while playing games.\n## Change the Performance profile\nA lighter performance profile reduces heat. Go to Settings, tap Device care, tap Performance profile, and then select Light.\n## Close background apps\nTap the Recents button and then tap Close all to stop apps running in the background.\n## Let the device cool down\nIf the device is very hot, stop using it and let it cool down before charging it."},
+   "expected_actions": [
+    {"name": "Adjust Performance Profile", "category": "auto", "deeplink_id": "DL-0418", "acceptable_deeplink_ids": ["DL-0476"], "required": true},
+    {"name": "Remove the Case", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Close Background Apps", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false},
+    {"name": "Let the Device Cool Down", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2_c1", "domain": "Camera", "relevant": true,
+   "query": "The camera app shows a black screen and says the camera is blocked in other apps too.",
+   "siis_response": {"title": "Camera is blocked or cannot be opened",
+    "content": "## Allow camera access\nIf camera access is turned off in privacy settings, apps cannot use the camera. Go to Settings, tap Security and privacy, tap Privacy, and then tap the switch next to Camera access.\n## Restart your device\nPress and hold the Side button, then tap Restart. Tap Restart again to confirm.\n## Contact Customer Support\nIf the camera still does not work, contact Customer Support to have the camera module checked."},
+   "expected_actions": [
+    {"name": "Enable Camera Access", "category": "auto", "deeplink_id": "DL-0197", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Contact Customer Support", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false},
+    {"name": "Restart Your Device", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true}]},
+
+  {"id": "d2_c2", "domain": "Camera", "relevant": false,
+   "query": "the camera shutter sound is way too loud, can i change it",
+   "siis_response": {"title": "Battery drains quickly on smartphone or tablet",
+    "content": "## Step 1: Turn on Power saving\nPower saving limits background activity to extend battery life. To turn it on, go to Settings, tap Battery, and then tap the switch next to Power saving.\n## Step 2: Restart your device\nPress and hold the Side button, then tap Restart."},
+   "expected_actions": []},
+
+  {"id": "d2_d4", "domain": "Display", "relevant": false,
+   "query": "I dropped my phone and now the screen has a big crack across it",
+   "siis_response": {"title": "Reduce eye strain on your smartphone",
+    "content": "## Turn on Eye comfort shield\nEye comfort shield reduces blue light to make the screen easier on your eyes at night. Go to Settings, tap Display, and then tap the switch next to Eye comfort shield.\n## Take regular breaks\nLook away from the screen for 20 seconds every 20 minutes."},
+   "expected_actions": []}
+ ]
+}

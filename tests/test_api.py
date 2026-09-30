@@ -110,3 +110,13 @@ def test_official_kit_outputs_stay_brand_neutral_and_dummy_text_is_5_to_7_words(
                 link = a["stepGroups"][0].get("actionableDeeplink")
                 if link and link["deeplink"] == dummy:
                     assert 5 <= len(link["description"].split()) <= 7 and 5 <= len(link["message"].split()) <= 7, link
+
+
+def test_kb_search_finds_matching_article_and_leaves_contract_untouched(client):
+    """Demo helper: a typed complaint without an article can be matched to an official article."""
+    res = client.get("/v1/kb/search", params={"q": "my phone screen is cracked"}).json()["results"]
+    assert res and res[0]["title"].lower().startswith("cracked") and res[0]["score"] >= 0.65
+    assert {"title", "content"} <= set(res[0]["siis_response"])
+    # /v1/troubleshoot without an article still follows the contract (cache lookup, else no_siis_context)
+    env = client.post("/v1/troubleshoot", json={"query": "My smartwatch strap keeps squeaking loudly"}).json()
+    assert env["meta"]["fallback"] == "no_siis_context"

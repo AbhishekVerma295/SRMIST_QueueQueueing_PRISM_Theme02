@@ -1,0 +1,41 @@
+{
+ "_readme": "D3b: second hand-written paraphrase set, written AFTER cache thresholds were tuned on D3 and never used for tuning. Report this as the unseen-paraphrase result. Written 28 Sep 2026.",
+ "positives": [
+  {"row_id": "row_1", "text": "every time i tap an email in gmail my tablet display flashes and dies for a bit"},
+  {"row_id": "row_2", "text": "apps like the stock search make my screen go plain white with no words"},
+  {"row_id": "row_3", "text": "my foldable is stuck on a black screen and data transfer is impossible"},
+  {"row_id": "row_4", "text": "the phone I bought last month has a black screen that shows nothing now"},
+  {"row_id": "row_5", "text": "trying to move stuff to my new tablet but its screen is blank when scanning the code"},
+  {"row_id": "row_9", "text": "big inner screen of the fold is gone - no picture and no touch response, small outer one ok"},
+  {"row_id": "row_10", "text": "opening my fold phone makes the display flicker and then go black"},
+  {"row_id": "row_11", "text": "left half of my fold's screen is black but the right half is working"},
+  {"row_id": "row_13", "text": "switched carriers and now the phone just shows a blank screen at startup, no activation"},
+  {"row_id": "row_14", "text": "dropped my phone and the whole screen is cracked, can't use it"},
+  {"row_id": "row_15", "text": "phone boots to a blue screen with tiny text and never loads, holding power does nothing"},
+  {"row_id": "row_17", "text": "display went dark with random scrolling and no content visible"},
+  {"row_id": "row_19", "text": "my fold's screen has a crack right on the hinge again"},
+  {"row_id": "row_20", "text": "the picture on my brand-new phone's screen looks warped, can I get a diagnostic?"},
+  {"row_id": "row_21", "text": "my taps take ages to register on the touchscreen"},
+  {"row_id": "row_22", "text": "calls come in and the phone works but the display stays black, not damaged"},
+  {"row_id": "row_2", "text": "Screen turns blank white while I'm using certain apps and shows no text at all."},
+  {"row_id": "row_4", "text": "black display after a month of use, won't show anything"},
+  {"row_id": "row_14", "text": "Completely broken screen with cracks everywhere; the device is unusable."},
+  {"row_id": "row_21", "text": "touch responsiveness is slow and laggy on my phone"},
+  {"row_id": "row_22", "text": "no display at all though phone is on and ringing"},
+  {"row_id": "row_10", "text": "flickering screen then blank whenever i open my foldable"},
+  {"row_id": "row_9", "text": "Inner screen shows no image and doesn't respond to touch; cover screen fine."},
+  {"row_id": "row_19", "text": "crack again where it folds"}
+ ],
+ "negatives": [
+  "my phone keeps overheating when gaming",
+  "can't hear the other person during calls",
+  "apps crash as soon as I open them",
+  "how do I set up a new email account",
+  "my charger cable is frayed, is it safe",
+  "keyboard autocorrect keeps changing my words",
+  "the flashlight won't turn on",
+  "screen time limits for my kid",
+  "how to increase font size",
+  "headphone jack has no sound"
+ ]
+}

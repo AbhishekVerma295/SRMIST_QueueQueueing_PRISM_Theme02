@@ -3,36 +3,347 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Troubleshooting Engine – test console</title>
+<title>FixFlow · Guided Troubleshooting</title>
 <style>
-  body { font: 15px/1.5 system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 16px; color: #1b1b1f; }
-  textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 8px; }
-  button { font: inherit; padding: 8px 16px; margin-top: 8px; cursor: pointer; }
-  pre { background: #f4f4f6; padding: 12px; overflow: auto; font-size: 13px; }
-  .meta { color: #555; }
+  :root {
+    --bg: #f4f5f8; --panel: #ffffff; --ink: #16181d; --muted: #5d6270; --line: #e3e5ea;
+    --accent: #3a5bd9; --accent-ink: #ffffff; --ok: #1b8a4b; --ok-bg: #e5f5ec; --warn: #b35c00; --warn-bg: #fff2e0;
+    --crit: #b3261e; --crit-bg: #fdecea; --chip: #eef1fb; --phone: #0f1115; --screen: #fafbfc; --code: #f6f7f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1115; --panel: #171a21; --ink: #e8eaf0; --muted: #9aa0ad; --line: #2a2f3a;
+      --accent: #7b96ff; --accent-ink: #0f1115; --ok: #5fd08f; --ok-bg: #16301f; --warn: #ffb35c; --warn-bg: #33250f;
+      --crit: #ff8a80; --crit-bg: #3a1614; --chip: #222838; --phone: #000000; --screen: #12151b; --code: #12151b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); }
+  header { padding: 18px 24px 6px; }
+  header h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+  header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+  /* the phone (the product) is the hero; the engine view is a narrower side panel */
+  main { display: grid; grid-template-columns: minmax(380px, 560px) minmax(300px, 400px); justify-content: center; gap: 28px; padding: 14px 24px 28px; align-items: start; }
+  header { max-width: 988px; margin: 0 auto; }
+  @media (max-width: 1000px) { main { grid-template-columns: 1fr; padding: 12px 16px 24px; } header { padding: 16px 16px 4px; } }
+  .screen { font-size: 15.5px; }
+  .micmsg { font-size: 12.5px; color: var(--muted); margin-top: 6px; min-height: 1em; }
+  .micmsg.err { color: var(--crit); }
+  .kbbar { background: var(--chip); border-radius: 12px; padding: 9px 11px; margin: 12px 2px 0; font-size: 13px; }
+  .kbbar button { margin: 6px 6px 0 0; font-size: 12.5px; padding: 5px 11px; }
+
+  .phone { background: var(--phone); border-radius: 34px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+  .screen { background: var(--screen); border-radius: 24px; min-height: 760px; padding: 18px 18px 20px; overflow: hidden; }
+  .status { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding: 0 6px 10px; }
+  .ask { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 10px; }
+  textarea { width: 100%; border: 0; resize: vertical; min-height: 64px; font: inherit; background: transparent; color: var(--ink); outline: none; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
+  button:disabled { opacity: .5; cursor: default; }
+  button.icon { padding: 7px 11px; }
+  select { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 10px; padding: 6px 8px; max-width: 100%; }
+  main > section { min-width: 0; }                      /* let grid columns shrink below their content width */
+  .row select { flex: 1 1 160px; min-width: 0; width: 100%; }
+  .card, .card ol li, .verify { overflow-wrap: anywhere; }
+  details summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  .siis { width: 100%; min-height: 90px; margin-top: 6px; border: 1px solid var(--line); border-radius: 10px; padding: 8px; font: 12px/1.4 ui-monospace, Consolas, monospace; background: var(--code); color: var(--ink); }
+
+  .goal { margin: 16px 4px 8px; }
+  .goal h2 { font-size: 16px; margin: 0; }
+  .goal .sub { color: var(--muted); font-size: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 10px; margin: 10px 0; }
+  .card.done { border-color: var(--ok); }
+  .card h3 { margin: 0; font-size: 15px; display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+  .card .desc { color: var(--muted); font-size: 13px; margin: 2px 0 6px; }
+  .card ol { margin: 6px 0 8px 18px; padding: 0; font-size: 13.5px; }
+  .tag { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+  .tag.auto { background: var(--chip); color: var(--accent); }
+  .tag.manual { background: var(--warn-bg); color: var(--warn); }
+  .tag.critical { background: var(--crit-bg); color: var(--crit); }
+  .verify { font-size: 12.5px; margin-top: 4px; }
+  .verify.ok { color: var(--ok); } .verify.no { color: var(--crit); }
+  .empty { color: var(--muted); text-align: center; padding: 30px 12px; font-size: 14px; }
+  .guided { background: var(--chip); border-radius: 14px; padding: 10px 12px; margin: 12px 0 4px; font-size: 13.5px; }
+
+  .engine { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; }
+  .engine h2 { margin: 0 0 10px; font-size: 16px; }
+  .stages { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
+  .stage { display: grid; grid-template-columns: 150px 1fr; align-items: baseline; gap: 8px; }
+  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+  .stage b { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .stage span { font-size: 14px; }
+  .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 14px; }
+  .kv div { background: var(--code); border-radius: 10px; padding: 8px 10px; }
+  .kv small { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+  .kv strong { font-size: 16px; font-variant-numeric: tabular-nums; }
+  pre { background: var(--code); border-radius: 12px; padding: 12px; overflow: auto; font-size: 12px; max-height: 420px; margin: 8px 0 0; }
+  .note { color: var(--muted); font-size: 12.5px; }
+  .mic.on { background: var(--crit-bg); color: var(--crit); border-color: var(--crit); }
 </style>
 </head>
 <body>
-<h1>Smart Guided Troubleshooting Engine</h1>
-<p class="meta">Phase 1 test console. The phone-style demo UI arrives in Phase 4. API docs: <a href="/docs">/docs</a></p>
-<label>Complaint<br><textarea id="q" rows="3">My Galaxy S22 screen inputs are delayed and the touch responsiveness is laggy.</textarea></label>
-<label>Reference text (siis_response, optional)<br><textarea id="s" rows="6"></textarea></label>
-<label><input type="checkbox" id="dbg"> include debug trace</label><br>
-<button id="go">Troubleshoot</button>
-<p class="meta" id="stat"></p>
-<pre id="out"></pre>
+<header>
+  <h1>FixFlow · Smart Guided Troubleshooting</h1>
+  <p>Vague complaint in, grounded one-tap fix out · Samsung PRISM GenAI Hackathon 2026 · Theme 02 · SRMIST_QueueQueueing</p>
+</header>
+<main>
+  <section class="phone" aria-label="Customer phone view">
+    <div class="screen">
+      <div class="status"><span>9:41</span><span>Support Assistant</span><span>100%</span></div>
+      <div class="ask">
+        <textarea id="q" placeholder="Describe the problem, e.g. my screen flickers and goes black when I open it"></textarea>
+        <div class="row">
+          <button class="primary" id="go">Find fix</button>
+          <button class="icon mic" id="mic" title="Speak your complaint">🎤</button>
+          <select id="samples" aria-label="Sample complaints"><option value="">Sample complaints…</option></select>
+        </div>
+        <div class="micmsg" id="micmsg"></div>
+        <details id="siisBox"><summary>Reference article (siis_response, optional)</summary>
+          <textarea class="siis" id="siis" placeholder="Paste a reference article, or pick a sample above."></textarea>
+        </details>
+      </div>
+      <div id="kb"></div>
+      <div id="plan"><div class="empty">Describe any phone or tablet problem, or pick a sample.<br>Least disruptive steps come first.</div></div>
+    </div>
+  </section>
+
+  <section class="engine" aria-label="Engine view">
+    <h2>Engine view</h2>
+    <div class="stages" id="stages">
+      <div class="stage"><b>Fast-path cache</b><span>–</span></div>
+      <div class="stage"><b>Enrichment</b><span>–</span></div>
+      <div class="stage"><b>Grounded extraction</b><span>–</span></div>
+      <div class="stage"><b>Deeplink mapping</b><span>–</span></div>
+      <div class="stage"><b>Contract gate</b><span>–</span></div>
+    </div>
+    <div class="kv" id="kv">
+      <div><small>Latency</small><strong id="k-lat">–</strong></div>
+      <div><small>Cache hit</small><strong id="k-hit">–</strong></div>
+      <div><small>Cost</small><strong id="k-cost">–</strong></div>
+      <div><small>Model</small><strong id="k-model" style="font-size:12px">–</strong></div>
+    </div>
+    <p class="note" id="explain">Each request runs: cache lookup → enrichment → grounded extraction (every step must cite the article) → deeplink mapping (copied verbatim from the catalog) → contract gate. Repeat or paraphrased complaints are answered from the cache in milliseconds at $0. A new complaint without an article is first matched to the knowledge base (the official articles), so the plan stays grounded.</p>
+    <details><summary>Response JSON</summary><pre id="raw">{}</pre></details>
+  </section>
+</main>
+
 <script>
-document.getElementById('go').onclick = async () => {
-  const body = { query: document.getElementById('q').value };
-  const s = document.getElementById('s').value.trim();
-  if (s) body.siis_response = s;
-  const url = '/v1/troubleshoot' + (document.getElementById('dbg').checked ? '?debug=true' : '');
-  const res = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
-  const json = await res.json();
-  const m = json.meta || {};
-  document.getElementById('stat').textContent = `HTTP ${res.status} · ${m.latency_ms} ms · cache_hit=${m.cache_hit} · ${m.fallback || 'plan'}`;
-  document.getElementById('out').textContent = JSON.stringify(json, null, 2);
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let SAMPLES = [];
+const device = {};          // simulated device state, keyed by validation key
+
+fetch("/v1/samples").then((r) => r.json()).then((d) => {
+  SAMPLES = d.samples || [];
+  SAMPLES.forEach((s, i) => { const o = document.createElement("option"); o.value = i; o.textContent = `${s.id || "no ref"} · ${s.query.slice(0, 70)}`; $("samples").appendChild(o); });
+  // demo helper: ?sample=N runs a sample complaint; &verify=1 also taps Open + Verify on the first action
+  const params = new URLSearchParams(location.search);
+  if (params.has("sample") && SAMPLES[+params.get("sample")]) {
+    $("samples").value = params.get("sample");
+    $("samples").onchange();
+    run().then(() => {
+      if (params.get("verify") === "1") {
+        const open = document.querySelector("button.open"), check = document.querySelector("button.check");
+        if (open && check) { open.click(); check.click(); }
+      }
+    });
+  }
+}).catch(() => {});
+
+$("samples").onchange = () => {
+  const s = SAMPLES[$("samples").value];
+  if (!s) return;
+  $("q").value = s.query;
+  $("siis").value = s.siis_response ? JSON.stringify(s.siis_response) : "";
+  $("siisBox").open = !!s.siis_response;
 };
+
+function siisPayload() {
+  const t = $("siis").value.trim();
+  if (!t) return undefined;
+  try { const o = JSON.parse(t); if (o && typeof o === "object") return o; } catch (e) {}
+  return t;
+}
+
+const KB_AUTO = 0.65;      // use the best knowledge-base article automatically at or above this match score
+
+async function troubleshoot(query, siis) {
+  const body = { query };
+  if (siis !== undefined) body.siis_response = siis;
+  const res = await fetch("/v1/troubleshoot?debug=true", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  return res.json();
+}
+
+function useArticle(article, note) {
+  $("siis").value = JSON.stringify(article.siis_response);
+  $("kb").innerHTML = `<div class="kbbar">📚 ${esc(note)}: <b>${esc(article.title)}</b> (match ${Math.round(article.score * 100)}%)</div>`;
+}
+
+async function run() {
+  const query = $("q").value.trim();
+  if (!query) return;
+  $("go").disabled = true; $("go").textContent = "Thinking…";
+  $("kb").innerHTML = "";
+  const t0 = performance.now();
+  try {
+    let env = await troubleshoot(query, siisPayload());
+    // A new complaint with no article and no cached plan: find the matching article in the knowledge base
+    // (the official kit's articles) and run the full grounded pipeline on it. The API contract is unchanged.
+    if (env.meta?.fallback === "no_siis_context" && siisPayload() === undefined) {
+      const kb = await (await fetch("/v1/kb/search?q=" + encodeURIComponent(query))).json();
+      const best = (kb.results || [])[0];
+      if (best && best.score >= KB_AUTO) {
+        useArticle(best, "Matched knowledge-base article");
+        env = await troubleshoot(query, best.siis_response);
+      } else if (best) {
+        $("kb").innerHTML = `<div class="kbbar">📚 No close match in the knowledge base for this complaint. Closest articles:<br>` +
+          kb.results.slice(0, 2).map((r, i) => `<button data-k="${i}">${esc(r.title)} (${Math.round(r.score * 100)}%)</button>`).join("") + `</div>`;
+        document.querySelectorAll("#kb button").forEach((b) => b.onclick = async () => {
+          const r = kb.results[+b.dataset.k];
+          useArticle(r, "Using knowledge-base article");
+          const e2 = await troubleshoot(query, r.siis_response);
+          renderEngine(e2); renderPlan(e2);
+        });
+      }
+    }
+    renderEngine(env, performance.now() - t0);
+    renderPlan(env);
+  } catch (e) {
+    $("plan").innerHTML = `<div class="empty">Could not reach the engine.</div>`;
+  } finally { $("go").disabled = false; $("go").textContent = "Find fix"; }
+}
+$("go").onclick = run;
+$("q").addEventListener("input", () => { $("siis").value = ""; $("siisBox").open = false; });   // a new complaint starts fresh
+$("q").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) run(); });
+
+function renderEngine(env, wallMs) {
+  const m = env.meta || {}, tr = env.trace || {};
+  const hit = m.cache_hit;
+  // L2 is only consulted after an L1 miss, so a trace with cache_l2 on a hit means the L2 lookup served it
+  const how = hit ? (tr.cache_l2 ? "L2 hit (normalised complaint)" : `L1 ${tr.cache?.how || "hit"}`) : "miss";
+  const llmUsed = m.model && !m.model.startsWith("rules");
+  const ex = tr.llm_extract;
+  const acts = (env.response?.contexts || []).flatMap((c) => c.actions);
+  const links = acts.filter((a) => a.stepGroups[0]?.actionableDeeplink);
+  const dummies = links.filter((a) => a.stepGroups[0].actionableDeeplink.deeplink.endsWith("dummy_positive"));
+  const stages = [
+    ["Fast-path cache", hit ? `✅ ${how}` : `➖ ${how}${tr.cache ? ` (sim ${tr.cache.similarity})` : ""}`],
+    ["Enrichment", hit ? "served from cache" : (llmUsed ? (tr.llm_enrich ? "rules (LLM slow)" : "LLM + rules") : "rules (offline)")],
+    ["Grounded extraction", hit ? "served from cache" : (ex ? `LLM · ${ex.problems.length} problem(s) · ${ex.dropped_ungrounded_steps.length} unsupported step(s) dropped` : "rules parser (offline)")],
+    ["Deeplink mapping", `${links.length - dummies.length} catalog link(s)${dummies.length ? ` + ${dummies.length} placeholder` : ""}`],
+    ["Contract gate", (tr.gate_rejections ? "❌ rejected" : "✅ passed") + (m.fallback ? ` · ${m.fallback}` : "")],
+  ];
+  $("stages").innerHTML = stages.map(([b, s]) => `<div class="stage"><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join("");
+  $("k-lat").textContent = `${m.latency_ms} ms`;
+  $("k-hit").textContent = hit ? "yes" : "no";
+  $("k-cost").textContent = `$${Number(m.cost_usd || 0).toFixed(5)}`;
+  $("k-model").textContent = m.model || "–";
+  const clean = { ...env }; delete clean.trace;
+  $("raw").textContent = JSON.stringify(clean, null, 2);
+}
+
+function renderPlan(env) {
+  const ctx = env.response?.contexts || [];
+  if (!ctx.length) {
+    const fb = env.meta?.fallback;
+    const msg = fb === "no_siis_context" ? "I haven't seen this problem before and no reference article was supplied. Add one, or contact support."
+      : fb === "no_match" ? "The reference article doesn't cover this problem, so no steps are suggested (nothing is invented)."
+      : "No plan available.";
+    $("plan").innerHTML = `<div class="empty">${esc(msg)}</div>`;
+    return;
+  }
+  let html = "";
+  ctx.forEach((c, ci) => {
+    html += `<div class="goal"><h2>${esc(c.title)}</h2><div class="sub">${esc(c.goal)} · confidence ${Math.round(c.score * 100)}%</div></div>`;
+    html += `<div class="guided" id="guide-${ci}">Guided mode: try step 1 first. <button data-g="${ci}" data-i="0" class="gstart">Start guided fix</button></div>`;
+    c.actions.forEach((a, ai) => {
+      const sg = a.stepGroups[0] || {};
+      const link = sg.actionableDeeplink, val = sg.validationDeeplink;
+      const btn = link ? `<button class="open" data-c="${ci}" data-a="${ai}">${a.category === "critical" ? "Open (confirm)" : "Open"}</button>` : "";
+      const vbtn = val ? `<button class="check" data-c="${ci}" data-a="${ai}">Verify</button>` : "";
+      html += `<div class="card" id="card-${ci}-${ai}"><h3><span>${ai + 1}. ${esc(a.actionName)}</span><span class="tag ${a.category}">${a.category}</span></h3>
+        <div class="desc">${esc(a.description)}</div>
+        <ol>${(sg.steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+        <div class="row">${btn}${vbtn}</div><div class="verify" id="v-${ci}-${ai}"></div></div>`;
+    });
+  });
+  $("plan").innerHTML = html;
+  const get = (el) => ctx[el.dataset.c].actions[el.dataset.a];
+  document.querySelectorAll("button.open").forEach((b) => b.onclick = () => {
+    const a = get(b), sg = a.stepGroups[0], link = sg.actionableDeeplink;
+    if (a.category === "critical" && !confirm(`${a.actionName}\n\nThis step is disruptive (restart / reset). Back up your data first. Continue?`)) return;
+    const val = sg.validationDeeplink;
+    if (val && val.key) {                                   // simulate the setting change the deeplink performs
+      if (link.originalType === "onURL") device[val.key] = "True";
+      else if (link.originalType === "offURL") device[val.key] = "False";
+      else device[val.key] = device[val.key] ?? "opened";
+    }
+    $(`v-${b.dataset.c}-${b.dataset.a}`).className = "verify";
+    $(`v-${b.dataset.c}-${b.dataset.a}`).textContent = `Opened ${link.deeplink.endsWith("dummy_positive") ? "the Settings screen" : link.message} (${link.deeplink})`;
+  });
+  document.querySelectorAll("button.check").forEach((b) => b.onclick = () => {
+    const a = get(b), val = a.stepGroups[0].validationDeeplink, el = $(`v-${b.dataset.c}-${b.dataset.a}`);
+    const cur = device[val.key];
+    let ok;
+    if (val.resultType === "boolean" && val.condition === "equal") ok = String(cur) === String(val.value);
+    else ok = cur !== undefined;
+    el.className = "verify " + (ok ? "ok" : "no");
+    el.textContent = ok ? `✓ Verified via ${val.deeplink}: "${val.key}" is ${cur}` : `✗ Not applied yet: "${val.key}" ${cur === undefined ? "unchanged" : "= " + cur}. Tap Open first.`;
+    if (ok) $(`card-${b.dataset.c}-${b.dataset.a}`).classList.add("done");
+  });
+  document.querySelectorAll("button.gstart").forEach((b) => b.onclick = () => guide(ctx, +b.dataset.g, 0));
+}
+
+function guide(ctx, ci, i) {
+  const acts = ctx[ci].actions, box = $(`guide-${ci}`);
+  document.querySelectorAll(`[id^="card-${ci}-"]`).forEach((el, k) => el.style.opacity = k === i ? "1" : ".45");
+  if (i >= acts.length) {
+    box.innerHTML = "Still not fixed after every step? Contact Customer Support with the steps you tried.";
+    document.querySelectorAll(`[id^="card-${ci}-"]`).forEach((el) => el.style.opacity = "1");
+    return;
+  }
+  $(`card-${ci}-${i}`).scrollIntoView({ behavior: "smooth", block: "center" });
+  box.innerHTML = `Step ${i + 1} of ${acts.length}: <b>${esc(acts[i].actionName)}</b>. Did it fix the problem?
+    <div class="row" style="margin-top:6px"><button class="primary" id="gy-${ci}">Yes, fixed</button><button id="gn-${ci}">No, next step</button></div>`;
+  $(`gy-${ci}`).onclick = () => { box.innerHTML = `Great, fixed at step ${i + 1} without anything more disruptive.`; document.querySelectorAll(`[id^="card-${ci}-"]`).forEach((el) => el.style.opacity = "1"); };
+  $(`gn-${ci}`).onclick = () => guide(ctx, ci, i + 1);
+}
+
+// voice input (browser speech recognition, where available)
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const micMsg = (t, err = false) => { $("micmsg").textContent = t; $("micmsg").className = "micmsg" + (err ? " err" : ""); };
+if (!SR) {
+  $("mic").onclick = () => micMsg("Voice input needs Chrome or Edge (this browser has no speech recognition). You can type instead.", true);
+} else {
+  const rec = new SR(); rec.lang = "en-IN"; rec.interimResults = true; rec.continuous = false;
+  let on = false, heard = false, failed = false;
+  const ERR = {
+    "not-allowed": "Microphone blocked. Click the camera/mic icon in the address bar, allow the microphone, and try again.",
+    "service-not-allowed": "Microphone blocked. Allow the microphone for this site in the browser settings.",
+    "no-speech": "Didn't hear anything. Click 🎤 and speak right away.",
+    "audio-capture": "No microphone found. Check that a microphone is connected and selected in Windows sound settings.",
+    "network": "The browser's speech service is unreachable (it needs internet). Type the complaint instead.",
+    "aborted": "Listening stopped.",
+  };
+  rec.onstart = () => { micMsg("Listening… describe the problem, then pause."); };
+  rec.onresult = (e) => {
+    heard = true;
+    $("q").value = Array.from(e.results).map((r) => r[0].transcript).join(" ");
+    $("siis").value = ""; $("siisBox").open = false;
+  };
+  rec.onerror = (e) => { failed = true; micMsg(ERR[e.error] || `Voice input error: ${e.error}`, true); };
+  rec.onend = () => {
+    on = false; $("mic").classList.remove("on");
+    if (heard && $("q").value.trim()) { micMsg("Got it."); run(); }
+    else if (!failed) micMsg("Didn't catch that. Click 🎤 and try again.", true);
+  };
+  $("mic").onclick = () => {
+    if (on) { rec.stop(); return; }
+    heard = false; failed = false; on = true; $("mic").classList.add("on");
+    try { rec.start(); } catch (err) { on = false; $("mic").classList.remove("on"); micMsg("Could not start voice input: " + err.message, true); }
+  };
+}
 </script>
 </body>
 </html>

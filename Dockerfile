@@ -18,9 +18,10 @@ COPY data ./data
 COPY tests ./tests
 COPY ui ./ui
 
-# Bake the embedding model + catalog index into the image (no downloads at runtime),
-# then pre-warm the cache from the official kit so the fast path works out of the box.
-RUN python scripts/build_index.py && python scripts/warm_cache.py
+# Bake the embedding model + catalog index into the image (no downloads at runtime).
+# The pre-validated plan cache (data/derived/cache.sqlite, compiled with the LLM by scripts/warm_cache.py)
+# ships with the repo; it is only rebuilt (offline rules) if missing.
+RUN python scripts/build_index.py && (test -f data/derived/cache.sqlite || python scripts/warm_cache.py)
 
 EXPOSE 8000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=40s --retries=5 \

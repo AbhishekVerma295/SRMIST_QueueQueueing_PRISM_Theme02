@@ -8,7 +8,8 @@
 | Metrics (20 official lines, offline mode) | Gates 100% (schema, rules, 0 URL leaks, catalog validity, auto links) · deeplink relevance 2.00/2 · deeplink precision 100% · abstention 95% · cache P95 25 ms · cold P95 ~0.25 s · $0 |
 | Open from Phase 1 | Docker build test (Docker Desktop must be running) · human spot-check of `eval/gold/d1_gold.json` |
 | Needed from user | Gemini API key (Google AI Studio) in `.env` → unblocks Phase 2 · GitHub repo created (user runs all git commands) |
-| **Next** | Phase 2: LLM enrichment + grounded extraction (fixes coarse offline relevance: row_16 abstains; rows 3/11/17 keep an irrelevant Screen-lock action on a dummy link), L2 canonical cache, paraphrase set D3, held-out D2, step-accuracy judge |
+| Phase 2 (28 Sep) | Code done: LLM adapter + enrichment + grounded extraction (citation check in code), L2 cache, symptom-aware thresholds, D3/D3b paraphrase sets, 47 tests. Held-out paraphrases: 83.3% hit / 79.2% correct / 1 false hit of 10 |
+| **Next** | Live LLM run → regenerate results/metrics · Docker test · D2 held-out 4-domain scenarios · step-accuracy judge · Phase 3 ablations · Phase 4 demo UI |
 
 ## 0. Context
 - **Theme 02 – Smart Guided Troubleshooting Engine.** Goal: be in the **Top 15 (9 Oct)** → final demo 15 Oct → win (internship/PPO, worklet, ₹1.5L pool).

@@ -62,8 +62,11 @@ class SemanticCache:
     def _siis_ok(self, entry: dict, s_hash: str | None) -> bool:
         return s_hash is None or entry["siis"] == s_hash
 
-    def lookup(self, query: str, s_hash: str | None) -> tuple[dict | None, str, float]:
-        """Returns (envelope, how, similarity); how is 'exact', 'semantic' or 'miss'."""
+    def lookup(self, query: str, s_hash: str | None, rerank_query: str | None = None) -> tuple[dict | None, str, float]:
+        """Returns (envelope, how, similarity); how is 'exact', 'semantic' or 'miss'.
+
+        rerank_query (L2): candidates are found with the normalised complaint, but among entries that pass
+        the guards the one whose stored wording is closest to what the user actually typed wins."""
         nk = norm_key(query)
         for eid in self.exact.get(nk, []):
             e = self.entries[eid]
@@ -73,17 +76,41 @@ class SemanticCache:
             return None, "miss", 0.0
         qv = embed.embed_one(normalize(query))
         sims = self.key_vecs @ qv
-        q_symptoms = {s[0] for s in symptoms_of(query)}
-        for i in np.argsort(-sims)[:10]:
+        found = [s[0] for s in symptoms_of(query)]
+        q_symptoms, primary = set(found), (found[0] if found else None)
+        best = None                           # (primary symptom shared, similarity, entry, entry id)
+        passing: list = []
+        seen: set = set()
+        for i in np.argsort(-sims)[:25]:
             sim = float(sims[i])
-            if sim < config.CACHE_MIN_SIM:
+            if sim < config.CACHE_MIN_SIM_SYMPTOM:
                 break
-            e = self.entries[int(self.key_ids[i])]
+            eid = int(self.key_ids[i])
+            if eid in seen:
+                continue
+            seen.add(eid)
+            e = self.entries[eid]
             if e["tier"] not in REUSABLE_TIERS or not self._siis_ok(e, s_hash):
                 continue
-            if q_symptoms and e["symptoms"] and not (q_symptoms & e["symptoms"]):
-                continue                      # symptom guard: flicker must not hit a cracked-screen plan
-            return e["envelope"], "semantic", sim
+            if q_symptoms:
+                if e["symptoms"] and not (q_symptoms & e["symptoms"]):
+                    continue                  # symptom guard: flicker must not hit a cracked-screen plan
+                need = config.CACHE_MIN_SIM_SYMPTOM if q_symptoms & e["symptoms"] else config.CACHE_MIN_SIM
+            else:
+                need = config.CACHE_MIN_SIM_NO_SYMPTOM   # nothing recognisable in the query: be strict
+            if sim < need:
+                continue
+            cand = (primary in e["symptoms"], sim, e, eid)
+            if rerank_query is not None:
+                passing.append(cand)
+            elif best is None or cand[:2] > best[:2]:
+                best = cand
+        if rerank_query is not None and passing:
+            rv = embed.embed_one(normalize(rerank_query))
+            raw_sim = {c[3]: float((self.key_vecs[self.key_ids == c[3]] @ rv).max()) for c in passing}
+            best = max(passing, key=lambda c: (c[0], raw_sim[c[3]]))
+        if best:
+            return best[2]["envelope"], "semantic", best[1]
         return None, "miss", float(sims.max()) if len(sims) else 0.0
 
     def store(self, query: str, s_hash: str | None, envelope: dict, keys: list[str], symptoms: list[str], tier: str = "auto") -> None:
@@ -97,6 +124,21 @@ class SemanticCache:
             eid = cur.lastrowid
             self.db.executemany("INSERT INTO keys(entry_id, text, vec) VALUES (?,?,?)",
                                 [(eid, t, v.astype(np.float32).tobytes()) for t, v in zip(texts, vecs)])
+            self.db.commit()
+            self._load()
+
+    def exact_entry(self, query: str, s_hash: str | None) -> dict | None:
+        for eid in self.exact.get(norm_key(query), []):
+            if self.entries[eid]["siis"] == s_hash:
+                return self.entries[eid]
+        return None
+
+    def delete_query(self, query: str, s_hash: str | None) -> None:
+        with self._lock:
+            ids = [eid for eid in self.exact.get(norm_key(query), []) if self.entries[eid]["siis"] == s_hash]
+            for eid in ids:
+                self.db.execute("DELETE FROM entries WHERE id = ?", (eid,))
+                self.db.execute("DELETE FROM keys WHERE entry_id = ?", (eid,))
             self.db.commit()
             self._load()
 

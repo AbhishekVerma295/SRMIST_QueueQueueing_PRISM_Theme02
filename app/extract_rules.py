@@ -28,11 +28,11 @@ SETTINGS_PATH_RE = re.compile(
     r"(?:go to|open|navigate to|launch|head to|access)\s+(?:the\s+)?(?:device\s+)?Settings(?:\s+app)?\s*(?P<rest>(?:,|>|then|and| )[^.]*)",
     re.IGNORECASE,
 )
-PATH_STEP_RE = re.compile(r"(?:>|,\s*(?:and\s+)?(?:then\s+)?tap|\bthen\s+tap|\btap(?: on)?|\bselect)\s+(?:the\s+)?(?:switch next to\s+)?(?P<item>[A-Z0-9][\w'&/+-]*(?:\s+[\w'&/+-]+){0,5}?)(?=\s*(?:,|>|\.|$| and | then | to | if ))")
+PATH_STEP_RE = re.compile(r"(?:>|,\s*(?:and\s+)?(?:then\s+)?tap|\bthen\s+tap|\btap(?: on)?)\s+(?:the\s+)?(?:switch next to\s+)?(?P<item>[A-Z0-9][\w'&/+-]*(?:\s+[\w'&/+-]+){0,5}?)(?=\s*(?:,|>|\.|$| and | then | to | if ))")
 DISRUPTIVE_RE = re.compile(r"(?i)\b(force(?:d)? (?:a )?restart|restart|reboot|power (?:it )?off and (?:back )?on|turn (?:it|the device|your device) off and (?:back )?on|safe mode|factory (?:data )?reset|reset (?:all )?settings|reset network|software update|update the software|firmware|wipe cache|remove the battery)\b")
 ESCALATION_RE = re.compile(r"(?i)\b(service cent(?:er|re)|contact (?:us|samsung|techcorp|customer|support|the manufacturer|your)|(?:samsung|techcorp|customer) support|repair service|schedule a repair|walk-in|technician|require service|requires service|visit (?:a|an|the)\b)")
-TOGGLE_ON_RE = re.compile(r"(?i)\b(turn on|turned on|enable|switch on|activate|tap the switch(?:es)? next to|toggle on)\b")
-TOGGLE_OFF_RE = re.compile(r"(?i)\b(turn off|disable|switch off|deactivate|toggle off)\b")
+TOGGLE_ON_RE = re.compile(r"(?i)\b(turn on|turned on|turn (?:it|this|them) on|enable|switch on|activate|tap the switch(?:es)? next to|toggle on)\b")
+TOGGLE_OFF_RE = re.compile(r"(?i)\b(turn off|turn (?:it|this|them) off|disable|switch off|deactivate|toggle off)\b")
 ADJUST_RE = re.compile(r"(?i)\b(adjust|increase|decrease|lower|raise|set)\b")
 HEADING_RE = re.compile(r"^\s*#{1,6}\s*(.+)$")
 STEP_PREFIX_RE = re.compile(r"^(?:step\s*\d+\s*[:.)-]\s*|\d+\s*[.)]\s*)", re.IGNORECASE)
@@ -196,7 +196,9 @@ def extract(content: str) -> tuple[list[IRAction], list[Section]]:
         if NON_ACTION_HEADINGS.match(heading):
             sid += len(sec.sentences)
             continue
-        crit_kind = _critical_kind(heading) if CRITICAL_HEADING_RE.search(heading) and "app" not in heading.lower() else None
+        # "Restart on schedule" / app updates are settings, not disruptive operations
+        crit_kind = (_critical_kind(heading) if CRITICAL_HEADING_RE.search(heading)
+                     and not re.search(r"(?i)\bapps?\b|schedul", heading) else None)
         manual = IRAction("critical" if crit_kind else "manual", heading, critical_kind=crit_kind)
         current: IRAction | None = None          # open settings action that absorbs follow-up taps
         for sent in sec.sentences:
