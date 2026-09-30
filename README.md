@@ -16,6 +16,7 @@ Answers are pure JSON from a REST API. Repeat and paraphrased complaints are ans
 | Presentation | [`docs/SRMIST_QueueQueueing.pptx`](docs/SRMIST_QueueQueueing.pptx) · [`docs/SRMIST_QueueQueueing.pdf`](docs/SRMIST_QueueQueueing.pdf) |
 | Demo video (≤ 5 min) | [Google Drive folder](https://drive.google.com/drive/folders/1ATDX614AjhvJfmq3afcTFr0g-L0GjvHL?usp=drive_link) |
 | Metrics / per-line output | [`metrics.md`](metrics.md) · [`results.jsonl`](results.jsonl) |
+| AI usage disclosure | [`docs/SRMIST_QueueQueueing_AI_Disclosure.docx`](docs/SRMIST_QueueQueueing_AI_Disclosure.docx) · [`.pdf`](docs/SRMIST_QueueQueueing_AI_Disclosure.pdf) |
 | Release tag | `PRISM_GENAI_HACKATHON_Y2026` |
 
 ## Quickstart (Docker, no API key needed)
