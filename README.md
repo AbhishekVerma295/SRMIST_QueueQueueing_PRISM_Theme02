@@ -14,7 +14,7 @@ Answers are pure JSON from a REST API. Repeat and paraphrased complaints are ans
 | Theme | **02 — Smart Guided Troubleshooting Engine** |
 | Team | **SRMIST_QueueQueueing** (SRM Institute of Science and Technology): Abhinav Kumar (RA2411003010993, ak8045@srmist.edu.in, primary member) · Abhishek Verma (RA2411003012011, av8372@srmist.edu.in) · Ayushi Paul (RA2411003010997, ap1547@srmist.edu.in) · Ketki Gonnade (RA2411003010739, kg0184@srmist.edu.in) |
 | Presentation | [`docs/SRMIST_QueueQueueing.pptx`](docs/SRMIST_QueueQueueing.pptx) · [`docs/SRMIST_QueueQueueing.pdf`](docs/SRMIST_QueueQueueing.pdf) |
-| Demo video (≤ 5 min) | VIDEO_LINK |
+| Demo video (≤ 5 min) | [Google Drive folder](https://drive.google.com/drive/folders/1ATDX614AjhvJfmq3afcTFr0g-L0GjvHL?usp=drive_link) |
 | Metrics / per-line output | [`metrics.md`](metrics.md) · [`results.jsonl`](results.jsonl) |
 | Release tag | `PRISM_GENAI_HACKATHON_Y2026` |
 
