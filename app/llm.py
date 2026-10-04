@@ -49,6 +49,7 @@ _model_lock = threading.Lock()
 _resolved_model: str | None = None
 _chain: list[str] = []          # fallback order of models (Gemini), best first
 _sticky: str | None = None      # last model that answered; tried first next time
+THINKING = os.getenv("LLM_THINKING", "minimal").strip().lower()   # batch compile may use "low" for more careful extraction
 BUDGET_S = float(os.getenv("LLM_BUDGET_S", "7.0"))   # total time for one logical call incl. retries/fallbacks
 RETRYABLE = {404, 408, 429, 500, 502, 503, 504}
 
@@ -125,7 +126,7 @@ def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_token
         gc = {"temperature": 0, "seed": 7, "maxOutputTokens": max_tokens,
               "responseMimeType": "application/json", "responseSchema": schema}
         if re.match(r"gemini-3", model):
-            gc["thinkingConfig"] = {"thinkingLevel": "minimal"}
+            gc["thinkingConfig"] = {"thinkingLevel": THINKING}
         body = {"systemInstruction": {"parts": [{"text": system}]},
                 "contents": [{"role": "user", "parts": [{"text": user}]}], "generationConfig": gc}
         try:

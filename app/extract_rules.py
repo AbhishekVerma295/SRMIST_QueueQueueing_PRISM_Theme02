@@ -92,15 +92,19 @@ def to_imperative(sentence: str) -> str | None:
     s = LEAD_INS.sub("", s).strip()
     if not s:
         return None
+    s = re.sub(r"(?i)\bplease\b,?\s*", "", s).strip()                # "After charging, please disconnect" -> "After charging, disconnect"
     first = s.split()[0].lower().strip(",")
     if first in IMPERATIVE_VERBS:
         return ensure_period(s[0].upper() + s[1:])
-    # "If X, do Y" / "For devices with ..., do Y" -> keep only when the main clause is imperative
+    # "If X, do Y" / "For devices with ..., do Y" -> keep only when the main clause is imperative,
+    # rebuilt from the cleaned main clause ("If no damage, let's try to force a restart" -> "If no damage, force a restart")
     m = re.match(r"^(if|for|when|once|after|before)\b[^,]{3,120},\s*(?P<main>.+)$", s, re.IGNORECASE)
     if m:
         main = LEAD_INS.sub("", m.group("main")).strip()
+        main = LEAD_INS.sub("", main).strip()
         if main and main.split()[0].lower() in IMPERATIVE_VERBS:
-            return ensure_period(s[0].upper() + s[1:])
+            rebuilt = s[: m.start("main")] + main[0].lower() + main[1:]
+            return ensure_period(rebuilt[0].upper() + rebuilt[1:])
     return None
 
 

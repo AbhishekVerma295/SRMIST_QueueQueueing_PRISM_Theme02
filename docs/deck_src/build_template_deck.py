@@ -247,7 +247,7 @@ def main() -> None:
              ("search", "Retrieval", "fastembed BAAI/bge-small-en-v1.5 (ONNX, CPU) · rank-bm25 · NumPy"),
              ("db", "Storage", "SQLite plan cache with embedded keys · JSON feature graph"),
              ("docker", "Delivery", "Docker + docker-compose · model and cache baked in · /health"),
-             ("flask", "Quality", "pytest (47 hermetic tests) · evaluation harness · ablation · gold labels"),
+             ("flask", "Quality", "pytest (53 hermetic tests) · eval harness · LLM judge · ablation · gold labels"),
              ("mobile", "Demo UI", "Static HTML/JS served at / · Web Speech API for voice input"),
              ("rocket", "Built with", "Claude Code as the engineering assistant")]
     for i, (ic, h, d) in enumerate(stack):
@@ -256,7 +256,7 @@ def main() -> None:
         icon(s, ic, x + 0.22, y + 0.23, 0.62, VIOLET)
         text(s, x + 1.05, y + 0.16, 4.4, 0.35, h, size=15, bold=True)
         text(s, x + 1.05, y + 0.52, 4.4, 0.5, d, size=12, color=MUTED)
-    notes(s, "CPU-only stack; runs with or without an API key. Point out the official schema is imported unchanged and 47 tests guard every contract rule.")
+    notes(s, "CPU-only stack; runs with or without an API key. Point out the official schema is imported unchanged and 53 tests guard every contract rule.")
 
     # ---------- 7. Impact & use case ----------
     s = S[6]; drop_body_placeholder(s)
@@ -284,15 +284,15 @@ def main() -> None:
                                             "Closed-loop Tap → Verify with validation deeplinks",
                                             "Trust-tiered, symptom-guarded two-level cache",
                                             "Outage-proof: model fallback chain + offline rules"]),
-            ("Results", GREEN, GREENSOFT, ["Gates 100%: schema, rules, 0 URL leaks, catalog-valid links (D1 + D2)",
-                                          "Deeplink precision 100%; relevance 2.00 (D1) / 1.71 (D2) of 2",
-                                          "Step-accuracy proxy 2.20 (D1) / 2.88 (D2) of 3; abstention 90% / 100%",
-                                          "Cache P95: 0 ms exact, 48 ms unseen paraphrase; 81.8% hit",
-                                          "Ablation: hybrid 1.76 rel / 100% precision vs rules 1.29 / 58%"]),
-            ("Limitations", RED, REDSOFT, ["Provider outage: the LLM built 12 of 20 official plans; the rest used rules",
-                                             "Paraphrases: every hit had the right symptom; 59% the exact same article",
-                                             "Offline relevance is coarse; LLM sometimes drops a section",
-                                             "Gold labels by one annotator; D2 used once for error analysis",
+            ("Results", GREEN, GREENSOFT, ["Gates 100%: schema, rules, 0 URL leaks, catalog-valid links (official + 2 held-out sets)",
+                                          "Step accuracy 2.60 official / 2.73 final held-out (of 3); LLM judge 1.94 / 2.06",
+                                          "Deeplink relevance 2.00 / 1.82 of 2; abstention 95% / 90%",
+                                          "Unseen paraphrases: 87.5% same plan, 0 false hits, P95 82 ms",
+                                          "Ablation: hybrid 1.88 rel / 100% precision vs full-LLM 1.76 / 75%, rules 1.29 / 58%"]),
+            ("Limitations", RED, REDSOFT, ["Final never-tuned paraphrase set: 75% hit (target 80%)",
+                                             "LLM sometimes drops an article section; compiles vary run to run",
+                                             "The LLM judge is noisy; gold labels by one annotator",
+                                             "Offline relevance is coarse (one official line abstains)",
                                              "Contract puts service escalation before restarts"])]
     for i, (h, col, fill, items) in enumerate(cols):
         x = 0.92 + i * 3.9
@@ -321,10 +321,10 @@ def main() -> None:
 
     # ---------- 10. Brownie points (differentiation) ----------
     s = S[9]; drop_body_placeholder(s)
-    diff = [("flask", "Measured, not claimed", "Held-out paraphrases, 4-domain scenarios, gold labels, and a scripted 3-way ablation, with honest limits."),
+    diff = [("flask", "Measured, not claimed", "Two held-out scenario sets, three paraphrase sets, gold labels, an LLM judge and a 3-way ablation, with honest limits."),
             ("sync", "Outage-proof, proven", "During a real Gemini 503 outage, 30 of 32 cold requests fell back to rules and every one stayed contract-valid."),
             ("check", "Closes the loop", "Validation deeplinks confirm the fix actually happened, not just a link to a screen."),
-            ("shield", "Contract-exact", "Official schema unchanged, every rule enforced in code, brand-neutral outputs, 47 hermetic tests."),
+            ("shield", "Contract-exact", "Official schema unchanged, every rule enforced in code, brand-neutral outputs, 53 hermetic tests."),
             ("docker", "Zero-friction to judge", "docker compose up: model and validated cache baked in; runs with no API key.")]
     for i, (ic, h, d) in enumerate(diff):
         y = 1.8 + i * 1.02
@@ -333,14 +333,15 @@ def main() -> None:
         text(s, 1.7, y + 0.38, 5.4, 0.6, d, size=11.5, color=MUTED)
     cd = CategoryChartData()
     cd.categories = ["Deeplink relevance (0–2)", "Link precision (0–1)"]
-    cd.add_series("Hybrid BM25 + dense (ours)", (1.76, 1.00))
+    cd.add_series("Hybrid BM25 + dense (ours)", (1.88, 1.00))
+    cd.add_series("Full-LLM mapping", (1.76, 0.75))
     cd.add_series("Pure keyword rules", (1.29, 0.58))
     gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, Inches(7.45), Inches(1.75), Inches(4.95), Inches(4.4), cd)
     ch = gf.chart
     ch.has_title = True; ch.chart_title.text_frame.text = "Ablation: same extraction, different mapper"
     ch.chart_title.text_frame.paragraphs[0].runs[0].font.size = Pt(13)
     ch.has_legend = True; ch.legend.position = XL_LEGEND_POSITION.BOTTOM; ch.legend.include_in_layout = False; ch.legend.font.size = Pt(11)
-    for ser, col in zip(ch.plots[0].series, (VIOLET, "B9A7E8")):
+    for ser, col in zip(ch.plots[0].series, (VIOLET, AMBER, "B9A7E8")):
         ser.format.fill.solid(); ser.format.fill.fore_color.rgb = rgb(col)
     pl = ch.plots[0]; pl.has_data_labels = True
     pl.data_labels.number_format = "0.00"; pl.data_labels.number_format_is_linked = False
@@ -348,7 +349,7 @@ def main() -> None:
     va = ch.value_axis; va.minimum_scale = 0; va.maximum_scale = 2.2; va.has_major_gridlines = True
     va.major_gridlines.format.line.color.rgb = rgb("E8E4F2"); va.tick_labels.font.size = Pt(10)
     ch.category_axis.tick_labels.font.size = Pt(11)
-    text(s, 7.45, 6.25, 4.95, 0.6, "Full-LLM mapping baseline implemented (eval/ablation.py); not completed due to the provider outage.", size=10, italic=True, color=MUTED)
+    text(s, 7.45, 6.25, 4.95, 0.6, "D1 + D2 scored on gold (eval/ablation.py). Full-LLM mapping also costs $0.00125 per query and 6 s P95; ours is $0.", size=10, italic=True, color=MUTED)
     notes(s, "Differentiation: measured evaluation, proven fallback, closed-loop verification, contract exactness, one-command run. Point at the ablation chart.")
 
     # ---------- 11. Checklist ----------

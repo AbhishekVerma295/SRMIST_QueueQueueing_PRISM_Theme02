@@ -125,6 +125,9 @@ def main() -> None:
             llm.API_KEY = ""
     out = ROOT / "eval" / "runs" / "ablation.json"
     out.parent.mkdir(parents=True, exist_ok=True)
+    if not any(r["name"].startswith("Baseline") for r in results) and out.exists():
+        # --skip-llm re-times the local variants only: keep the last measured LLM baseline
+        results[:0] = [r for r in json.loads(out.read_text(encoding="utf-8")) if r["name"].startswith("Baseline")]
     out.write_text(json.dumps(results, indent=1), encoding="utf-8")
     for r in results:
         print(f"{r['name'][:52]:52} step={r['step_accuracy']:.2f} rel={r['deeplink_relevance'] if r['deeplink_relevance'] is None else round(r['deeplink_relevance'], 2)} "

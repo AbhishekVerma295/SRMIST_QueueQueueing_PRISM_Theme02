@@ -5,6 +5,7 @@
 2. **Never read, list or refer to local files outside this project folder (`C:\Samsung Prism`) without asking first**, even in auto mode. Use the project-local `.tmp/` folder (gitignored) for scratch work, not the system temp or scratchpad.
 3. Never put API keys in files that get committed. Keys go only in `.env` (gitignored); `.env.example` holds placeholders.
 4. Never commit the Samsung PDFs or DRM files (`*.pdf` at the root, `*_FAQ_*`, the Submission template). They carry an employee watermark. Only our own deck goes in `docs/`.
+5. Never add `Co-Authored-By` or any other Claude attribution line to commit messages, tag messages or release notes Claude writes for the user.
 
 ## Plan & status
 - Team: **SRMIST_QueueQueueing**. GitHub repo: `SRMIST_QueueQueueing_PRISM_Theme02`. PPT/PDF file name: `SRMIST_QueueQueueing`. Release tag: `PRISM_GENAI_HACKATHON_Y2026`.
@@ -15,7 +16,16 @@
 - **30 Sep 17:50:** Deck done: `docs/SRMIST_QueueQueueing.pptx` + `.pdf` (13 slides, validated, exported by PowerPoint; generator `docs/deck_src/build_deck.js`, run with `NODE_PATH=.tmp/deckgen/node_modules`; set `VIDEO_URL` to add the link to the closing slide). UI screenshot `docs/img/ui_demo.png`. UI supports `?sample=N&verify=1` for demos. README has a Submission table with a `VIDEO_LINK` placeholder that MUST be replaced before tagging. Product name: FixFlow. Team: Abhinav Kumar (primary, RA2411003010993), Abhishek Verma (RA2411003012011), Ayushi Paul (RA2411003010997), Ketki Gonnade (RA2411003010739).
 - **30 Sep ~18:30:** The deck was rebuilt on the OFFICIAL template (`CollegeName_TeamName_Submission.pptx`, copied to `.tmp/template/template.pptx`, never committed) with `docs/deck_src/build_template_deck.py` (icons: `docs/deck_src/make_icons.js`; team/emails/video in `docs/deck_src/team.json`). 12 template sections filled; PDF exported via PowerPoint COM. `docs/PITCH.md` is split into 4 presenters (Abhinav 1–3, Abhishek 4–6, Ayushi 7–9, Ketki 10–12), and speaker notes name the presenter. Member emails are still missing (title slide).
 - **30 Sep evening:** Emails added (team.json, title slide, README). Video link = Google Drive FOLDER (stable link; the video file is dropped in later) in README, deck slides 5 and 11, and the PDF. `VIDEO_LINK` placeholder removed. UI: knowledge-base article matching (`app/kb.py`, `/v1/kb/search`), mic error feedback, phone-first layout; 48 tests.
-- **Next:** the user runs the final commit → tag `PRISM_GENAI_HACKATHON_Y2026` → push the tag → GitHub release → make public → uploads the video into the Drive folder → submits the Google Form before 11:59 PM.
+- **3 Oct (deadline extended to 4 Oct 11:59 PM, re-tag allowed):** Tier 1+2 round.
+  - Cache picks among guarded candidates by closeness to each plan's ORIGINAL complaint (first key per entry).
+  - Wider symptom lexicon (flashlight false hit fixed); "Optimize now" alias; manual description regex fixes; "please" stripped from all steps.
+  - Option/switch missing from the catalog → open its parent screen when the catalog has it (no placeholder).
+  - LLM abstains but rules find a grounded plan → rules plan (abstain only if both say no).
+  - New shipped cache: compile of 3 Oct (16/20 LLM, 4 rules). Gold proxy 2.60 vs 2.20 before. The LLM judge (`eval/llm_judge.py`, Gemini Flash) is noisy and rated the old and new caches about equal. `LLM_THINKING=low` scored lower and was not used.
+  - D2b (10 scenarios) and D3c (16+10 paraphrases) are FINAL held-out sets: never tune on them. D3c = 75% hit / 62.5% correct, reported as is.
+  - Full-LLM mapping ablation done: rel 1.76 / precision 75% / $0.00125 per query vs hybrid 1.88 / 100% / $0.
+  - Old baseline files: `.tmp/baseline_1003/`.
+- **Next (3 Oct):** feature freeze. The user commits, pushes main, moves the tag `PRISM_GENAI_HACKATHON_Y2026` to the new commit (delete + recreate + push), re-attaches the GitHub release to it, and runs the Docker build + smoke test (Docker Desktop was not running for Claude). The repo is public and the 30 Sep form submission stands (same GitHub link).
 - Starter kit: **official** kit in `starter_kit/Theme 2/` (see `starter_kit/SOURCE.md`). **Never edit these files.** Derived data goes in `data/derived/`. `starter_kit/_unofficial_public_copy/` is superseded and gitignored.
 
 ## Theme 02 contract (automated gates; enforce in code, never only in prompts)

@@ -60,8 +60,8 @@ uvicorn app.main:app --port 8000                    # Windows: .venv\Scripts\pyt
 | `touch screen is laggy and slow to respond` | Cache hit: **Enable Touch Sensitivity** and **Open Navigation Bar Settings**, both with catalog deeplinks, then checks and restart/safe mode last |
 | `touchscreen not working in some areas` | Cache hit: the same touchscreen plan from a differently worded complaint |
 | `my display is completely dark and nothing shows` | Cache hit: check damage → charge → power on → contact support → force restart (critical, last) |
-| `phone screen is black but it still rings` | Cache hit: black-screen plan (data access via mouse/monitor, force restart) |
-| `screen got cracked after I dropped my phone` | Cache hit: repair and care-plan options, no invented settings steps |
+| `phone screen is black but it still rings` | Cache hit: black-screen plan (damage check → charge → power on → support → force restart last) |
+| `screen got cracked after I dropped my phone` | Cache hit: a single support action with the article's repair options, no invented settings steps |
 | `gmail app shows a blank screen when I open an email` | Cache hit: Wi-Fi and app-storage settings (deeplinks), then Safe mode |
 | `can't transfer data to my new tablet, the qr code won't scan` | Cache hit: open the Data Transfer app (steps from the transfer article) |
 | `the screen doesn't rotate when I turn my phone sideways` | New complaint: the knowledge base finds the rotation article (90% match) → orientation settings, test app rotation, support |
@@ -94,6 +94,8 @@ Invoke-RestMethod -Method Post -Uri http://localhost:8000/v1/troubleshoot -Conte
 ```
 
 ## How it works
+![FixFlow architecture](docs/img/architecture.png)
+
 ```
 complaint (+ reference article)
  → [3] fast-path cache: L1 exact/semantic on the query, L2 on the normalised complaint; symptom guard; $0, ~30 ms
@@ -110,17 +112,42 @@ complaint (+ reference article)
 - **Deterministic:** temperature 0 with a fixed seed; the cache returns the identical plan for identical or same-meaning complaints.
 
 ## Results
-Full report: [`metrics.md`](metrics.md) (Appendix-C template: gates, accuracy, latency, cost, ablation). Per-line output: [`results.jsonl`](results.jsonl).
+| Metric (target) | D1 official (shipped) | D2b final held-out | Notes |
+|---|---|---|---|
+| Schema-valid / rule compliance / URL leaks (≥99% / ≥95% / 0) | 100% / 100% / 0 | 100% / 100% / 0 | D2 dev set also 100% / 100% / 0 |
+| Auto actions with a valid catalog deeplink (≥90%) | 100% | 100% | links copied verbatim from the catalog |
+| Step accuracy, gold proxy (0–3) | 2.60 | 2.73 | was 2.20 on D1 before the 3 Oct round |
+| Step accuracy, LLM judge (0–3) | 1.94 | 2.06 | Gemini Flash judge, never sees the gold labels |
+| Deeplink relevance (0–2) / precision | 2.00 / 100% | 1.82 / 91% | |
+| Abstention accuracy | 95% | 90% | `no_match` only when the article doesn't fit |
+
+| Cache and cost | Measured |
+|---|---|
+| Unseen paraphrases, D3b (24 held-out) | 91.7% hit, 87.5% same-article plan, 0 false hits of 10 |
+| Final unseen paraphrases, D3c (16, never tuned on) | 75% hit, 62.5% same-article plan, 0 false hits of 10 (below the 80% target, see limitations) |
+| Latency P95 | exact hit 1 ms · paraphrase hit 82 ms · cold path 6.6 s with Gemini (8 s budget) |
+| Cost | $0 per cache hit · ≈ $0.0005 per LLM-served cold query |
+
+**Deeplink ablation** (same extraction, only the mapper changes, D1 + D2 on gold):
+
+| Mapper | Deeplink relevance (0–2) | Precision | Cost per query |
+|---|---|---|---|
+| Full-LLM mapping | 1.76 | 75% | $0.00125 |
+| **Hybrid BM25 + dense (ours)** | **1.88** | **100%** | $0 |
+| Pure keyword rules | 1.29 | 58% | $0 |
+
+Full report: [`metrics.md`](metrics.md) (Appendix-C template: gates, accuracy, latency, cost, ablation, limitations). Offline rules-only run: [`metrics_offline.md`](metrics_offline.md). Per-line output: [`results.jsonl`](results.jsonl).
 ```bash
 python scripts/warm_cache.py --llm-budget 60   # compile the official lines into the cache (LLM, batch)
 python scripts/gen_results.py                  # results.jsonl, one line per input.txt line
 python eval/run_eval.py                        # metrics.md   (--offline for rules-only)
-python eval/ablation.py                        # 3-way deeplink-mapping ablation
+python eval/ablation.py                        # 3-way deeplink-mapping ablation (--skip-llm keeps the last LLM baseline)
+python eval/llm_judge.py                       # LLM-as-judge step accuracy (--compare A.sqlite B.sqlite for two caches)
 python -m pytest -q                            # contract, API and LLM-path tests (hermetic)
 ```
 
 ## Repository layout
-`app/` engine (`kb.py` = knowledge-base article search for the UI) · `ui/` demo · `starter_kit/Theme 2/` official kit (unchanged) · `data/derived/` index + pre-validated cache · `scripts/` build / warm / results / labelling · `eval/` datasets, gold labels, harness, ablation · `tests/` (48) · `docs/` deck (PPTX + PDF, built on the official template by `docs/deck_src/`), pitch script (`docs/PITCH.md`), UI screenshot · `Dockerfile`, `docker-compose.yml`
+`app/` engine (`kb.py` = knowledge-base article search for the UI) · `ui/` demo · `starter_kit/Theme 2/` official kit (unchanged) · `data/derived/` index + pre-validated cache · `scripts/` build / warm / results / labelling · `eval/` datasets, gold labels, harness, ablation · `tests/` (53) · `docs/` deck (PPTX + PDF, built on the official template by `docs/deck_src/`), pitch script (`docs/PITCH.md`), UI screenshot, architecture diagram (`docs/img/architecture.svg`) · `Dockerfile`, `docker-compose.yml`
 
 ## Notes
 - `starter_kit/Theme 2/` is the official Theme 2 kit (brand-neutral: `voiceassist://` deeplinks, TechCorp/Nexa names). See `starter_kit/SOURCE.md`.

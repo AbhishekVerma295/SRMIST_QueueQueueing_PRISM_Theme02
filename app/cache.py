@@ -52,9 +52,14 @@ class SemanticCache:
         self.exact = {}
         for eid, e in self.entries.items():
             self.exact.setdefault(e["norm"], []).append(eid)
-        keys = self.db.execute("SELECT entry_id, text, vec FROM keys").fetchall()
+        keys = self.db.execute("SELECT entry_id, text, vec FROM keys ORDER BY rowid").fetchall()
         self.key_ids = np.array([k[0] for k in keys], dtype=np.int64)
         self.key_vecs = np.stack([np.frombuffer(k[2], dtype=np.float32) for k in keys]) if keys else np.zeros((0, 384), np.float32)
+        # the first key stored for an entry is always its original complaint (see store()); generic variations
+        # widen recall, but choosing BETWEEN plans is done on the original complaint so the most specific plan wins
+        self.orig_vec: dict = {}
+        for i, k in enumerate(keys):
+            self.orig_vec.setdefault(k[0], self.key_vecs[i])
 
     def __len__(self) -> int:
         return len(self.entries)
@@ -78,8 +83,7 @@ class SemanticCache:
         sims = self.key_vecs @ qv
         found = [s[0] for s in symptoms_of(query)]
         q_symptoms, primary = set(found), (found[0] if found else None)
-        best = None                           # (primary symptom shared, similarity, entry, entry id)
-        passing: list = []
+        passing: list = []                    # (primary symptom shared, similarity, entry, entry id)
         seen: set = set()
         for i in np.argsort(-sims)[:25]:
             sim = float(sims[i])
@@ -100,16 +104,13 @@ class SemanticCache:
                 need = config.CACHE_MIN_SIM_NO_SYMPTOM   # nothing recognisable in the query: be strict
             if sim < need:
                 continue
-            cand = (primary in e["symptoms"], sim, e, eid)
-            if rerank_query is not None:
-                passing.append(cand)
-            elif best is None or cand[:2] > best[:2]:
-                best = cand
-        if rerank_query is not None and passing:
-            rv = embed.embed_one(normalize(rerank_query))
-            raw_sim = {c[3]: float((self.key_vecs[self.key_ids == c[3]] @ rv).max()) for c in passing}
-            best = max(passing, key=lambda c: (c[0], raw_sim[c[3]]))
-        if best:
+            passing.append((primary in e["symptoms"], sim, e, eid))
+        if passing:
+            # pick among plans that passed every guard: primary symptom first, then closeness of what the user
+            # typed to each plan's ORIGINAL complaint (not to its generic variations)
+            rv = embed.embed_one(normalize(rerank_query)) if rerank_query is not None else qv
+            orig = {c[3]: float(self.orig_vec[c[3]] @ rv) for c in passing}
+            best = max(passing, key=lambda c: (c[0], orig[c[3]], c[1]))
             return best[2]["envelope"], "semantic", best[1]
         return None, "miss", float(sims.max()) if len(sims) else 0.0
 

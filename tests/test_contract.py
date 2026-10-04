@@ -37,6 +37,7 @@ def test_official_schema_imported_unchanged():
     ("Navigation bar", "view", "View Navigation bar"),
     ("Power saving", "on", "Enable Power saving"),
     ("Power saving", "off", "Disable Power saving"),
+    ("Optimize now", None, "Optimize Device Performance"),     # button label alias
 ])
 def test_resolver_picks_exact_screen_and_operation(target, op, expected_message):
     m = catalog.get().match(target, op)
@@ -87,3 +88,13 @@ def test_validator_catches_each_violation(mutate, needle):
 def test_dummy_deeplink_is_valid_catalog_uri():
     cat = catalog.get()
     assert cat.dummy_uri == "voiceassist://dummy_positive" and cat.dummy_uri in cat.valid_uris
+
+
+def test_option_inside_a_catalog_screen_opens_that_screen_not_a_placeholder():
+    from app.compile import compile_action
+    from app.extract_rules import IRAction
+    a = IRAction(kind="settings", heading="Use buttons", path=["Display", "Navigation bar", "Buttons"], op="off",
+                 steps=["Go to Settings.", "Tap Display.", "Tap Navigation bar.", "Select Buttons."])
+    c = compile_action(a, catalog.get())
+    assert c.data["stepGroups"][0]["actionableDeeplink"]["message"] == "View Navigation bar"
+    assert c.data["actionName"] == "Open Navigation Bar Settings"

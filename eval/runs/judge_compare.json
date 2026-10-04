@@ -1,0 +1,32 @@
+{
+ "A": ".tmp\\baseline_1003\\cache.sqlite",
+ "B": "data\\derived\\cache.sqlite",
+ "absolute_A": {
+  "set": "A",
+  "judged": 19,
+  "failed": 0,
+  "plans": 17,
+  "step_accuracy": 1.853,
+  "completeness": 0.588,
+  "correctness": 0.706,
+  "ordering": 0.559,
+  "abstention_agreement": 0.842
+ },
+ "absolute_B": {
+  "set": "B",
+  "judged": 19,
+  "failed": 0,
+  "plans": 18,
+  "step_accuracy": 1.944,
+  "completeness": 0.528,
+  "correctness": 0.722,
+  "ordering": 0.694,
+  "abstention_agreement": 0.895
+ },
+ "pairwise": {
+  "A": 7,
+  "B": 6,
+  "tie": 6
+ },
+ "judge_model": "gemini-3.8-flash"
+}

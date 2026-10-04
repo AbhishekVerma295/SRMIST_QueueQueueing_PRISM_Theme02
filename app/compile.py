@@ -40,13 +40,14 @@ MANUAL_DESC = [
     (r"charger|cable", "It will rule out a faulty charger"),
     (r"\bcharg", "It will make sure the battery charges"),
     (r"power on|turn it on|powers on", "It will confirm the device powers on"),
-    (r"clean|wipe|dust|moisture|wet", "It will clear dirt affecting the screen"),
+    (r"\bclean|\bwipe|\bdust|moisture|\bwet\b", "It will clear dirt affecting the screen"),
     (r"wi-?fi|internet|network|mobile data", "It will restore your network connection"),
+    (r"\bmouse\b|\busb\b|computer|\bpc\b", "It will let you reach your data"),
     (r"back ?up|smart switch|transfer", "It will keep your personal data safe"),
-    (r"mouse|usb|computer|pc\b", "It will let you reach your data"),
-    (r"app|cache|update", "It will rule out app conflicts"),
-    (r"light|shutter|camera|video", "It will reduce flicker in your videos"),
     (r"rotat|orientation", "It will restore automatic screen rotation"),
+    (r"software update", "It will install the latest software fixes"),
+    (r"\bapps?\b|cache|\bupdate", "It will rule out app conflicts"),
+    (r"\blight|shutter|camera|video", "It will reduce flicker in your videos"),
 ]
 ESCALATION_NAME = "Contact Customer Support"
 ESCALATION_DESC = "It will get your device professionally repaired"
@@ -101,7 +102,7 @@ def _manual_desc(a: IRAction) -> str:
 def _clean_steps(steps: list[str]) -> list[str]:
     out = []
     for s in steps:
-        s = scrub_urls(s)
+        s = re.sub(r"(?i)\bplease\b,?\s*", "", scrub_urls(s)).strip()      # steps are commands, not requests
         if s and not has_url(s) and len(s.split()) >= 2:
             out.append(ensure_period(s[0].upper() + s[1:]))
     return out
@@ -115,6 +116,13 @@ def compile_action(a: IRAction, cat: "catalog_mod.Catalog") -> CompiledAction | 
     confidence = 0.5
     if a.kind == "settings":
         m = cat.match(a.target, a.op, " > ".join(a.path))
+        screen_path = a.path if a.toggle and a.path and a.toggle.lower() != a.path[-1].lower() else a.path[:-1]
+        if not m.accepted and screen_path and screen_path[-1].lower() != "settings":
+            # the target is an option or switch inside a screen the catalog has (e.g. "Buttons" inside Navigation
+            # bar): that screen is the one screen this action happens on, so open it instead of a placeholder
+            parent = cat.match(screen_path[-1], "view", " > ".join(screen_path))
+            if parent.accepted and parent.coverage >= 0.99 and parent.entry.op == "view":
+                m, a = parent, IRAction(**{**a.__dict__, "path": list(screen_path), "toggle": None, "op": "view"})
         if m.accepted:
             actionable, validation = cat.actionable(m.entry), cat.validation(m.entry)
             confidence = min(1.0, 0.5 * m.dense + 0.5 * m.coverage + 0.1)

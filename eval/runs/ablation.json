@@ -1,22 +1,34 @@
 [
  {
-  "name": "Variant A: Hybrid BM25 + Dense Embedding Retrieval",
-  "step_accuracy": 2.53641975308642,
+  "name": "Baseline: Full LLM Deeplink Mapping",
+  "step_accuracy": 2.5549382716049385,
   "deeplink_relevance": 1.7647058823529411,
+  "precision": 0.75,
+  "p95_ms": 6166.945600009058,
+  "cost_per_query": 0.0012514375,
+  "map_calls": 23,
+  "map_failed": 1,
+  "auto_actions": 20,
+  "dummy": 1
+ },
+ {
+  "name": "Variant A: Hybrid BM25 + Dense Embedding Retrieval",
+  "step_accuracy": 2.5734567901234566,
+  "deeplink_relevance": 1.8823529411764706,
   "precision": 1.0,
-  "p95_ms": 137.1629000059329,
+  "p95_ms": 541.2399000488222,
   "cost_per_query": 0.0,
   "map_calls": 0,
   "map_failed": 0,
   "auto_actions": 20,
-  "dummy": 5
+  "dummy": 4
  },
  {
   "name": "Variant B: Pure Rules-Based Deeplink Mapping",
-  "step_accuracy": 2.53641975308642,
+  "step_accuracy": 2.545679012345679,
   "deeplink_relevance": 1.2941176470588236,
   "precision": 0.5789473684210527,
-  "p95_ms": 120.4934000124922,
+  "p95_ms": 510.8979999786243,
   "cost_per_query": 0.0,
   "map_calls": 0,
   "map_failed": 0,

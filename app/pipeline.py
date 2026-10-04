@@ -152,13 +152,20 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
                 goal = compile_goal(e, actions, 0.9 if rel == "yes" else 0.7, MAX_ACTIONS)
                 if goal:
                     _add_context(contexts, goal)
-    if extracted is None:                     # no key, or the LLM call failed: offline rules path
-        if llm.enabled():
+    # no key, or the LLM call failed: offline rules path. Also when the LLM abstained: the rules path has its own,
+    # stricter relevance check (symptom + similarity), so a plan it finds is grounded; we abstain only if both say no
+    if extracted is None or not contexts:
+        if extracted is None and llm.enabled():
             model = MODEL_NAME + " (llm fallback)"
+        llm_model = model
+        if extracted is not None:
+            model = MODEL_NAME + " (llm abstained)"
         for intent in intents:
             goal = plan_intent(intent, content, title, trace)
             if goal:
                 _add_context(contexts, goal)
+        if extracted is not None and not contexts:
+            model = llm_model                 # both abstained: the LLM's decision stands
     qvars = qvars or variations(primary)
 
     # final gate: drop any context that still violates the contract (should not happen)

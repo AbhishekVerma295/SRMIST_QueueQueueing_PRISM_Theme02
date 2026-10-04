@@ -36,7 +36,7 @@ Before recording: `docker compose up --build`, open http://localhost:8000, set t
 - Type an unseen paraphrase, "my taps take ages to register on the touchscreen" → same kind of plan from the cache in milliseconds.
 
 **Slide 6 — Tech stack (2:20–2:30)**
-"Python 3.12 with FastAPI and Pydantic, the official schema unchanged; Gemini Flash-Lite; local CPU embeddings with BM25; SQLite cache; Docker; 47 tests." Hand over to Ayushi.
+"Python 3.12 with FastAPI and Pydantic, the official schema unchanged; Gemini Flash-Lite; local CPU embeddings with BM25; SQLite cache; Docker; 53 tests." Hand over to Ayushi.
 
 ## Part 3 — Ayushi Paul · slides 7–9 · 2:30–3:40
 **Slide 7 — Impact & use case (2:30–2:55)**
@@ -45,15 +45,15 @@ Before recording: `docker compose up --build`, open http://localhost:8000, set t
 
 **Slide 8 — Innovation, results & limitations (2:55–3:25)**
 - Innovation: citation-verified extraction, action- and depth-aware deeplinks, Tap → Verify, symptom-guarded cache, outage-proof design.
-- Results: all automated gates 100% on the official and held-out sets, deeplink precision 100%, cache P95 48 ms on unseen paraphrases.
-- Limitations, said honestly: a real provider outage limited the LLM to 12 of 20 plans; paraphrases always land on the right symptom but only 59% on the exact same article.
+- Results: all automated gates 100% on the official and both held-out sets; step accuracy 2.60 of 3 on the official lines and 2.73 on the final held-out set; an independent LLM judge gives 1.94 and 2.06; 87.5% of unseen paraphrases get the same-article plan in under 100 ms.
+- Limitations, said honestly: on our final never-tuned paraphrase set the cache reaches only 75% hits (target 80%); the LLM sometimes drops an article section; the judge itself is noisy.
 
 **Slide 9 — What's next (3:25–3:40)**
 "Compile the full 10k+ article base, learn the best order from telemetry, verify on real devices, and add Hindi/Hinglish." Hand over to Ketki.
 
 ## Part 4 — Ketki Gonnade · slides 10–12 · 3:40–4:40
 **Slide 10 — Differentiation (3:40–4:10)**
-- Measured, not claimed: held-out sets, gold labels and a 3-way ablation. The hybrid mapper reaches 100% precision vs 58% for keyword rules.
+- Measured, not claimed: held-out sets, gold labels, an LLM judge and a 3-way ablation. The hybrid mapper reaches 100% precision vs 75% for full-LLM mapping and 58% for keyword rules, at $0.
 - Outage-proof, proven: during the Gemini 503 outage, 30 of 32 cold requests fell back and every one stayed contract-valid.
 - Show the no-match case in the browser: `localhost:8000/?sample=5` (tablet dark, multi-window article) → "the article doesn't cover this, so nothing is invented."
 

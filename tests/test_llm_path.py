@@ -118,3 +118,12 @@ def test_cold_path_output_is_cached_for_paraphrases(fake_llm):
     again = pipeline.troubleshoot(r["original_query"], r["siis_response"])
     assert first["meta"]["cache_hit"] is False and again["meta"]["cache_hit"] is True
     assert again["meta"]["cost_usd"] == 0.0 and again["response"] == first["response"]
+
+
+def test_llm_abstains_but_rules_find_a_grounded_plan(fake_llm):
+    r = _row(21)
+    fake_llm["enrich"] = _enrich_ok()
+    fake_llm["extract"] = {"problems": [{"text": r["original_query"], "relevant": "no", "reason": "unsure", "actions": []}]}
+    env = pipeline.troubleshoot(r["original_query"], r["siis_response"], use_cache=False)
+    assert validators.check_envelope(env) == []
+    assert env["response"]["contexts"] and "llm abstained" in env["meta"]["model"]

@@ -120,3 +120,19 @@ def test_kb_search_finds_matching_article_and_leaves_contract_untouched(client):
     # /v1/troubleshoot without an article still follows the contract (cache lookup, else no_siis_context)
     env = client.post("/v1/troubleshoot", json={"query": "My smartwatch strap keeps squeaking loudly"}).json()
     assert env["meta"]["fallback"] == "no_siis_context"
+
+
+def test_symptom_lexicon_ignores_other_parts_that_wont_turn_on():
+    from app.enrich_rules import symptoms_of
+    assert symptoms_of("my flashlight won't turn on") == []
+    assert [s[0] for s in symptoms_of("my phone won't turn on")][:1] == ["black_screen"]
+
+
+def test_cache_prefers_plan_whose_original_complaint_is_closest(tmp_path):
+    from app.cache import SemanticCache
+    c = SemanticCache(tmp_path / "c.sqlite")
+    generic = ["How do I fix a flickering screen?", "Screen flickering troubleshooting"]
+    c.store("screen flickers when I open my email app", None, {"tag": "email"}, generic, ["flicker"])
+    c.store("screen flickers after I unfold the phone", None, {"tag": "unfold"}, generic, ["flicker"])
+    env, how, _ = c.lookup("the display flickers every time I unfold my phone", None)
+    assert how == "semantic" and env["tag"] == "unfold"

@@ -23,9 +23,11 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--llm-budget", type=float, default=60.0, help="seconds per LLM call incl. fallbacks (batch mode)")
     ap.add_argument("--pause", type=float, default=4.0, help="seconds between lines (free-tier rate limits)")
+    ap.add_argument("--thinking", default="minimal", help="Gemini 3 thinking level for the batch compile (low was tried on 3 Oct and scored lower)")
     ap.add_argument("--resume", action="store_true", help="keep lines whose cached plan was already built by the LLM; redo the rest")
     args = ap.parse_args()
     llm.BUDGET_S = args.llm_budget
+    llm.THINKING = args.thinking
 
     cache = pipeline.get_cache()
     log_path = ROOT / "eval" / "runs" / "cold_runs.jsonl"

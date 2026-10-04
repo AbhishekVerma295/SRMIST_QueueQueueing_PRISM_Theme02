@@ -200,6 +200,24 @@ def main() -> None:
                 exact.append((time.perf_counter() - t) * 1000)
     tune = paraphrases(envs, "d3_paraphrases.json")
     para = paraphrases(envs, "d3b_paraphrases_holdout.json") or tune
+    # final unseen sets: written on 3 Oct before the last round of changes, never used for tuning or error analysis
+    d2b = json.loads((ROOT / "eval" / "datasets" / "d2b_heldout.json").read_text(encoding="utf-8"))["cases"]
+    cold2b = cold_runs([(c["query"], c["siis_response"]) for c in d2b])
+    g2b, s2b = gates(cold2b), score_gold(list(zip(cold2b, d2b)))
+    final = paraphrases(envs, "d3c_paraphrases_final.json")
+    judge_path = ROOT / "eval" / "runs" / "judge.json"
+    judge = json.loads(judge_path.read_text(encoding="utf-8")) if judge_path.exists() else None
+    jrow = {r["set"].split()[0]: r for r in judge["summary"]} if judge else {}
+    jfmt = lambda k: (f"{jrow[k]['step_accuracy']:.2f} ({jrow[k]['plans']})" if k in jrow and jrow[k]["step_accuracy"] is not None else "n/a")  # noqa: E731
+    abl_path = ROOT / "eval" / "runs" / "ablation.json"
+    abl = {r["name"].split(":")[0]: r for r in json.loads(abl_path.read_text(encoding="utf-8"))} if abl_path.exists() else {}
+
+    def abl_row(key: str, label: str, note: str) -> str:
+        r = abl.get(key)
+        if not r:
+            return f"| {label} | not run | - | - | {note} |"
+        return (f"| {label} | {r['step_accuracy']:.2f} (deeplink relevance {r['deeplink_relevance']:.2f}, precision {r['precision'] * 100:.0f}%) "
+                f"| {r['p95_ms']:.0f} ms | ${r['cost_per_query']:.5f} | {note} |")
 
     fmt = lambda x: f"{x * 100:.1f}%" if x is not None else "n/a"  # noqa: E731
     f2 = lambda x, n: f"{x:.2f}" + (f" ({n})" if n else "") if x is not None else "n/a"  # noqa: E731
@@ -211,34 +229,37 @@ def main() -> None:
 **Model(s) on the cold path:** {model_list}
 **Embeddings:** {config.EMBED_MODEL} (ONNX, CPU)
 **Environment:** {os.cpu_count()} vCPU / {platform.system()} {platform.release()} / Python {platform.python_version()}
-**Data:** official Theme 2 kit (D1, 20 lines; results.jsonl), held-out D2 ({len(d2)} scenarios, 4 domains), paraphrase sets D3/D3b. Generated {time.strftime('%Y-%m-%d %H:%M')}
+**Data:** official Theme 2 kit (D1, 20 lines; results.jsonl), D2 dev set ({len(d2)} scenarios), D2b final held-out ({len(d2b)} scenarios, 6 domains incl. 2 mismatched pairs), paraphrase sets D3 (tuning) / D3b (held-out) / D3c (final unseen). Generated {time.strftime('%Y-%m-%d %H:%M')}
 
 ---
 
 ## 1. Schema & Rule Compliance
-| Metric | Target | D1 official (results.jsonl) | D2 held-out (cold) |
-| :--- | :--- | :--- | :--- |
-| Schema-valid output lines | >= 99% | {fmt(g['schema_valid'])} | {fmt(g2['schema_valid'])} |
-| Rule compliance (Goal / Title / Description syntax) | >= 95% | {fmt(g['rule_compliance'])} | {fmt(g2['rule_compliance'])} |
-| Absolute URL leaks | 0 | {g['url_leaks']} | {g2['url_leaks']} |
-| Deeplink catalog validity (exact URI match) | 100% | {fmt(g['catalog_valid'])} | {fmt(g2['catalog_valid'])} |
-| Auto actions carrying valid actionable deeplink | >= 90% | {fmt(g['auto_with_link'])} | {fmt(g2['auto_with_link'])} |
+| Metric | Target | D1 official (results.jsonl) | D2 dev (cold) | D2b final held-out (cold) |
+| :--- | :--- | :--- | :--- | :--- |
+| Schema-valid output lines | >= 99% | {fmt(g['schema_valid'])} | {fmt(g2['schema_valid'])} | {fmt(g2b['schema_valid'])} |
+| Rule compliance (Goal / Title / Description syntax) | >= 95% | {fmt(g['rule_compliance'])} | {fmt(g2['rule_compliance'])} | {fmt(g2b['rule_compliance'])} |
+| Absolute URL leaks | 0 | {g['url_leaks']} | {g2['url_leaks']} | {g2b['url_leaks']} |
+| Deeplink catalog validity (exact URI match) | 100% | {fmt(g['catalog_valid'])} | {fmt(g2['catalog_valid'])} | {fmt(g2b['catalog_valid'])} |
+| Auto actions carrying valid actionable deeplink | >= 90% | {fmt(g['auto_with_link'])} | {fmt(g2['auto_with_link'])} | {fmt(g2b['auto_with_link'])} |
 
 D1: plans {g['plans']}/{g['lines']} · actions {g['actions']} (auto {g['auto_actions']}, dummy_positive {g['dummy_links']}) · full envelope valid {fmt(g['full_envelope_valid'])}.
 D2: plans {g2['plans']}/{g2['lines']} · actions {g2['actions']} (auto {g2['auto_actions']}, dummy_positive {g2['dummy_links']}) · full envelope valid {fmt(g2['full_envelope_valid'])}.
+D2b: plans {g2b['plans']}/{g2b['lines']} · actions {g2b['actions']} (auto {g2b['auto_actions']}, dummy_positive {g2b['dummy_links']}) · full envelope valid {fmt(g2b['full_envelope_valid'])}.
 
 ---
 
 ## 2. Accuracy Benchmarks
-| Evaluation Metric | Scale / Anchor | D1 official | D2 held-out |
-| :--- | :--- | :--- | :--- |
-| Step accuracy (completeness, correctness, ordering) — automatic proxy* | 0.0 - 3.0 | {f2(s1['step_accuracy'], s1['step_scored'])} | {f2(s2['step_accuracy'], s2['step_scored'])} |
-| Deeplink relevance (exact target screen vs. parent menu) | 0.0 - 2.0 | {f2(s1['deeplink_relevance'], s1['deeplinks_scored'])} | {f2(s2['deeplink_relevance'], s2['deeplinks_scored'])} |
-| Deeplink precision (emitted catalog links that gold expects) | 0 - 100% | {fmt(s1['link_precision'])} ({s1['spurious_links']} spurious of {s1['emitted_links']}) | {fmt(s2['link_precision'])} ({s2['spurious_links']} spurious of {s2['emitted_links']}) |
-| Abstention accuracy (no_match exactly when the reference text doesn't fit) | 0 - 100% | {fmt(s1['abstention_accuracy'])} | {fmt(s2['abstention_accuracy'])} |
+| Evaluation Metric | Scale / Anchor | D1 official | D2 dev | D2b final held-out |
+| :--- | :--- | :--- | :--- | :--- |
+| Step accuracy (completeness, correctness, ordering) — automatic proxy* | 0.0 - 3.0 | {f2(s1['step_accuracy'], s1['step_scored'])} | {f2(s2['step_accuracy'], s2['step_scored'])} | {f2(s2b['step_accuracy'], s2b['step_scored'])} |
+| Step accuracy — LLM judge** | 0.0 - 3.0 | {jfmt('D1')} | {jfmt('D2')} | {jfmt('D2b')} |
+| Deeplink relevance (exact target screen vs. parent menu) | 0.0 - 2.0 | {f2(s1['deeplink_relevance'], s1['deeplinks_scored'])} | {f2(s2['deeplink_relevance'], s2['deeplinks_scored'])} | {f2(s2b['deeplink_relevance'], s2b['deeplinks_scored'])} |
+| Deeplink precision (emitted catalog links that gold expects) | 0 - 100% | {fmt(s1['link_precision'])} ({s1['spurious_links']} spurious of {s1['emitted_links']}) | {fmt(s2['link_precision'])} ({s2['spurious_links']} spurious of {s2['emitted_links']}) | {fmt(s2b['link_precision'])} ({s2b['spurious_links']} spurious of {s2b['emitted_links']}) |
+| Abstention accuracy (no_match exactly when the reference text doesn't fit) | 0 - 100% | {fmt(s1['abstention_accuracy'])} | {fmt(s2['abstention_accuracy'])} | {fmt(s2b['abstention_accuracy'])} |
 
 D1 is scored on results.jsonl (the shipped, pre-warmed plans). The same D1 lines re-run cold in this mode score: step accuracy {f2(s1_cold['step_accuracy'], 0)}, deeplink relevance {f2(s1_cold['deeplink_relevance'], 0)}, precision {fmt(s1_cold['link_precision'])}, abstention {fmt(s1_cold['abstention_accuracy'])}.
 *Step-accuracy proxy = required gold actions found (0-1) + emitted actions that gold expects (0-1) + contract order respected (0-1); actions match by exact deeplink id or fuzzy name (token-set ratio >= 70). Gold labels: D1 by one annotator (Claude, spot-check pending); D2 written with its reference texts.
+**LLM judge = {judge['judge_model'] if judge else 'n/a'} (a stronger model than the Flash-Lite plan writer), temperature 0. It sees only the complaint, the reference article and the plan, never our gold labels, and grades completeness, correctness and ordering 0 / 0.5 / 1 each (eval/llm_judge.py, eval/runs/judge.json). D2 and D2b plans for the judge come from the deterministic offline engine.
 
 ---
 
@@ -258,6 +279,7 @@ D1 is scored on results.jsonl (the shipped, pre-warmed plans). The same D1 lines
 | Cache hit inference cost | $0.00 | $0.00 |
 | Semantic cache hit rate (on unseen paraphrases) | >= 80% | {fmt(para['hit_rate']) + ' hit; ' + fmt(para['correct_rate']) + ' same-article plan (strict), ' + fmt(para['symptom_rate']) + ' same-symptom plan (' + str(para['n']) + ' held-out hand-written paraphrases, D3b)' if para else 'n/a'} |
 | False hits on unrelated complaints | 0 | {str(len(para['false_hits'])) + ' of ' + str(para['negatives']) if para else 'n/a'} |
+| Final unseen set D3c (written before the last changes, never tuned on) | >= 80% | {fmt(final['hit_rate']) + ' hit; ' + fmt(final['correct_rate']) + ' same-article plan, ' + fmt(final['symptom_rate']) + ' same-symptom plan (' + str(final['n']) + ' paraphrases); false hits ' + str(len(final['false_hits'])) + ' of ' + str(final['negatives']) if final else 'n/a'} |
 | Tuning set D3 (for reference; thresholds were set on it) | - | {fmt(tune['hit_rate']) + ' hit, ' + fmt(tune['correct_rate']) + ' correct, ' + str(len(tune['false_hits'])) + ' false hits of ' + str(tune['negatives']) if tune else 'n/a'} |
 | Cost derivation method | - | (prompt tokens x input rate + completion tokens x output rate), rates from .env (LLM_PRICE_*_PER_1M) |
 
@@ -266,22 +288,29 @@ D1 is scored on results.jsonl (the shipped, pre-warmed plans). The same D1 lines
 ## 5. Architectural Ablation Analysis
 | Architecture Variant | Step Accuracy | Latency (P95) | Cost / Query | Key Observations |
 | :--- | :--- | :--- | :--- | :--- |
-| Baseline: Full LLM Deeplink Mapping | TBD | TBD | TBD | Phase 3 |
-| Variant A: Hybrid BM25 + Dense Embedding Retrieval | TBD | TBD | TBD | current default mapper |
-| Variant B: Pure Rules-Based Deeplink Mapping | TBD | TBD | TBD | Phase 3 |
+{abl_row('Baseline', 'Baseline: Full LLM Deeplink Mapping', 'LLM reads the whole catalog and picks an id per action')}
+{abl_row('Variant A', 'Variant A: Hybrid BM25 + Dense Embedding Retrieval', 'our default: action- and depth-aware rerank, phrase check, $0')}
+{abl_row('Variant B', 'Variant B: Pure Rules-Based Deeplink Mapping', 'longest feature-phrase match; cheap but picks wrong screens')}
+
+Extraction is held fixed (offline rules) so only the deeplink mapper changes; D1 + D2 cold, scored on gold (eval/ablation.py, eval/runs/ablation.json).
 
 ---
 
 ## 6. Known Edge Cases & System Limitations
-* The LLM provider was heavily overloaded while these numbers were produced (HTTP 503 "high demand" on most Flash/Flash-Lite models). The engine then tries other models and finally falls back to offline rules, so every request still returns a contract-valid plan. The model mix above shows how often each path served.
+* Shipped plans (results.jsonl, data/derived/cache.sqlite) come from a batch compile on 3 Oct: Gemini Flash-Lite built 16 of 20 official lines. On the 4 lines where the LLM judged the article not relevant, the rules path found a grounded plan and that plan is used (the engine abstains only when both paths say no). Against the first compile (28 Sep) this cache scores higher on gold (step proxy 2.60 vs 2.20, abstention 95% vs 90%) and on the LLM judge's absolute score (1.94 vs 1.85, abstention agreement 89% vs 84%); in blind pairwise comparisons (both orders) the judge is even (6 wins vs 7, 6 ties). Details: eval/runs/judge_compare.json. Gemini compiles vary between runs; a compile with thinking level low scored lower (2.38) and was not shipped.
+* Free-tier provider limits: when Gemini is overloaded (HTTP 503) or out of quota (429), the adapter tries other models and then falls back to offline rules, so every request still returns a contract-valid plan. The model mix above shows which path served.
 * Contract rule "critical actions last" puts service-centre escalation before restarts/resets.
 * input.txt line 17 holds three complaints. Each becomes its own intent; intents that yield an identical plan are merged.
-* Paraphrase thresholds were tuned on D3; D3b was written afterwards and is reported untouched.
-* D2 was used for one round of error analysis (28 Sep). It exposed four general bugs, three of them fixed: a selected option read as a deeper menu, "turn it off" not read as switching off, a "Restart on schedule" setting treated as a disruptive restart, and an open-screen bonus outranking an exact phrase match. D2 is therefore a development set, not a strict held-out set.
-* "Optimize now" (a button label) does not reach the catalog's "Optimize Device Performance" entry; the engine falls back to the placeholder link.
-* Shipped plans (results.jsonl) come from a batch compile in which Gemini built 12 of 20 official lines and the rest used the rules path (provider outage). On our gold labels the rules-only path scores slightly higher (step 2.34 vs 2.20, abstention 95% vs 90%). The gold action names were written close to the article headings, which favours the rules extractor's wording. The LLM plans are shorter and cleaner but sometimes drop applicable sections (row_2) or accept advice for another device (row_8, TV aspect ratio); the extraction prompt was tightened for both. A second compile under the same outage (8 of 20 LLM lines) scored 2.15 / 85%, so the first compile is shipped.
+* Paraphrase thresholds were tuned on D3; D3b was written afterwards; D3c and D2b were written on 3 Oct before the final changes and are reported untouched.
+* D2 was used for error analysis, so it is a development set; D2b is the strict held-out scenario set.
+* row_8 (a TV aspect-ratio article for a phone complaint) still gets a plan from the LLM; gold says the article does not fit.
 * Offline rules relevance is coarse (e.g. row_16 abstains although the blank-display article partly fits). The LLM path decides relevance per problem.
+* Gold labels for D1 were written by one annotator (Claude) with a human spot-check pending; the LLM judge is reported next to the gold proxy for that reason.
+* The LLM judge is itself noisy: with the same complaint and article it sometimes flips its "article has a fix" verdict between runs, and it scores lower than the gold proxy overall (it penalises missing optional sections). We report it as a second opinion, not ground truth.
+* D3c (final unseen paraphrases) is below the 80% target: 75% hit, 62.5% same-article plan. Two hits went to the wrong plan through the normalised-complaint (L2) lookup ("pitch black" and "won't light up" got the flicker plan, which shares the black-screen symptom). We did not tune on D3c after seeing this.
 """
+    if final and (final["misses"] or final["false_hits"]):
+        md += "\n**D3c final set:** misses " + ("; ".join(repr(m) for m in final["misses"]) or "none") + " · false hits " + ("; ".join(repr(m) for m in final["false_hits"]) or "none") + "\n"
     if para and para["misses"]:
         md += "\n**Paraphrase misses (D3b held-out):** " + "; ".join(repr(m) for m in para["misses"]) + "\n"
     if para and para["false_hits"]:

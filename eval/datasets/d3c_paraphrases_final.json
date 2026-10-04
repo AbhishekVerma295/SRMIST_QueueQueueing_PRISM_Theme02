@@ -1,0 +1,33 @@
+{
+ "_readme": "D3c: third hand-written paraphrase set, written on 3 Oct 2026 BEFORE the Tier-1 changes, never used for tuning. Reported as the final unseen-paraphrase result.",
+ "positives": [
+  {"row_id": "row_2", "text": "random apps turn my screen totally white and empty"},
+  {"row_id": "row_3", "text": "fold phone display is pitch black so I can't back up anything"},
+  {"row_id": "row_4", "text": "my month-old phone's screen died and stays black"},
+  {"row_id": "row_5", "text": "tablet goes blank during the QR step of moving data from my phone"},
+  {"row_id": "row_9", "text": "foldable main display shows nothing and ignores my fingers, outside screen still fine"},
+  {"row_id": "row_10", "text": "screen flickers then blacks out every time I unfold the phone"},
+  {"row_id": "row_11", "text": "right side of my fold screen is dead black, left side OK"},
+  {"row_id": "row_13", "text": "after porting my number the new phone boots to a blank screen"},
+  {"row_id": "row_14", "text": "shattered display, phone unusable now"},
+  {"row_id": "row_15", "text": "stuck on a blue screen with small text when powering on"},
+  {"row_id": "row_19", "text": "the fold crease cracked once again"},
+  {"row_id": "row_21", "text": "touch input feels delayed and the screen reacts late"},
+  {"row_id": "row_21", "text": "My touchscreen responds slowly to every tap."},
+  {"row_id": "row_22", "text": "display won't light up though I can hear calls coming in"},
+  {"row_id": "row_1", "text": "opening an email makes my tablet screen flash and go blank"},
+  {"row_id": "row_20", "text": "new phone, picture on the display looks wrong and warped"}
+ ],
+ "negatives": [
+  "my phone takes forever to charge",
+  "how do I change the wallpaper",
+  "the volume buttons are stuck",
+  "my alarm didn't ring this morning",
+  "wifi calling is not working",
+  "the phone doesn't vibrate for notifications",
+  "my contacts disappeared",
+  "how do I turn on night mode",
+  "the microphone doesn't pick up my voice on calls",
+  "the speaker crackles when I play music"
+ ]
+}

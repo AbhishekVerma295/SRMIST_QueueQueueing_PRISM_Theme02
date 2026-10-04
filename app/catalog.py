@@ -16,6 +16,8 @@ from .text import tokens
 
 APPLIANCE_RE = re.compile(r"(?i)refrigerator|fridge|air conditioner|washer|washing machine|dryer|oven|dishwasher|robot vacuum|air purifier|\bTV\b")
 OP_BY_TYPE = {"onURL": "on", "offURL": "off", "onClickURL": "view", "updateURL": "update"}
+# on-screen button names that the kit articles use for a catalog action whose message words differ
+TARGET_ALIASES = {"optimize now": "Optimize device performance", "optimise now": "Optimize device performance"}
 VERB_RE = re.compile(r"^(view|enable|disable|adjust|check|increase|decrease|set|open|switch|diagnose|optimize)\s+", re.I)
 
 
@@ -112,6 +114,7 @@ class Catalog:
         Depth-aware: lexical coverage is measured against the target (last path element), so a parent
         menu mentioned only in `context` cannot win. Action-aware: on/off hints must agree with the entry.
         """
+        target = TARGET_ALIASES.get(target.lower().strip(" ."), target)
         q_tokens = set(tokens(target))
         if not q_tokens:
             return Match(None, 0.0, 0.0, 0.0, False, [])

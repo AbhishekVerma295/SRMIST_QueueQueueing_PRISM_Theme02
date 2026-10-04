@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .box { fill:#ffffff; stroke:#cbd5e1; stroke-width:1.5; }
+      .h { font-size:15px; font-weight:700; fill:#0f172a; }
+      .t { font-size:12.5px; fill:#334155; }
+      .s { font-size:11.5px; fill:#64748b; }
+      .tag { font-size:11px; font-weight:700; fill:#ffffff; }
+      .line { stroke:#475569; stroke-width:1.8; fill:none; marker-end:url(#arr); }
+      .dash { stroke:#94a3b8; stroke-width:1.5; fill:none; stroke-dasharray:6 5; marker-end:url(#arr); }
+    </style>
+  </defs>
+  <rect width="1200" height="640" fill="#f8fafc"/>
+  <text x="32" y="40" font-size="22" font-weight="700" fill="#0f172a">FixFlow: Smart Guided Troubleshooting Engine</text>
+  <text x="32" y="62" class="s">POST /v1/troubleshoot {query, siis_response?}  →  Appendix-B JSON envelope. Every stage has a deterministic offline path; the LLM is optional.</text>
+
+  <!-- request -->
+  <rect x="32" y="96" width="170" height="92" rx="12" class="box"/>
+  <text x="48" y="122" class="h">Complaint</text>
+  <text x="48" y="144" class="t">query + optional</text>
+  <text x="48" y="161" class="t">reference article</text>
+  <text x="48" y="178" class="s">string or {title, content}</text>
+
+  <!-- cache -->
+  <rect x="246" y="86" width="300" height="112" rx="12" class="box" stroke="#0ea5e9"/>
+  <rect x="246" y="86" width="300" height="24" rx="12" fill="#0ea5e9"/><rect x="246" y="98" width="300" height="12" fill="#0ea5e9"/>
+  <text x="258" y="103" class="tag">STAGE 3 · SEMANTIC CACHE (checked first)</text>
+  <text x="258" y="130" class="t">L1 exact + semantic (bge-small, cosine)</text>
+  <text x="258" y="148" class="t">L2 on the normalised complaint</text>
+  <text x="258" y="166" class="t">symptom guard · trust tiers · ranks by</text>
+  <text x="258" y="184" class="t">closeness to each plan's original complaint</text>
+
+  <!-- hit -->
+  <rect x="600" y="96" width="250" height="92" rx="12" class="box" stroke="#22c55e"/>
+  <text x="616" y="122" class="h">Cache hit</text>
+  <text x="616" y="144" class="t">pre-validated plan, $0</text>
+  <text x="616" y="161" class="t">P95 well under 300 ms</text>
+  <text x="616" y="178" class="s">variations re-written for this query</text>
+
+  <!-- response -->
+  <rect x="924" y="96" width="244" height="178" rx="12" class="box" stroke="#0f172a"/>
+  <text x="940" y="122" class="h">JSON response</text>
+  <text x="940" y="144" class="t">query_variations (8–10)</text>
+  <text x="940" y="162" class="t">contexts: Goal → actions</text>
+  <text x="940" y="180" class="t">auto · manual · critical (last)</text>
+  <text x="940" y="198" class="t">catalog deeplinks, verbatim</text>
+  <text x="940" y="216" class="t">meta: latency, cache_hit,</text>
+  <text x="940" y="234" class="t">model, cost_usd, fallback</text>
+  <text x="940" y="258" class="s">no_match · no_siis_context</text>
+
+  <path d="M202,142 L242,142" class="line"/>
+  <path d="M546,142 L596,142" class="line"/>
+  <path d="M850,142 L920,142" class="line"/>
+  <text x="560" y="134" class="s">hit</text>
+  <text x="528" y="226" class="s">store</text>
+
+  <!-- miss path -->
+  <path d="M268,198 L268,262" class="line"/>
+  <text x="278" y="236" class="s">miss (needs the article)</text>
+
+  <rect x="32" y="266" width="260" height="150" rx="12" class="box" stroke="#8b5cf6"/>
+  <rect x="32" y="266" width="260" height="24" rx="12" fill="#8b5cf6"/><rect x="32" y="278" width="260" height="12" fill="#8b5cf6"/>
+  <text x="44" y="283" class="tag">STAGE 0 · ENRICHMENT</text>
+  <text x="44" y="312" class="t">symptom lexicon → topic, request type</text>
+  <text x="44" y="330" class="t">canonical complaint, intent split</text>
+  <text x="44" y="348" class="t">(one line can hold 3 complaints)</text>
+  <text x="44" y="372" class="s">LLM call A: canonical + variations</text>
+  <text x="44" y="390" class="s">rules fallback, never blocks</text>
+
+  <rect x="320" y="266" width="280" height="150" rx="12" class="box" stroke="#8b5cf6"/>
+  <rect x="320" y="266" width="280" height="24" rx="12" fill="#8b5cf6"/><rect x="320" y="278" width="280" height="12" fill="#8b5cf6"/>
+  <text x="332" y="283" class="tag">STAGE 1 · GROUNDED EXTRACTION</text>
+  <text x="332" y="312" class="t">LLM call B: actions with sentence</text>
+  <text x="332" y="330" class="t">citations; code drops any step the</text>
+  <text x="332" y="348" class="t">article does not support</text>
+  <text x="332" y="372" class="s">rules parser: sections → imperative steps</text>
+  <text x="332" y="390" class="s">abstain only if LLM and rules both say no</text>
+
+  <rect x="628" y="266" width="268" height="150" rx="12" class="box" stroke="#f59e0b"/>
+  <rect x="628" y="266" width="268" height="24" rx="12" fill="#f59e0b"/><rect x="628" y="278" width="268" height="12" fill="#f59e0b"/>
+  <text x="640" y="283" class="tag">STAGE 2 · DEEPLINK RESOLVER</text>
+  <text x="640" y="312" class="t">Feature Graph over the catalog</text>
+  <text x="640" y="330" class="t">BM25 + dense (RRF), action-aware</text>
+  <text x="640" y="348" class="t">(on/off/view) + depth-aware rerank</text>
+  <text x="640" y="372" class="s">exact phrase check · parent-screen rule</text>
+  <text x="640" y="390" class="s">DL-DUMMY only for a missing real screen</text>
+
+  <path d="M292,341 L316,341" class="line"/>
+  <path d="M600,341 L624,341" class="line"/>
+
+  <rect x="924" y="300" width="244" height="116" rx="12" class="box" stroke="#ef4444"/>
+  <rect x="924" y="300" width="244" height="24" rx="12" fill="#ef4444"/><rect x="924" y="312" width="244" height="12" fill="#ef4444"/>
+  <text x="936" y="317" class="tag">CONTRACT GATE (in code)</text>
+  <text x="936" y="344" class="t">official schema.py, unchanged</text>
+  <text x="936" y="362" class="t">"It will" 5–7 words, casing,</text>
+  <text x="936" y="380" class="t">no URLs, critical last</text>
+  <text x="936" y="400" class="s">violating context is dropped</text>
+  <path d="M896,358 L920,358" class="line"/>
+  <path d="M1046,300 L1046,278" class="line"/>
+
+  <!-- store back -->
+  <path d="M1046,416 L1046,452 L614,452 L614,232 L520,232 L520,202" class="dash"/>
+  <text x="630" y="446" class="s">store plan + canonical keys + variations (validated tier only)</text>
+
+  <!-- offline compile -->
+  <rect x="32" y="486" width="560" height="122" rx="12" class="box" stroke="#64748b"/>
+  <text x="48" y="512" class="h">Offline batch compile (scripts/warm_cache.py)</text>
+  <text x="48" y="536" class="t">Runs every official line through Stages 0–2 with a generous LLM budget, gates it,</text>
+  <text x="48" y="554" class="t">and ships the result as data/derived/cache.sqlite. Kept only if an independent</text>
+  <text x="48" y="572" class="t">LLM judge and the gold labels both score it higher than the previous cache.</text>
+  <text x="48" y="594" class="s">Gemini Flash-Lite with model fallback chain, backoff, dead-model skipping</text>
+
+  <rect x="620" y="486" width="548" height="122" rx="12" class="box" stroke="#64748b"/>
+  <text x="636" y="512" class="h">Evaluation (eval/)</text>
+  <text x="636" y="536" class="t">D1 official · D2 dev · D2b final held-out · D3 / D3b / D3c paraphrases</text>
+  <text x="636" y="554" class="t">gates + gold step proxy + LLM judge (Gemini Flash, never sees gold)</text>
+  <text x="636" y="572" class="t">3-way deeplink ablation: full-LLM vs hybrid vs pure rules</text>
+  <text x="636" y="594" class="s">CPU only · FastAPI · Docker · runs with no API key</text>
+</svg>

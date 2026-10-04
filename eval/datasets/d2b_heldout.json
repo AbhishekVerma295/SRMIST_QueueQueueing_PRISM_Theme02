@@ -1,0 +1,86 @@
+{
+ "_readme": "D2b: second held-out scenario set, written on 3 Oct 2026 BEFORE the Tier-1 changes and never used for tuning. Battery, Charging, Display, Performance, Connectivity, Camera, plus two mismatched article/complaint pairs that must abstain. Reference texts are the team's own writing in the style of the kit articles; gold deeplink ids come from starter_kit/Theme 2/deeplinks.json.",
+ "cases": [
+  {"id": "d2b_1", "domain": "Battery", "relevant": true,
+   "query": "my battery percentage keeps dropping even when I'm not using the phone",
+   "siis_response": {"title": "Battery drains while the phone is idle",
+    "content": "## Put unused apps to sleep\nApps running in the background use battery even when the screen is off. Go to Settings, tap Battery, tap Background usage limits, and then tap the switch next to Put unused apps to sleep.\n## Turn on Adaptive battery\nAdaptive battery learns how you use apps and limits battery for apps you rarely use. Go to Settings, tap Battery, tap More battery settings, and then tap the switch next to Adaptive battery.\n## Use Power saving\nGo to Settings, tap Battery, and then tap the switch next to Power saving.\n## Contact Customer Support\nIf the battery still drains quickly when idle, contact Customer Support to have the battery checked."},
+   "expected_actions": [
+    {"name": "Enable Put Unused Apps to Sleep", "category": "auto", "deeplink_id": "DL-0417", "acceptable_deeplink_ids": ["DL-0544"], "required": true},
+    {"name": "Enable Adaptive Battery", "category": "auto", "deeplink_id": "DL-0398", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Enable Power Saving", "category": "auto", "deeplink_id": "DL-0412", "acceptable_deeplink_ids": ["DL-0519"], "required": false},
+    {"name": "Contact Customer Support", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2b_2", "domain": "Charging", "relevant": true,
+   "query": "wireless charging stopped working on my Nexa X1",
+   "siis_response": {"title": "Wireless charging does not work",
+    "content": "## Check the charging pad and case\nRemove any metal case, magnets or cards from the back of the phone. Place the phone in the centre of the charging pad and make sure the pad is connected to its own adapter.\n## Turn on Fast wireless charging\nIf charging is very slow, go to Settings, tap Battery, tap Charging settings, and then tap the switch next to Fast wireless charging.\n## Restart your device\nPress and hold the Side button, then tap Restart. Tap Restart again to confirm."},
+   "expected_actions": [
+    {"name": "Check the Charging Pad and Case", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Enable Fast Wireless Charging", "category": "auto", "deeplink_id": "DL-0406", "acceptable_deeplink_ids": ["DL-0515"], "required": true},
+    {"name": "Restart Your Device", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true}]},
+
+  {"id": "d2b_3", "domain": "Display", "relevant": true,
+   "query": "I can barely read my screen outside in sunlight even at max brightness",
+   "siis_response": {"title": "Screen is hard to see in bright light",
+    "content": "## Turn on Extra brightness\nExtra brightness raises the maximum screen brightness for outdoor use. Go to Settings, tap Display, and then tap the switch next to Extra brightness.\n## Turn on Adaptive brightness\nAdaptive brightness adjusts the screen to the light around you. Go to Settings, tap Display, and then tap the switch next to Adaptive brightness.\n## Clean the screen\nWipe the screen with a soft, dry microfiber cloth to remove smudges that reduce visibility."},
+   "expected_actions": [
+    {"name": "Enable Extra Brightness", "category": "auto", "deeplink_id": "DL-0105", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Enable Adaptive Brightness", "category": "auto", "deeplink_id": "DL-0021", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Clean the Screen", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2b_4", "domain": "Display", "relevant": true,
+   "query": "everything on my screen looks too small and hard to read",
+   "siis_response": {"title": "Make text and items on the screen larger",
+    "content": "## Change Screen zoom\nScreen zoom makes everything on the screen larger, including icons and text. Go to Settings, tap Display, tap Screen zoom, and then drag the slider to the right.\n## Use Bold font\nBold font makes text easier to read. Go to Settings, tap Display, tap Font size and style, and then tap the switch next to Bold font."},
+   "expected_actions": [
+    {"name": "Adjust Screen Zoom", "category": "auto", "deeplink_id": "DL-0229", "acceptable_deeplink_ids": ["DL-0549"], "required": true},
+    {"name": "Enable Bold Font", "category": "auto", "deeplink_id": "DL-0045", "acceptable_deeplink_ids": [], "required": true}]},
+
+  {"id": "d2b_5", "domain": "Performance", "relevant": true,
+   "query": "my phone keeps restarting on its own at random times",
+   "siis_response": {"title": "Phone restarts by itself",
+    "content": "## Check Auto restart\nThe device can restart automatically to keep running smoothly. If unexpected restarts bother you, go to Settings, tap Device care, tap Auto optimization, and then tap the switch next to Auto restart to turn it off.\n## Update the software\nGo to Settings, tap Software update, and then tap Download and install.\n## Use Safe mode\nPress and hold the Side button, touch and hold Power off, and then tap Safe mode. If the restarts stop, a recently installed app may be the cause."},
+   "expected_actions": [
+    {"name": "Disable Auto Restart", "category": "auto", "deeplink_id": "DL-0479", "acceptable_deeplink_ids": ["DL-0480"], "required": true},
+    {"name": "Update Device Software", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Start Device in Safe Mode", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2b_6", "domain": "Connectivity", "relevant": true,
+   "query": "my bluetooth earbuds won't connect to the phone anymore",
+   "siis_response": {"title": "Bluetooth device does not connect",
+    "content": "## Check Bluetooth\nGo to Settings, tap Connections, and then tap Bluetooth. Make sure the switch is on and select your earbuds from the list of devices.\n## Pair the device again\nForget the earbuds in the Bluetooth list, put the earbuds back in their case, and then pair them again.\n## Restart your device\nPress and hold the Side button, then tap Restart."},
+   "expected_actions": [
+    {"name": "Open Bluetooth Settings", "category": "auto", "deeplink_id": "DL-0044", "acceptable_deeplink_ids": ["DL-0495"], "required": true},
+    {"name": "Pair the Device Again", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Restart Your Device", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2b_7", "domain": "Camera", "relevant": true,
+   "query": "the phone vibrates every time I take a photo, how do I stop it",
+   "siis_response": {"title": "Turn off camera vibration",
+    "content": "## Turn off Camera feedback\nThe device can vibrate when you take a picture. Go to Settings, tap Sounds and vibration, tap System sound and vibration control, and then tap the switch next to Camera feedback to turn it off."},
+   "expected_actions": [
+    {"name": "Disable Camera Feedback", "category": "auto", "deeplink_id": "DL-0053", "acceptable_deeplink_ids": [], "required": true}]},
+
+  {"id": "d2b_8", "domain": "Performance", "relevant": true,
+   "query": "apps keep crashing and closing on my tablet",
+   "siis_response": {"title": "Apps close unexpectedly",
+    "content": "## Update the app\nOpen the app store, search for the app, and then tap Update.\n## Clear the app cache\nNavigate to Settings. Tap Apps. Select the app. Tap Storage. Tap Clear cache.\n## Restart your device\nPress and hold the Side button, then tap Restart."},
+   "expected_actions": [
+    {"name": "Update the App", "category": "manual", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Clear the App Cache", "category": "auto", "deeplink_id": "DL-DUMMY", "acceptable_deeplink_ids": [], "required": true},
+    {"name": "Restart Your Device", "category": "critical", "deeplink_id": null, "acceptable_deeplink_ids": [], "required": false}]},
+
+  {"id": "d2b_9", "domain": "Mismatch", "relevant": false,
+   "query": "my phone gets really hot while charging",
+   "siis_response": {"title": "Bluetooth device does not connect",
+    "content": "## Check Bluetooth\nGo to Settings, tap Connections, and then tap Bluetooth. Make sure the switch is on and select your earbuds from the list of devices.\n## Pair the device again\nForget the earbuds in the Bluetooth list, and then pair them again."},
+   "expected_actions": []},
+
+  {"id": "d2b_10", "domain": "Mismatch", "relevant": false,
+   "query": "the fingerprint sensor doesn't recognise my finger",
+   "siis_response": {"title": "Wireless charging does not work",
+    "content": "## Check the charging pad and case\nRemove any metal case, magnets or cards from the back of the phone. Place the phone in the centre of the charging pad.\n## Turn on Fast wireless charging\nGo to Settings, tap Battery, tap Charging settings, and then tap the switch next to Fast wireless charging."},
+   "expected_actions": []}
+ ]
+}
