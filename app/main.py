@@ -4,19 +4,26 @@ Always answers with JSON. Bad input -> 400/422 with the normal envelope and meta
 unexpected errors -> 500 with meta.fallback="internal_error". /health is 503 until the catalog index,
 embedding model and cache are loaded.
 """
+import asyncio
 import json
 import logging
+import os
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse
+from starlette.concurrency import run_in_threadpool
 
 from . import catalog, embed, pipeline
 
 log = logging.getLogger("troubleshoot")
 STATE = {"ready": False, "started": None}
+# how many requests may run the pipeline at the same time; the rest wait their turn. Each embedding already uses
+# several CPU cores, so a small number avoids oversubscribing the CPU under heavy concurrency.
+PIPELINE_SLOTS = int(os.getenv("PIPELINE_CONCURRENCY", "4"))
+_slots: asyncio.Semaphore | None = None
 UI_DIR = Path(__file__).resolve().parents[1] / "ui"
 
 
@@ -62,7 +69,14 @@ async def troubleshoot(request: Request):
         siis = json.dumps(siis)
     debug = request.query_params.get("debug", "").lower() in ("1", "true", "yes")
     try:
-        return JSONResponse(pipeline.troubleshoot(body["query"], siis, debug=debug))
+        # the pipeline is CPU and network bound: run it in a worker thread so one slow request (e.g. a new
+        # complaint waiting on the LLM) never blocks cache hits for everyone else
+        global _slots
+        if _slots is None:
+            _slots = asyncio.Semaphore(PIPELINE_SLOTS)
+        async with _slots:
+            env = await run_in_threadpool(pipeline.troubleshoot, body["query"], siis, debug)
+        return JSONResponse(env)
     except Exception:  # never leak a stack trace or a non-JSON body
         log.exception("pipeline failure")
         return JSONResponse(_error_envelope(body["query"], "internal_error", t0), status_code=500)

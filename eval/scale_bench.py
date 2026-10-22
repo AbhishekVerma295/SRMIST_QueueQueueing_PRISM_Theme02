@@ -201,39 +201,27 @@ def load_test(levels=(1, 10, 50), n_requests=300, port=8799) -> dict:
     mix = official + [{"query": p["text"]} for p in D3B["positives"]] + [{"query": n} for n in D3B["negatives"]]
     reqs = [mix[i % len(mix)] for i in range(n_requests)]
 
-    async def run(conc: int) -> dict:
-        sem = asyncio.Semaphore(conc)
-        lat, errors, hits = [], 0, 0
-        async with httpx.AsyncClient(base_url=base, timeout=60, limits=httpx.Limits(max_connections=conc)) as client:
-            async def one(body):
-                nonlocal errors, hits
-                async with sem:
-                    t = time.perf_counter()
-                    try:
-                        r = await client.post("/v1/troubleshoot", json=body)
-                        data = r.json()
-                        ok = r.status_code == 200 and "response" in data
-                        hits += bool(data.get("meta", {}).get("cache_hit"))
-                    except Exception:
-                        ok = False
-                    lat.append((time.perf_counter() - t) * 1000)
-                    errors += not ok
-            t0 = time.perf_counter()
-            await asyncio.gather(*(one(b) for b in reqs))
-            wall = time.perf_counter() - t0
-        return {"concurrency": conc, "requests": len(reqs), "errors": errors, "cache_hits": hits,
-                "req_per_s": round(len(reqs) / wall, 1), "latency_ms_p50": pct(lat, 50), "latency_ms_p95": pct(lat, 95)}
+    req_file = WORK / "load_requests.json"
+    req_file.write_text(json.dumps(reqs), encoding="utf-8")
+
+    def run(conc: int) -> dict:
+        # the client runs in its own process, like real users would; in-process clients would compete with
+        # the server for Python's GIL and distort the numbers
+        import subprocess
+        out = subprocess.run([sys.executable, str(ROOT / "eval" / "load_client.py"), base, str(conc), str(req_file)],
+                             capture_output=True, text=True, timeout=600)
+        return json.loads(out.stdout.strip().splitlines()[-1])
 
     out = []
     for conc in levels:
-        out.append(asyncio.run(run(conc)))
+        out.append(run(conc))
         print(f"  load c={conc:>2}: {out[-1]['req_per_s']} req/s, P95 {out[-1]['latency_ms_p95']} ms, errors {out[-1]['errors']}", flush=True)
     server.should_exit = True
     th.join(timeout=10)
     llm.API_KEY = key
     config.CACHE_WRITE = True
     return {"mix": f"{len(official)} official lines with article (exact hits), {len(D3B['positives'])} held-out rewordings, "
-                   f"{len(D3B['negatives'])} unrelated complaints; no LLM", "server": "1 uvicorn worker, CPU", "runs": out,
+                   f"{len(D3B['negatives'])} unrelated complaints; no LLM", "server": f"1 uvicorn worker, CPU, pipeline in a worker thread ({os.getenv('PIPELINE_CONCURRENCY', '4')} at a time); client in a separate process", "runs": out,
             "rows_in_kit": len(rows)}
 
 
@@ -265,6 +253,11 @@ def to_md(r: dict) -> str:
                   "| Concurrent clients | Requests | Errors | Requests/s | Latency P50 | Latency P95 |", "|---|---|---|---|---|---|"]
         for s in r["load"]["runs"]:
             lines.append(f"| {s['concurrency']} | {s['requests']} | {s['errors']} | {s['req_per_s']} | {s['latency_ms_p50']} ms | {s['latency_ms_p95']} ms |")
+        if r.get("load_before_threadpool"):
+            lines += ["", "Before the request handler moved to a worker thread (22 Oct, same traffic):", "",
+                      "| Concurrent clients | Errors | Requests/s | Latency P95 |", "|---|---|---|---|"]
+            for s in r["load_before_threadpool"]["runs"]:
+                lines.append(f"| {s['concurrency']} | {s['errors']} | {s['req_per_s']} | {s['latency_ms_p95']} ms |")
     return "\n".join(lines) + "\n"
 
 
@@ -274,7 +267,20 @@ def main() -> None:
     ap.add_argument("--llm-budget", type=float, default=30.0, help="seconds per LLM call when compiling new articles")
     ap.add_argument("--pause", type=float, default=3.0)
     ap.add_argument("--skip-load", action="store_true")
+    ap.add_argument("--load-only", action="store_true", help="re-run only the load test; keep the other results")
     args = ap.parse_args()
+    out = ROOT / "eval" / "runs"
+    if args.load_only:
+        res = json.loads((out / "scale.json").read_text(encoding="utf-8"))
+        if res.get("load") and "load_before_threadpool" not in res:
+            res["load_before_threadpool"] = res["load"]
+        print("4. load", flush=True)
+        res["load"] = load_test()
+        res["load_generated"] = time.strftime("%Y-%m-%d %H:%M")
+        (out / "scale.json").write_text(json.dumps(res, indent=1), encoding="utf-8")
+        (out / "scale.md").write_text(to_md(res), encoding="utf-8")
+        print(to_md(res))
+        return
     import platform
     res = {"generated": time.strftime("%Y-%m-%d %H:%M"), "env": f"{os.cpu_count()} vCPU / {platform.system()} {platform.release()} / Python {platform.python_version()}"}
     key = llm.API_KEY
@@ -292,7 +298,6 @@ def main() -> None:
     if not args.skip_load:
         print("4. load", flush=True)
         res["load"] = load_test()
-    out = ROOT / "eval" / "runs"
     out.mkdir(parents=True, exist_ok=True)
     (out / "scale.json").write_text(json.dumps(res, indent=1), encoding="utf-8")
     (out / "scale.md").write_text(to_md(res), encoding="utf-8")

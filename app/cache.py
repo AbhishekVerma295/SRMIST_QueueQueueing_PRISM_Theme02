@@ -48,21 +48,30 @@ class SemanticCache:
 
     def _load(self) -> None:
         rows = self.db.execute("SELECT id, norm_query, siis_hash, symptoms, envelope, tier FROM entries").fetchall()
-        self.entries = {r[0]: {"norm": r[1], "siis": r[2], "symptoms": set(json.loads(r[3])), "envelope": json.loads(r[4]), "tier": r[5]} for r in rows}
-        self.exact = {}
-        for eid, e in self.entries.items():
-            self.exact.setdefault(e["norm"], []).append(eid)
+        entries = {r[0]: {"norm": r[1], "siis": r[2], "symptoms": set(json.loads(r[3])), "envelope": json.loads(r[4]), "tier": r[5]} for r in rows}
+        exact: dict = {}
+        for eid, e in entries.items():
+            exact.setdefault(e["norm"], []).append(eid)
         keys = self.db.execute("SELECT entry_id, text, vec FROM keys ORDER BY rowid").fetchall()
-        self.key_ids = np.array([k[0] for k in keys], dtype=np.int64)
-        self.key_vecs = np.stack([np.frombuffer(k[2], dtype=np.float32) for k in keys]) if keys else np.zeros((0, 384), np.float32)
+        key_ids = np.array([k[0] for k in keys], dtype=np.int64)
+        key_vecs = np.stack([np.frombuffer(k[2], dtype=np.float32) for k in keys]) if keys else np.zeros((0, 384), np.float32)
         # the first key stored for an entry is always its original complaint (see store()); generic variations
         # widen recall, but choosing BETWEEN plans is done on the original complaint so the most specific plan wins
-        self.orig_vec: dict = {}
+        orig_vec: dict = {}
         for i, k in enumerate(keys):
-            self.orig_vec.setdefault(k[0], self.key_vecs[i])
+            orig_vec.setdefault(k[0], key_vecs[i])
+        # one assignment, so a lookup running in another request thread never sees a half-rebuilt index
+        self._st = (entries, exact, key_ids, key_vecs, orig_vec)
+
+    # read-only views of the current index (kept for scripts and tests)
+    entries = property(lambda self: self._st[0])
+    exact = property(lambda self: self._st[1])
+    key_ids = property(lambda self: self._st[2])
+    key_vecs = property(lambda self: self._st[3])
+    orig_vec = property(lambda self: self._st[4])
 
     def __len__(self) -> int:
-        return len(self.entries)
+        return len(self._st[0])
 
     def _siis_ok(self, entry: dict, s_hash: str | None) -> bool:
         return s_hash is None or entry["siis"] == s_hash
@@ -72,15 +81,16 @@ class SemanticCache:
 
         rerank_query (L2): candidates are found with the normalised complaint, but among entries that pass
         the guards the one whose stored wording is closest to what the user actually typed wins."""
+        entries, exact, key_ids, key_vecs, orig_vec = self._st      # one consistent snapshot
         nk = norm_key(query)
-        for eid in self.exact.get(nk, []):
-            e = self.entries[eid]
+        for eid in exact.get(nk, []):
+            e = entries[eid]
             if self._siis_ok(e, s_hash):
                 return e["envelope"], "exact", 1.0
-        if not len(self.key_ids):
+        if not len(key_ids):
             return None, "miss", 0.0
         qv = embed.embed_one(normalize(query))
-        sims = self.key_vecs @ qv
+        sims = key_vecs @ qv
         found = [s[0] for s in symptoms_of(query)]
         q_symptoms, primary = set(found), (found[0] if found else None)
         passing: list = []                    # (primary symptom shared, similarity, entry, entry id)
@@ -89,11 +99,11 @@ class SemanticCache:
             sim = float(sims[i])
             if sim < config.CACHE_MIN_SIM_SYMPTOM:
                 break
-            eid = int(self.key_ids[i])
+            eid = int(key_ids[i])
             if eid in seen:
                 continue
             seen.add(eid)
-            e = self.entries[eid]
+            e = entries[eid]
             if e["tier"] not in REUSABLE_TIERS or not self._siis_ok(e, s_hash):
                 continue
             if q_symptoms:
@@ -109,7 +119,7 @@ class SemanticCache:
             # pick among plans that passed every guard: primary symptom first, then closeness of what the user
             # typed to each plan's ORIGINAL complaint (not to its generic variations)
             rv = embed.embed_one(normalize(rerank_query)) if rerank_query is not None else qv
-            orig = {c[3]: float(self.orig_vec[c[3]] @ rv) for c in passing}
+            orig = {c[3]: float(orig_vec[c[3]] @ rv) for c in passing}
             best = max(passing, key=lambda c: (c[0], orig[c[3]], c[1]))
             return best[2]["envelope"], "semantic", best[1]
         return None, "miss", float(sims.max()) if len(sims) else 0.0
@@ -129,9 +139,10 @@ class SemanticCache:
             self._load()
 
     def exact_entry(self, query: str, s_hash: str | None) -> dict | None:
-        for eid in self.exact.get(norm_key(query), []):
-            if self.entries[eid]["siis"] == s_hash:
-                return self.entries[eid]
+        entries, exact = self._st[0], self._st[1]
+        for eid in exact.get(norm_key(query), []):
+            if entries[eid]["siis"] == s_hash:
+                return entries[eid]
         return None
 
     def delete_query(self, query: str, s_hash: str | None) -> None:

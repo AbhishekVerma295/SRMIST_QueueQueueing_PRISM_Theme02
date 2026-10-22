@@ -369,6 +369,40 @@
  },
  "load": {
   "mix": "20 official lines with article (exact hits), 24 held-out rewordings, 10 unrelated complaints; no LLM",
+  "server": "1 uvicorn worker, CPU, pipeline in a worker thread (4 at a time); client in a separate process",
+  "runs": [
+   {
+    "concurrency": 1,
+    "requests": 300,
+    "errors": 0,
+    "cache_hits": 239,
+    "req_per_s": 51.1,
+    "latency_ms_p50": 21.0,
+    "latency_ms_p95": 54.0
+   },
+   {
+    "concurrency": 10,
+    "requests": 300,
+    "errors": 0,
+    "cache_hits": 239,
+    "req_per_s": 95.5,
+    "latency_ms_p50": 93.6,
+    "latency_ms_p95": 199.4
+   },
+   {
+    "concurrency": 50,
+    "requests": 300,
+    "errors": 0,
+    "cache_hits": 239,
+    "req_per_s": 97.8,
+    "latency_ms_p50": 494.8,
+    "latency_ms_p95": 642.1
+   }
+  ],
+  "rows_in_kit": 20
+ },
+ "load_before_threadpool": {
+  "mix": "20 official lines with article (exact hits), 24 held-out rewordings, 10 unrelated complaints; no LLM",
   "server": "1 uvicorn worker, CPU",
   "runs": [
    {
@@ -400,5 +434,6 @@
    }
   ],
   "rows_in_kit": 20
- }
+ },
+ "load_generated": "2026-10-22 19:37"
 }

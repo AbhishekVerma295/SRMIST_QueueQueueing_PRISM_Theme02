@@ -1,4 +1,5 @@
 """Local CPU sentence embeddings (fastembed / ONNX). Vectors are L2-normalised, so dot = cosine."""
+import os
 import threading
 
 import numpy as np
@@ -15,7 +16,10 @@ def _get_model():
         with _lock:
             if _model is None:
                 from fastembed import TextEmbedding
-                _model = TextEmbedding(config.EMBED_MODEL, cache_dir=str(config.MODEL_CACHE))
+                # EMBED_THREADS caps the CPU threads one embedding call may use, so parallel requests don't fight
+                # over every core (2 measured best on 16 cores: eval/runs/scale.md); 0 = the library default (all cores)
+                threads = int(os.getenv("EMBED_THREADS", "2")) or None
+                _model = TextEmbedding(config.EMBED_MODEL, cache_dir=str(config.MODEL_CACHE), threads=threads)
     return _model
 
 

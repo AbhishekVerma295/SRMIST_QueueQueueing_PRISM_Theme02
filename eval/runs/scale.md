@@ -26,10 +26,18 @@ synthetic keys are random unit vectors (they measure speed, not accuracy).
 | 100,256 | 25.6 ms | 39.2 ms | 154.0 MB | 0.52 s | 34/34 |
 
 ## 4. Concurrent load (real HTTP API)
-Traffic: 20 official lines with article (exact hits), 24 held-out rewordings, 10 unrelated complaints; no LLM. Server: 1 uvicorn worker, CPU.
+Traffic: 20 official lines with article (exact hits), 24 held-out rewordings, 10 unrelated complaints; no LLM. Server: 1 uvicorn worker, CPU, pipeline in a worker thread (4 at a time); client in a separate process.
 
 | Concurrent clients | Requests | Errors | Requests/s | Latency P50 | Latency P95 |
 |---|---|---|---|---|---|
-| 1 | 300 | 0 | 50.9 | 20.2 ms | 51.9 ms |
-| 10 | 300 | 0 | 53.7 | 189.3 ms | 319.9 ms |
-| 50 | 300 | 0 | 58.3 | 847.1 ms | 1042.0 ms |
+| 1 | 300 | 0 | 51.1 | 21.0 ms | 54.0 ms |
+| 10 | 300 | 0 | 95.5 | 93.6 ms | 199.4 ms |
+| 50 | 300 | 0 | 97.8 | 494.8 ms | 642.1 ms |
+
+Before the request handler moved to a worker thread (22 Oct, same traffic):
+
+| Concurrent clients | Errors | Requests/s | Latency P95 |
+|---|---|---|---|
+| 1 | 0 | 50.9 | 51.9 ms |
+| 10 | 0 | 53.7 | 319.9 ms |
+| 50 | 0 | 58.3 | 1042.0 ms |

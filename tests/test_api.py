@@ -169,3 +169,17 @@ def test_devanagari_without_llm_key_is_reported_and_stays_contract_valid():
     env = pipeline.troubleshoot(q, None, debug=True)
     assert env["query"] == q and env["meta"]["fallback"] == "no_siis_context"
     assert env["trace"]["lang"]["english"] is None
+
+
+def test_concurrent_requests_all_succeed_and_agree(client):
+    """Many requests at once (cache hits, misses and a new plan being stored) must all return valid JSON,
+    and identical complaints must still get identical plans."""
+    from concurrent.futures import ThreadPoolExecutor
+    r = _row(21)
+    body_new = {"query": r["original_query"], "siis_response": r["siis_response"]}
+    bodies = [body_new] * 6 + [{"query": "touch screen is laggy and slow to respond"}] * 6 + [{"query": "my alarm did not ring"}] * 4
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        envs = list(pool.map(lambda b: client.post("/v1/troubleshoot", json=b).json(), bodies))
+    assert all("response" in e and "meta" in e for e in envs)
+    plans = {json.dumps(e["response"], sort_keys=True) for e in envs[:6]}
+    assert len(plans) == 1
