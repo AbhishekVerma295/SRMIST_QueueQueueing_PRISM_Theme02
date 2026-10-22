@@ -136,3 +136,36 @@ def test_cache_prefers_plan_whose_original_complaint_is_closest(tmp_path):
     c.store("screen flickers after I unfold the phone", None, {"tag": "unfold"}, generic, ["flicker"])
     env, how, _ = c.lookup("the display flickers every time I unfold my phone", None)
     assert how == "semantic" and env["tag"] == "unfold"
+
+
+def test_english_complaints_are_never_treated_as_hinglish():
+    from app import lang
+    for q in kit.input_queries():
+        assert lang.detect(q) == "english", q
+        assert lang.to_english(q) == (q, None)
+
+
+def test_hinglish_complaint_is_normalised_to_english():
+    from app import lang
+    en, info = lang.to_english("phone gir gaya aur screen tut gayi")
+    assert info["detected"] == "hinglish" and info["method"] == "rules"
+    assert "cracked" in en.lower() and "gaya" not in en.lower()
+    assert lang.to_english("phone gir gaya aur screen tut gayi")[0] == en      # deterministic
+
+
+def test_hinglish_query_gets_a_grounded_plan_and_keeps_the_original_text():
+    r = _row(14)
+    q = "display poori toot gayi hai, phone use nahi kar pa raha"
+    env = pipeline.troubleshoot(q, r["siis_response"], debug=True, use_cache=False)
+    assert validators.check_envelope({k: env[k] for k in ("query", "query_variations", "response", "meta")}) == []
+    assert env["query"] == q and env["response"]["contexts"]
+    assert env["trace"]["lang"]["detected"] == "hinglish"
+
+
+def test_devanagari_without_llm_key_is_reported_and_stays_contract_valid():
+    from app import lang
+    q = "मेरे फोन की स्क्रीन काम नहीं कर रही"
+    assert lang.detect(q) == "hindi"
+    env = pipeline.troubleshoot(q, None, debug=True)
+    assert env["query"] == q and env["meta"]["fallback"] == "no_siis_context"
+    assert env["trace"]["lang"]["english"] is None

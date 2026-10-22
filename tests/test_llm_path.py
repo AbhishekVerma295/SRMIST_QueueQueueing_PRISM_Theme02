@@ -127,3 +127,44 @@ def test_llm_abstains_but_rules_find_a_grounded_plan(fake_llm):
     env = pipeline.troubleshoot(r["original_query"], r["siis_response"], use_cache=False)
     assert validators.check_envelope(env) == []
     assert env["response"]["contexts"] and "llm abstained" in env["meta"]["model"]
+
+
+def test_a_slow_model_cannot_use_the_whole_time_budget(monkeypatch):
+    """Model A times out; model B must still get its turn inside the budget, and A is tried last afterwards."""
+    import httpx
+
+    calls = []
+
+    class FakeResponse:
+        status_code = 200
+        text = ""
+
+        def json(self):
+            return {"candidates": [{"content": {"parts": [{"text": '{"ok": true}'}]}}], "usageMetadata": {}}
+
+        def raise_for_status(self):
+            pass
+
+    class FakeClient:
+        def post(self, url, headers=None, json=None, timeout=None):
+            model = url.split("/models/")[1].split(":")[0]
+            calls.append((model, timeout))
+            if model == "model-a":
+                raise httpx.ReadTimeout("slow")
+            return FakeResponse()
+
+    monkeypatch.setattr(llm, "PROVIDER", "gemini")
+    monkeypatch.setattr(llm, "API_KEY", "test")
+    monkeypatch.setattr(llm, "MODEL", "")
+    monkeypatch.setattr(llm, "BUDGET_S", 8.0)
+    monkeypatch.setattr(llm, "_resolved_model", "model-a")
+    monkeypatch.setattr(llm, "_chain", ["model-a", "model-b"])
+    monkeypatch.setattr(llm, "_sticky", None)
+    monkeypatch.setattr(llm, "_dead", set())
+    monkeypatch.setattr(llm, "_slow", set())
+    monkeypatch.setattr(llm, "_http", lambda: FakeClient())
+    usage = llm.Usage()
+    out = llm.call_json("sys", "user", {"type": "OBJECT"}, usage, max_tokens=20)
+    assert out == {"ok": True} and usage.model == "model-b"
+    assert calls[0][0] == "model-a" and calls[0][1] <= 4.01          # at most half of the 8 s budget
+    assert llm._candidates()[-1] == "model-a"                        # the slow model now goes last

@@ -100,12 +100,23 @@ def _parse_json(text: str):
 
 
 _dead: set = set()              # models that returned 404 (unavailable) or a quota 429 this process: skip them
+_slow: set = set()              # models that timed out this process: still used, but only after the others
+MIN_ATTEMPT_S = 3.0             # a Flash-Lite answer normally takes 2-3 s
 
 
 def _candidates() -> list[str]:
     model_name()                                   # populates the discovery chain once
     order = ([MODEL] if MODEL else []) + ([_sticky] if _sticky else []) + _chain + ([_resolved_model] if _resolved_model else [])
-    return [m for m in dict.fromkeys(m for m in order if m) if m not in _dead]
+    alive = [m for m in dict.fromkeys(m for m in order if m) if m not in _dead]
+    return [m for m in alive if m not in _slow] + [m for m in alive if m in _slow]
+
+
+def _attempt_timeout(remaining: float, others_left: bool) -> float:
+    """One slow model must not use the whole budget: while another model can still be tried, an attempt gets at
+    most half of the remaining time (but at least MIN_ATTEMPT_S)."""
+    if not others_left:
+        return max(1.0, remaining)
+    return max(1.0, min(remaining, max(MIN_ATTEMPT_S, remaining / 2)))
 
 
 def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_tokens: int, t0: float):
@@ -114,7 +125,7 @@ def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_token
     last_err = "no model available"
     # each model gets a few tries with backoff on 503 "high demand" (transient), bounded by the time budget
     attempts = [(m, k) for m in _candidates() for k in range(3 if BUDGET_S >= 20 else 1)]
-    for model, k in attempts:
+    for i, (model, k) in enumerate(attempts):
         if model in _dead:
             continue
         remaining = BUDGET_S - (time.perf_counter() - t0)
@@ -123,6 +134,8 @@ def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_token
         if k > 0:
             time.sleep(min(2.0 * k, max(0.0, remaining - 1.0)))
             remaining = BUDGET_S - (time.perf_counter() - t0)
+        others_left = any(m != model and m not in _dead for m, _ in attempts[i + 1:])
+        attempt_s = _attempt_timeout(remaining, others_left)
         gc = {"temperature": 0, "seed": 7, "maxOutputTokens": max_tokens,
               "responseMimeType": "application/json", "responseSchema": schema}
         if re.match(r"gemini-3", model):
@@ -131,11 +144,11 @@ def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_token
                 "contents": [{"role": "user", "parts": [{"text": user}]}], "generationConfig": gc}
         try:
             r = _http().post(f"{GEMINI_BASE}/models/{model}:generateContent", headers={"x-goog-api-key": API_KEY},
-                             json=body, timeout=max(1.0, remaining))
+                             json=body, timeout=attempt_s)
             if r.status_code == 400 and "thinking" in r.text.lower():      # model rejects the thinking setting
                 gc.pop("thinkingConfig", None)
                 r = _http().post(f"{GEMINI_BASE}/models/{model}:generateContent", headers={"x-goog-api-key": API_KEY},
-                                 json=body, timeout=max(1.0, remaining))
+                                 json=body, timeout=attempt_s)
             if r.status_code in RETRYABLE:
                 last_err = f"{model}: HTTP {r.status_code}"
                 usage.errors.append(last_err)
@@ -152,10 +165,15 @@ def _gemini_json(system: str, user: str, schema: dict, usage: "Usage", max_token
             usage.calls += 1
             usage.model = model
             _sticky = model
+            _slow.discard(model)
             return _parse_json(text)
         except (httpx.TimeoutException, httpx.TransportError) as exc:
             last_err = f"{model}: {type(exc).__name__}"
             usage.errors.append(last_err)
+            if isinstance(exc, httpx.TimeoutException):
+                _slow.add(model)                  # try the other models first from now on
+                if _sticky == model:
+                    _sticky = None
         except (KeyError, IndexError, ValueError) as exc:                 # empty/blocked/non-JSON answer
             last_err = f"{model}: bad response {type(exc).__name__}"
             usage.errors.append(last_err)

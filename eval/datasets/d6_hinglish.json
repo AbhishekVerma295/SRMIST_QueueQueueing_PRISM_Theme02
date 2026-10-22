@@ -1,0 +1,28 @@
+{
+ "_readme": "D6: Hinglish (romanised Hindi + English) complaints, written on 22 Oct 2026 BEFORE app/lang.py existed. Positives are rewordings of official kit complaints (row ids from siis_responses.json) and should get that row's cached plan with no article sent. Negatives have no plan in the kit and must not hit. Written by the same people who wrote the normaliser, so it is a development set; a held-out set written by the team is reported separately if available.",
+ "positives": [
+  {"row_id": "row_21", "text": "mera phone ka touch bahut slow hai, der se respond karta hai"},
+  {"row_id": "row_21", "text": "touch screen hang ho raha hai aur late respond karta hai"},
+  {"row_id": "row_14", "text": "phone gir gaya aur screen tut gayi"},
+  {"row_id": "row_14", "text": "display poori toot gayi hai, phone use nahi kar pa raha"},
+  {"row_id": "row_22", "text": "screen pe kuch nahi dikh raha lekin call aane par ring hota hai"},
+  {"row_id": "row_1", "text": "email kholte hi tablet ki screen flash hoke blank ho jati hai"},
+  {"row_id": "row_2", "text": "apps kholne par screen white ho jati hai aur kuch likha nahi dikhta"},
+  {"row_id": "row_10", "text": "phone unfold karne par screen flicker karke black ho jati hai"},
+  {"row_id": "row_19", "text": "fold wali jagah pe screen phir se crack ho gayi"},
+  {"row_id": "row_15", "text": "phone on karte waqt blue screen pe atak jata hai"},
+  {"row_id": "row_4", "text": "naya phone hai aur screen poori kaali ho gayi"},
+  {"row_id": "row_11", "text": "fold screen ka right side black hai, left side theek hai"},
+  {"row_id": "row_20", "text": "naye phone ki screen pe picture tedhi medhi dikh rahi hai"},
+  {"row_id": "row_5", "text": "data transfer karte waqt QR wale step pe tablet ki screen blank ho gayi"},
+  {"row_id": "row_9", "text": "andar wali screen pe kuch nahi dikhta aur touch bhi kaam nahi karta, bahar wali screen theek hai"}
+ ],
+ "negatives": [
+  "mera alarm subah nahi baja",
+  "wifi ka password kaise badlu",
+  "ringtone kaise change karu",
+  "sim card detect nahi ho raha",
+  "phone ki battery jaldi khatam ho jati hai",
+  "camera se photo blur aati hai"
+ ]
+}

@@ -6,7 +6,7 @@ import time
 import numpy as np
 
 from . import cache as cache_mod
-from . import config, embed, llm, llm_stages, validators
+from . import config, embed, lang, llm, llm_stages, validators
 from .compile import compile_goal
 from .enrich_rules import enrich, split_intents, symptoms_of, variations
 from .extract_rules import clean_siis, extract
@@ -88,10 +88,11 @@ def plan_intent(intent: str, content: str, title: str, trace: dict) -> dict | No
 
 def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache: bool = True, lookup: bool = True) -> dict:
     t0 = time.perf_counter()
-    query = (query or "")[: config.MAX_QUERY_CHARS]
+    original = (query or "")[: config.MAX_QUERY_CHARS]
+    query, lang_info = lang.to_english(original)     # Hinglish / Hindi -> English; English passes through untouched
     content, title = coerce_siis(siis_response)
     s_hash = cache_mod.siis_hash(f"{title}\n{content}") if content else None
-    trace: dict = {}
+    trace: dict = {"lang": lang_info} if lang_info else {}
     cache = get_cache()
 
     if use_cache and lookup:
@@ -99,7 +100,7 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
         trace["cache"] = {"how": how, "similarity": round(sim, 3)}
         if hit:
             env = copy.deepcopy(hit)
-            env["query"] = query
+            env["query"] = original
             if how != "exact":   # variations must paraphrase *this* query, not the cached one (rules mode: ~1 ms)
                 env["query_variations"] = variations(enrich(split_intents(query)[0], title))
             env["meta"] = {"latency_ms": int(round((time.perf_counter() - t0) * 1000)), "cache_hit": True, "model": hit["meta"].get("model", MODEL_NAME), "cost_usd": 0.0}
@@ -118,7 +119,7 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
         trace["cache_l2"] = {"how": how, "similarity": round(sim, 3), "key": primary.canonical}
         if hit:
             env = copy.deepcopy(hit)
-            env["query"] = query
+            env["query"] = original
             env["query_variations"] = variations(primary)
             env["meta"] = {"latency_ms": int(round((time.perf_counter() - t0) * 1000)), "cache_hit": True, "model": hit["meta"].get("model", MODEL_NAME), "cost_usd": 0.0}
             if hit["meta"].get("fallback"):
@@ -128,7 +129,7 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
             return env
 
     if not content:
-        env = _envelope(query, variations(primary), [], t0, False, MODEL_NAME, "no_siis_context")
+        env = _envelope(original, variations(primary), [], t0, False, MODEL_NAME, "no_siis_context")
         if debug:
             env["trace"] = trace
         return env
@@ -176,7 +177,7 @@ def troubleshoot(query: str, siis_response=None, debug: bool = False, use_cache:
             trace.setdefault("gate_rejections", []).append(problems)
         else:
             safe.append(g)
-    env = _envelope(query, qvars, safe, t0, False, model, None if safe else "no_match")
+    env = _envelope(original, qvars, safe, t0, False, model, None if safe else "no_match")
     env["meta"]["cost_usd"] = cost
     if use_cache and config.CACHE_WRITE and (safe or extracted is not None):
         keys = [*canonical_keys, *qvars]
