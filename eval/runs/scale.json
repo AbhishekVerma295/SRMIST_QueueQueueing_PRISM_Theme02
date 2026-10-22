@@ -1,0 +1,404 @@
+{
+ "generated": "2026-10-22 15:47",
+ "env": "16 vCPU / Windows 11 / Python 3.12.10",
+ "onboarding": [
+  {
+   "mode": "rules",
+   "articles": 8,
+   "code_changes": 0,
+   "entries_before": 20,
+   "entries_after": 28,
+   "planned": 8,
+   "compile_ms_mean": 306,
+   "compile_ms_max": 1404,
+   "cost_usd_total": 0.0,
+   "cost_usd_per_article": 0.0,
+   "exact_hit_ms_p95": 0.2,
+   "rewording_hits": 6,
+   "rewording_right_plan": 6,
+   "rewordings": 8,
+   "rewording_ms_p95": 48.4,
+   "false_hits": [],
+   "negatives": 5,
+   "rows": [
+    {
+     "case": "d2b_1",
+     "domain": "Battery",
+     "compile_ms": 1404,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 4,
+     "catalog_links": 3,
+     "fallback": null
+    },
+    {
+     "case": "d2b_2",
+     "domain": "Charging",
+     "compile_ms": 159,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 1,
+     "fallback": null
+    },
+    {
+     "case": "d2b_3",
+     "domain": "Display",
+     "compile_ms": 164,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 2,
+     "fallback": null
+    },
+    {
+     "case": "d2b_4",
+     "domain": "Display",
+     "compile_ms": 153,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 2,
+     "catalog_links": 2,
+     "fallback": null
+    },
+    {
+     "case": "d2b_5",
+     "domain": "Performance",
+     "compile_ms": 154,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 0,
+     "fallback": null
+    },
+    {
+     "case": "d2b_6",
+     "domain": "Connectivity",
+     "compile_ms": 137,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 1,
+     "fallback": null
+    },
+    {
+     "case": "d2b_7",
+     "domain": "Camera",
+     "compile_ms": 138,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 1,
+     "catalog_links": 1,
+     "fallback": null
+    },
+    {
+     "case": "d2b_8",
+     "domain": "Performance",
+     "compile_ms": 136,
+     "cost_usd": 0.0,
+     "model": "rules-offline+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 0,
+     "fallback": null
+    }
+   ],
+   "rewording_detail": [
+    {
+     "case": "d2b_1",
+     "text": "battery keeps going down overnight even though I'm not using the phone",
+     "hit": false,
+     "right_plan": false,
+     "ms": 27.8
+    },
+    {
+     "case": "d2b_2",
+     "text": "my phone doesn't charge on the wireless pad anymore",
+     "hit": false,
+     "right_plan": false,
+     "ms": 28.1
+    },
+    {
+     "case": "d2b_3",
+     "text": "the screen is too dim to see outdoors in bright sun",
+     "hit": true,
+     "right_plan": true,
+     "ms": 13.3
+    },
+    {
+     "case": "d2b_4",
+     "text": "the icons and letters on my display are tiny and hard to read",
+     "hit": true,
+     "right_plan": true,
+     "ms": 13.5
+    },
+    {
+     "case": "d2b_5",
+     "text": "my phone reboots by itself randomly",
+     "hit": true,
+     "right_plan": true,
+     "ms": 13.4
+    },
+    {
+     "case": "d2b_6",
+     "text": "earbuds won't pair with my phone over bluetooth",
+     "hit": true,
+     "right_plan": true,
+     "ms": 14.8
+    },
+    {
+     "case": "d2b_7",
+     "text": "how do I turn off the vibration when I click a picture",
+     "hit": true,
+     "right_plan": true,
+     "ms": 48.4
+    },
+    {
+     "case": "d2b_8",
+     "text": "apps on my tablet keep force closing",
+     "hit": true,
+     "right_plan": true,
+     "ms": 15.7
+    }
+   ]
+  },
+  {
+   "mode": "llm",
+   "articles": 8,
+   "code_changes": 0,
+   "entries_before": 20,
+   "entries_after": 28,
+   "planned": 8,
+   "compile_ms_mean": 2597,
+   "compile_ms_max": 3437,
+   "cost_usd_total": 0.00322,
+   "cost_usd_per_article": 0.0004,
+   "exact_hit_ms_p95": 0.1,
+   "rewording_hits": 7,
+   "rewording_right_plan": 7,
+   "rewordings": 8,
+   "rewording_ms_p95": 31.9,
+   "false_hits": [],
+   "negatives": 5,
+   "rows": [
+    {
+     "case": "d2b_1",
+     "domain": "Battery",
+     "compile_ms": 3437,
+     "cost_usd": 0.000552,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 4,
+     "catalog_links": 3,
+     "fallback": null
+    },
+    {
+     "case": "d2b_2",
+     "domain": "Charging",
+     "compile_ms": 2346,
+     "cost_usd": 0.000383,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 1,
+     "fallback": null
+    },
+    {
+     "case": "d2b_3",
+     "domain": "Display",
+     "compile_ms": 2734,
+     "cost_usd": 0.000286,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 2,
+     "fallback": null
+    },
+    {
+     "case": "d2b_4",
+     "domain": "Display",
+     "compile_ms": 2693,
+     "cost_usd": 0.000437,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 2,
+     "catalog_links": 2,
+     "fallback": null
+    },
+    {
+     "case": "d2b_5",
+     "domain": "Performance",
+     "compile_ms": 2978,
+     "cost_usd": 0.00048,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 0,
+     "fallback": null
+    },
+    {
+     "case": "d2b_6",
+     "domain": "Connectivity",
+     "compile_ms": 2414,
+     "cost_usd": 0.000454,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 1,
+     "fallback": null
+    },
+    {
+     "case": "d2b_7",
+     "domain": "Camera",
+     "compile_ms": 2185,
+     "cost_usd": 0.000286,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 1,
+     "catalog_links": 1,
+     "fallback": null
+    },
+    {
+     "case": "d2b_8",
+     "domain": "Performance",
+     "compile_ms": 1988,
+     "cost_usd": 0.000344,
+     "model": "gemini-flash-lite-latest+bge-small-en-v1.5",
+     "actions": 3,
+     "catalog_links": 0,
+     "fallback": null
+    }
+   ],
+   "rewording_detail": [
+    {
+     "case": "d2b_1",
+     "text": "battery keeps going down overnight even though I'm not using the phone",
+     "hit": true,
+     "right_plan": true,
+     "ms": 16.5
+    },
+    {
+     "case": "d2b_2",
+     "text": "my phone doesn't charge on the wireless pad anymore",
+     "hit": false,
+     "right_plan": false,
+     "ms": 31.9
+    },
+    {
+     "case": "d2b_3",
+     "text": "the screen is too dim to see outdoors in bright sun",
+     "hit": true,
+     "right_plan": true,
+     "ms": 16.3
+    },
+    {
+     "case": "d2b_4",
+     "text": "the icons and letters on my display are tiny and hard to read",
+     "hit": true,
+     "right_plan": true,
+     "ms": 17.2
+    },
+    {
+     "case": "d2b_5",
+     "text": "my phone reboots by itself randomly",
+     "hit": true,
+     "right_plan": true,
+     "ms": 15.5
+    },
+    {
+     "case": "d2b_6",
+     "text": "earbuds won't pair with my phone over bluetooth",
+     "hit": true,
+     "right_plan": true,
+     "ms": 16.7
+    },
+    {
+     "case": "d2b_7",
+     "text": "how do I turn off the vibration when I click a picture",
+     "hit": true,
+     "right_plan": true,
+     "ms": 16.7
+    },
+    {
+     "case": "d2b_8",
+     "text": "apps on my tablet keep force closing",
+     "hit": true,
+     "right_plan": true,
+     "ms": 15.8
+    }
+   ]
+  }
+ ],
+ "catalog": {
+  "catalog_entries": 578,
+  "phone_entries": 556,
+  "appliance_entries_excluded": 21,
+  "exact": 534,
+  "duplicate_entry": 21,
+  "other_entry": 0,
+  "declined": 1,
+  "reached_pct": 99.8,
+  "match_ms_p50": 16.1,
+  "match_ms_p95": 20.8,
+  "other_entry_examples": []
+ },
+ "cache_size": {
+  "queries": 34,
+  "note": "synthetic keys are random unit vectors (they measure speed, not accuracy)",
+  "runs": [
+   {
+    "keys": 1256,
+    "entries": 120,
+    "load_s": 0.01,
+    "lookup_ms_p50": 16.8,
+    "lookup_ms_p95": 21.6,
+    "vector_memory_mb": 1.9,
+    "answers_unchanged": "34/34"
+   },
+   {
+    "keys": 10256,
+    "entries": 1020,
+    "load_s": 0.05,
+    "lookup_ms_p50": 17.5,
+    "lookup_ms_p95": 21.6,
+    "vector_memory_mb": 15.8,
+    "answers_unchanged": "34/34"
+   },
+   {
+    "keys": 100256,
+    "entries": 10020,
+    "load_s": 0.52,
+    "lookup_ms_p50": 25.6,
+    "lookup_ms_p95": 39.2,
+    "vector_memory_mb": 154.0,
+    "answers_unchanged": "34/34"
+   }
+  ]
+ },
+ "load": {
+  "mix": "20 official lines with article (exact hits), 24 held-out rewordings, 10 unrelated complaints; no LLM",
+  "server": "1 uvicorn worker, CPU",
+  "runs": [
+   {
+    "concurrency": 1,
+    "requests": 300,
+    "errors": 0,
+    "cache_hits": 239,
+    "req_per_s": 50.9,
+    "latency_ms_p50": 20.2,
+    "latency_ms_p95": 51.9
+   },
+   {
+    "concurrency": 10,
+    "requests": 300,
+    "errors": 0,
+    "cache_hits": 239,
+    "req_per_s": 53.7,
+    "latency_ms_p50": 189.3,
+    "latency_ms_p95": 319.9
+   },
+   {
+    "concurrency": 50,
+    "requests": 300,
+    "errors": 0,
+    "cache_hits": 239,
+    "req_per_s": 58.3,
+    "latency_ms_p50": 847.1,
+    "latency_ms_p95": 1042.0
+   }
+  ],
+  "rows_in_kit": 20
+ }
+}

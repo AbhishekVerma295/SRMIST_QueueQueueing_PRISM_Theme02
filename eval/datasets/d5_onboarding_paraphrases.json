@@ -1,0 +1,20 @@
+{
+ "_readme": "D5: written on 22 Oct 2026 before the scalability benchmark ran. One hand-written rewording per D2b scenario (D2b articles are treated as brand-new scenarios added to the shipped cache) plus unrelated complaints that must not hit. Used only by eval/scale_bench.py; never used for tuning.",
+ "positives": [
+  {"case": "d2b_1", "text": "battery keeps going down overnight even though I'm not using the phone"},
+  {"case": "d2b_2", "text": "my phone doesn't charge on the wireless pad anymore"},
+  {"case": "d2b_3", "text": "the screen is too dim to see outdoors in bright sun"},
+  {"case": "d2b_4", "text": "the icons and letters on my display are tiny and hard to read"},
+  {"case": "d2b_5", "text": "my phone reboots by itself randomly"},
+  {"case": "d2b_6", "text": "earbuds won't pair with my phone over bluetooth"},
+  {"case": "d2b_7", "text": "how do I turn off the vibration when I click a picture"},
+  {"case": "d2b_8", "text": "apps on my tablet keep force closing"}
+ ],
+ "negatives": [
+  "my sim card is not detected",
+  "how do I change my ringtone",
+  "the gps shows the wrong location",
+  "my phone fell in water yesterday",
+  "the volume buttons don't work"
+ ]
+}
