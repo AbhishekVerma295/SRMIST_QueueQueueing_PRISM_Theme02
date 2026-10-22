@@ -55,7 +55,8 @@ RETRYABLE = {404, 408, 429, 500, 502, 503, 504}
 
 
 def enabled() -> bool:
-    return bool(PROVIDER and API_KEY)
+    """LLM_PROVIDER=off (or none) forces offline rules mode even when a key is set, e.g. for a demo recording."""
+    return bool(PROVIDER and PROVIDER not in ("off", "none") and API_KEY)
 
 
 def _http() -> httpx.Client:

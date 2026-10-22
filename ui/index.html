@@ -3,129 +3,234 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FixFlow · Guided Troubleshooting</title>
+<title>FixFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@85..100,400..700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
+  /* Layout: a diagnostic bench. The phone (the product) on the left; the engine's signal path on the right.
+     One memorable element: the signal path that lights up stage by stage and visibly skips the AI on a cache hit. */
   :root {
-    --bg: #f4f5f8; --panel: #ffffff; --ink: #16181d; --muted: #5d6270; --line: #e3e5ea;
-    --accent: #3a5bd9; --accent-ink: #ffffff; --ok: #1b8a4b; --ok-bg: #e5f5ec; --warn: #b35c00; --warn-bg: #fff2e0;
-    --crit: #b3261e; --crit-bg: #fdecea; --chip: #eef1fb; --phone: #0f1115; --screen: #fafbfc; --code: #f6f7f9;
+    --canvas: #e9edf2; --panel: #ffffff; --ink: #18202c; --muted: #586474; --line: #d3dae3; --soft: #f3f5f8;
+    --act: #2346b5; --act-ink: #ffffff; --act-soft: #e4e9fa;
+    --ran: #13805b; --ran-soft: #def3ea; --warn: #9c5a00; --warn-soft: #fbedd6; --skip: #a3adba;
+    --hand: #8f5600; --hand-soft: #f8ebd6; --last: #b2261e; --last-soft: #fbe5e3;
+    --bezel: #1d2430; --screen: #fbfcfd; --code: #f2f4f7;
+    --f: "Instrument Sans", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    --mono: "JetBrains Mono", "Cascadia Mono", Consolas, ui-monospace, monospace;
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #0f1115; --panel: #171a21; --ink: #e8eaf0; --muted: #9aa0ad; --line: #2a2f3a;
-      --accent: #7b96ff; --accent-ink: #0f1115; --ok: #5fd08f; --ok-bg: #16301f; --warn: #ffb35c; --warn-bg: #33250f;
-      --crit: #ff8a80; --crit-bg: #3a1614; --chip: #222838; --phone: #000000; --screen: #12151b; --code: #12151b;
+      --canvas: #0f1319; --panel: #171d26; --ink: #e5eaf0; --muted: #9aa6b5; --line: #2a3340; --soft: #1d2430;
+      --act: #8ea6ff; --act-ink: #0f1319; --act-soft: #1f2a48;
+      --ran: #5fcf9d; --ran-soft: #15332a; --warn: #f0b05a; --warn-soft: #3a2a12; --skip: #5b6676;
+      --hand: #f0b05a; --hand-soft: #382a14; --last: #ff8f86; --last-soft: #3b1816;
+      --bezel: #05070a; --screen: #121821; --code: #121821; color-scheme: dark;
     }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); }
-  header { padding: 18px 24px 6px; }
-  header h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
-  header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-  /* the phone (the product) is the hero; the engine view is a narrower side panel */
-  main { display: grid; grid-template-columns: minmax(380px, 560px) minmax(300px, 400px); justify-content: center; gap: 28px; padding: 14px 24px 28px; align-items: start; }
-  header { max-width: 988px; margin: 0 auto; }
-  @media (max-width: 1000px) { main { grid-template-columns: 1fr; padding: 12px 16px 24px; } header { padding: 16px 16px 4px; } }
-  .screen { font-size: 15.5px; }
-  .micmsg { font-size: 12.5px; color: var(--muted); margin-top: 6px; min-height: 1em; }
-  .micmsg.err { color: var(--crit); }
-  .kbbar { background: var(--chip); border-radius: 12px; padding: 9px 11px; margin: 12px 2px 0; font-size: 13px; }
-  .kbbar button { margin: 6px 6px 0 0; font-size: 12.5px; padding: 5px 11px; }
+  html, body { margin: 0; }
+  body { background: var(--canvas); color: var(--ink); font: 16px/1.5 var(--f); }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 
-  .phone { background: var(--phone); border-radius: 34px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.18); }
-  .screen { background: var(--screen); border-radius: 24px; min-height: 760px; padding: 18px 18px 20px; overflow: hidden; }
-  .status { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding: 0 6px 10px; }
-  .ask { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 10px; }
-  textarea { width: 100%; border: 0; resize: vertical; min-height: 64px; font: inherit; background: transparent; color: var(--ink); outline: none; }
+  header { max-width: 1240px; margin: 0 auto; padding: 22px 24px 8px; display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; justify-content: space-between; }
+  .brand { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .brand h1 { margin: 0; font-size: 28px; font-weight: 700; font-stretch: 88%; letter-spacing: -0.02em; }
+  .brand p { margin: 0; color: var(--muted); font-size: 15px; }
+  .team { color: var(--muted); font-size: 14px; }
+
+  main { max-width: 1240px; margin: 0 auto; padding: 10px 24px 40px; display: grid; gap: 28px; grid-template-columns: 470px minmax(0, 1fr); align-items: start; }
+  @media (max-width: 1060px) { main { grid-template-columns: minmax(0, 1fr); } }
+  main > * { min-width: 0; }
+
+  /* ---------- the phone ---------- */
+  .phone { background: var(--bezel); border-radius: 44px; padding: 12px; box-shadow: 0 18px 40px -18px rgba(20, 30, 50, .45); }
+  .screen { background: var(--screen); border-radius: 34px; min-height: 820px; padding: 14px 18px 22px; overflow: hidden; font-size: 16.5px; }
+  .appbar { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 14px; }
+  .appbar strong { font-size: 18px; font-weight: 650; }
+  .appbar span { color: var(--muted); font-size: 13px; }
+  .ask { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 12px 12px 10px; }
+  #q { width: 100%; border: 0; resize: vertical; min-height: 70px; background: transparent; outline: none; line-height: 1.45; }
   .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  button { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
-  button.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
-  button:disabled { opacity: .5; cursor: default; }
-  button.icon { padding: 7px 11px; }
-  select { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 10px; padding: 6px 8px; max-width: 100%; }
-  main > section { min-width: 0; }                      /* let grid columns shrink below their content width */
-  .row select { flex: 1 1 160px; min-width: 0; width: 100%; }
-  .card, .card ol li, .verify { overflow-wrap: anywhere; }
-  details summary { cursor: pointer; color: var(--muted); font-size: 13px; }
-  .siis { width: 100%; min-height: 90px; margin-top: 6px; border: 1px solid var(--line); border-radius: 10px; padding: 8px; font: 12px/1.4 ui-monospace, Consolas, monospace; background: var(--code); color: var(--ink); }
+  button { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 15px; cursor: pointer; line-height: 1.2; }
+  button:hover { border-color: var(--act); }
+  button.primary { background: var(--act); color: var(--act-ink); border-color: transparent; font-weight: 600; }
+  button:disabled { opacity: .55; cursor: default; }
+  button.mic { padding: 8px 12px; }
+  button.mic.on { background: var(--last-soft); color: var(--last); border-color: var(--last); }
+  select { border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 8px 10px; flex: 1 1 150px; min-width: 0; max-width: 100%; }
+  .micmsg { font-size: 13px; color: var(--muted); min-height: 1.2em; margin-top: 6px; }
+  .micmsg.err { color: var(--last); }
+  .tries { margin: 12px 2px 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); }
+  .tries button { font-size: 14px; padding: 5px 11px; background: var(--soft); }
+  details.article { margin-top: 8px; }
+  details summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+  .siis { width: 100%; min-height: 96px; margin-top: 6px; border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; font: 12.5px/1.45 var(--mono); background: var(--code); }
+  .understood { margin: 10px 4px 0; font-size: 14.5px; color: var(--muted); }
+  .understood b { color: var(--ink); font-weight: 600; }
+  .kbbar { background: var(--soft); border-radius: 14px; padding: 10px 12px; margin: 12px 2px 0; font-size: 14px; }
+  .kbbar button { margin: 6px 6px 0 0; font-size: 13.5px; padding: 5px 11px; }
 
-  .goal { margin: 16px 4px 8px; }
-  .goal h2 { font-size: 16px; margin: 0; }
-  .goal .sub { color: var(--muted); font-size: 12px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 10px; margin: 10px 0; }
-  .card.done { border-color: var(--ok); }
-  .card h3 { margin: 0; font-size: 15px; display: flex; gap: 8px; align-items: center; justify-content: space-between; }
-  .card .desc { color: var(--muted); font-size: 13px; margin: 2px 0 6px; }
-  .card ol { margin: 6px 0 8px 18px; padding: 0; font-size: 13.5px; }
-  .tag { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
-  .tag.auto { background: var(--chip); color: var(--accent); }
-  .tag.manual { background: var(--warn-bg); color: var(--warn); }
-  .tag.critical { background: var(--crit-bg); color: var(--crit); }
-  .verify { font-size: 12.5px; margin-top: 4px; }
-  .verify.ok { color: var(--ok); } .verify.no { color: var(--crit); }
-  .empty { color: var(--muted); text-align: center; padding: 30px 12px; font-size: 14px; }
-  .guided { background: var(--chip); border-radius: 14px; padding: 10px 12px; margin: 12px 0 4px; font-size: 13.5px; }
+  .goal { margin: 18px 4px 6px; }
+  .goal h2 { margin: 0; font-size: 21px; font-weight: 650; letter-spacing: -0.01em; }
+  .goal .sub { color: var(--muted); font-size: 14px; }
+  .guided { background: var(--act-soft); border-radius: 16px; padding: 11px 13px; margin: 12px 0 6px; font-size: 15px; }
+  .progress { height: 6px; background: var(--panel); border-radius: 99px; overflow: hidden; margin: 8px 0 4px; }
+  .progress i { display: block; height: 100%; background: var(--act); border-radius: 99px; transition: width .3s ease; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 13px 14px 11px; margin: 10px 0; transition: opacity .2s ease, border-color .2s ease; }
+  .card.done { border-color: var(--ran); box-shadow: inset 0 0 0 1px var(--ran); }
+  .card h3 { margin: 0; font-size: 17px; font-weight: 650; display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; }
+  .card .n { color: var(--muted); font-weight: 500; margin-right: 4px; font-variant-numeric: tabular-nums; }
+  .card .desc { color: var(--muted); font-size: 14.5px; margin: 2px 0 6px; }
+  .card ol { margin: 6px 0 8px 20px; padding: 0; font-size: 15px; }
+  .card ol li { margin: 2px 0; }
+  .card, .card li, .verify { overflow-wrap: anywhere; }
+  .chip { font-size: 12.5px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap; flex: none; }
+  .chip.auto { background: var(--act-soft); color: var(--act); }
+  .chip.manual { background: var(--hand-soft); color: var(--hand); }
+  .chip.critical { background: var(--last-soft); color: var(--last); }
+  .verify { font-size: 14px; margin-top: 6px; }
+  .verify.ok { color: var(--ran); }
+  .verify.no { color: var(--last); }
+  .verify small { display: block; color: var(--muted); font: 12px var(--mono); margin-top: 2px; }
+  .tick { display: inline-block; animation: pop .35s ease; }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .confirm { background: var(--last-soft); border-radius: 12px; padding: 9px 11px; margin-top: 8px; font-size: 14px; }
+  .confirm .row { margin-top: 6px; }
+  .empty { color: var(--muted); text-align: center; padding: 36px 14px; font-size: 15.5px; }
 
-  .engine { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; }
-  .engine h2 { margin: 0 0 10px; font-size: 16px; }
-  .stages { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
-  .stage { display: grid; grid-template-columns: 150px 1fr; align-items: baseline; gap: 8px; }
-  .stage { border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
-  .stage b { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-  .stage span { font-size: 14px; }
-  .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 14px; }
-  .kv div { background: var(--code); border-radius: 10px; padding: 8px 10px; }
-  .kv small { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
-  .kv strong { font-size: 16px; font-variant-numeric: tabular-nums; }
-  pre { background: var(--code); border-radius: 12px; padding: 12px; overflow: auto; font-size: 12px; max-height: 420px; margin: 8px 0 0; }
-  .note { color: var(--muted); font-size: 12.5px; }
-  .mic.on { background: var(--crit-bg); color: var(--crit); border-color: var(--crit); }
+  /* ---------- the engine ---------- */
+  .bench { display: grid; gap: 18px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px 20px; }
+  .panel h2 { margin: 0 0 4px; font-size: 19px; font-weight: 650; }
+  .panel > p.lead { margin: 0 0 14px; color: var(--muted); font-size: 15px; }
+  .verdict { font-size: 17px; margin: 2px 0 16px; min-height: 1.5em; }
+
+  .path { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .node { position: relative; padding: 0 6px; text-align: center; }
+  .node::before { content: ""; position: absolute; top: 13px; left: -50%; width: 100%; height: 3px; background: var(--line); z-index: 0; }
+  .node:first-child::before { display: none; }
+  .node.ran::before, .node.warn::before { background: var(--ran); }
+  .node.skip::before { background: repeating-linear-gradient(90deg, var(--skip) 0 6px, transparent 6px 11px); }
+  .dot { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; margin: 0 auto 8px; background: var(--panel); border: 3px solid var(--line); display: grid; place-items: center; font-size: 13px; font-weight: 700; transition: background .25s ease, border-color .25s ease; }
+  .node.ran .dot { background: var(--ran); border-color: var(--ran); color: #fff; }
+  .node.warn .dot { background: var(--warn); border-color: var(--warn); color: #fff; }
+  .node.skip .dot { border-color: var(--skip); border-style: dashed; color: var(--skip); }
+  .node.lit .dot { animation: pop .3s ease both; animation-delay: var(--d, 0s); }
+  .node b { display: block; font-size: 14.5px; font-weight: 650; }
+  .node span { display: block; font-size: 13px; color: var(--muted); line-height: 1.35; margin-top: 2px; overflow-wrap: anywhere; }
+  .node.skip b { color: var(--muted); }
+  @media (max-width: 700px) {
+    .path { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .node { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; text-align: left; padding: 0; }
+    .node::before { display: none; }
+    .dot { margin: 0; }
+  }
+
+  .meters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+  @media (max-width: 560px) { .meters { grid-template-columns: minmax(0, 1fr); } }
+  .meter { background: var(--soft); border-radius: 14px; padding: 10px 12px; min-width: 0; }
+  .meter small { display: block; color: var(--muted); font-size: 13px; }
+  .meter strong { display: block; font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+  .meter strong.small { font-size: 14px; font-weight: 600; line-height: 1.35; padding-top: 4px; }
+  .bar { height: 6px; background: var(--panel); border-radius: 99px; margin-top: 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ran); border-radius: 99px; transition: width .4s ease; }
+  .meter em { font-style: normal; font-size: 12.5px; color: var(--muted); }
+
+  .teach label { display: block; font-size: 14px; font-weight: 600; margin: 10px 0 4px; }
+  .teach input, .teach textarea { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; background: var(--soft); }
+  .teach textarea { min-height: 120px; resize: vertical; font-size: 14px; line-height: 1.45; }
+  .teach ol.steps { margin: 4px 0 0; padding-left: 20px; }
+  .teach ol.steps > li { margin: 12px 0 0; }
+  .teach ol.steps > li::marker { font-weight: 650; }
+  .teach .result { margin-top: 8px; font-size: 15px; min-height: 1.4em; }
+  .teach .result.ok { color: var(--ran); }
+  .teach .result.no { color: var(--last); }
+  .teach .row { margin-top: 8px; }
+
+  pre { background: var(--code); border-radius: 14px; padding: 12px 14px; overflow: auto; font: 12.5px/1.5 var(--mono); max-height: 460px; margin: 10px 0 0; }
 </style>
 </head>
 <body>
 <header>
-  <h1>FixFlow · Smart Guided Troubleshooting</h1>
-  <p>Vague complaint in, grounded one-tap fix out · Samsung PRISM GenAI Hackathon 2026 · Theme 02 · SRMIST_QueueQueueing</p>
+  <div class="brand">
+    <h1>FixFlow</h1>
+    <p>Turns a vague phone complaint into tap-ready fixes, using only the support article.</p>
+  </div>
+  <div class="team">Team SRMIST_QueueQueueing, Samsung PRISM GenAI Hackathon 2026, Theme 02</div>
 </header>
+
 <main>
   <section class="phone" aria-label="Customer phone view">
     <div class="screen">
-      <div class="status"><span>9:41</span><span>Support Assistant</span><span>100%</span></div>
+      <div class="appbar"><strong>Device help</strong><span id="clock">9:41</span></div>
       <div class="ask">
-        <textarea id="q" placeholder="Describe the problem, e.g. my screen flickers and goes black when I open it"></textarea>
+        <label for="q" class="sr" style="position:absolute;left:-9999px">Describe the problem</label>
+        <textarea id="q" placeholder="Tell us what's wrong, in English or Hinglish. For example: my screen flickers when I open the camera"></textarea>
         <div class="row">
           <button class="primary" id="go">Find fix</button>
-          <button class="icon mic" id="mic" title="Speak your complaint">🎤</button>
-          <select id="samples" aria-label="Sample complaints"><option value="">Sample complaints…</option></select>
+          <button class="mic" id="mic" title="Speak your complaint" aria-label="Speak your complaint">🎤</button>
+          <select id="samples" aria-label="Official sample complaints"><option value="">Official complaints…</option></select>
         </div>
         <div class="micmsg" id="micmsg"></div>
-        <details id="siisBox"><summary>Reference article (siis_response, optional)</summary>
-          <textarea class="siis" id="siis" placeholder="Paste a reference article, or pick a sample above."></textarea>
+        <details class="article" id="siisBox"><summary>Support article (optional)</summary>
+          <textarea class="siis" id="siis" placeholder="Paste a support article, or pick an official complaint above."></textarea>
         </details>
       </div>
+      <div class="tries" aria-label="Examples to try">Try:
+        <button type="button" data-try="touch screen is laggy and slow to respond">touch screen is laggy</button>
+        <button type="button" data-try="phone gir gaya aur screen tut gayi">phone gir gaya aur screen tut gayi</button>
+        <button type="button" data-try="mera phone ka touch bahut slow hai, der se respond karta hai">touch bahut slow hai</button>
+      </div>
+      <div id="understood"></div>
       <div id="kb"></div>
-      <div id="plan"><div class="empty">Describe any phone or tablet problem, or pick a sample.<br>Least disruptive steps come first.</div></div>
+      <div id="plan"><div class="empty">Describe any phone or tablet problem.<br>The gentlest fixes come first; restarts and resets come last.</div></div>
     </div>
   </section>
 
-  <section class="engine" aria-label="Engine view">
-    <h2>Engine view</h2>
-    <div class="stages" id="stages">
-      <div class="stage"><b>Fast-path cache</b><span>–</span></div>
-      <div class="stage"><b>Enrichment</b><span>–</span></div>
-      <div class="stage"><b>Grounded extraction</b><span>–</span></div>
-      <div class="stage"><b>Deeplink mapping</b><span>–</span></div>
-      <div class="stage"><b>Contract gate</b><span>–</span></div>
-    </div>
-    <div class="kv" id="kv">
-      <div><small>Latency</small><strong id="k-lat">–</strong></div>
-      <div><small>Cache hit</small><strong id="k-hit">–</strong></div>
-      <div><small>Cost</small><strong id="k-cost">–</strong></div>
-      <div><small>Model</small><strong id="k-model" style="font-size:12px">–</strong></div>
-    </div>
-    <p class="note" id="explain">Each request runs: cache lookup → enrichment → grounded extraction (every step must cite the article) → deeplink mapping (copied verbatim from the catalog) → contract gate. Repeat or paraphrased complaints are answered from the cache in milliseconds at $0. A new complaint without an article is first matched to the knowledge base (the official articles), so the plan stays grounded.</p>
-    <details><summary>Response JSON</summary><pre id="raw">{}</pre></details>
-  </section>
+  <div class="bench">
+    <section class="panel" aria-label="How FixFlow answered">
+      <h2>How FixFlow answered</h2>
+      <p class="verdict" id="verdict">Run a complaint to see the path it takes through the engine.</p>
+      <ol class="path" id="path"></ol>
+      <div class="meters">
+        <div class="meter"><small>Time</small><strong id="k-lat">–</strong><div class="bar"><i id="k-bar"></i></div><em id="k-target">target: 300 ms from memory, 8 s for a new plan</em></div>
+        <div class="meter"><small>Cost</small><strong id="k-cost">–</strong><em>Gemini tokens only; memory and rules are free</em></div>
+        <div class="meter"><small>Built by</small><strong class="small" id="k-model">–</strong></div>
+      </div>
+      <details style="margin-top:14px"><summary>Response JSON (the API contract)</summary><pre id="raw">{}</pre></details>
+    </section>
+
+    <section class="panel teach" aria-label="Teach FixFlow a new problem">
+      <h2>Teach FixFlow a new problem</h2>
+      <p class="lead">No code changes: give it a complaint and its support article once, and every later wording is answered from memory.</p>
+      <ol class="steps">
+        <li>
+          <label for="t-q">Complaint</label>
+          <input id="t-q" value="I can barely read my screen outside in sunlight even at max brightness">
+          <label for="t-title">Article title</label>
+          <input id="t-title" value="Screen is hard to see in bright light">
+          <label for="t-body">Article text</label>
+          <textarea id="t-body">## Turn on Extra brightness
+Extra brightness raises the maximum screen brightness for outdoor use. Go to Settings, tap Display, and then tap the switch next to Extra brightness.
+## Turn on Adaptive brightness
+Adaptive brightness adjusts the screen to the light around you. Go to Settings, tap Display, and then tap the switch next to Adaptive brightness.
+## Clean the screen
+Wipe the screen with a soft, dry microfiber cloth to remove smudges that reduce visibility.</textarea>
+          <div class="row"><button class="primary" id="teach">Teach this problem</button></div>
+          <div class="result" id="t-result" aria-live="polite"></div>
+        </li>
+        <li>
+          <label for="t-ask">Now ask it in different words</label>
+          <input id="t-ask" value="the screen is too dim to see outdoors in bright sun">
+          <div class="row"><button id="t-go">Ask on the phone</button></div>
+        </li>
+      </ol>
+    </section>
+  </div>
 </main>
 
 <script>
@@ -133,11 +238,14 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 let SAMPLES = [];
 const device = {};          // simulated device state, keyed by validation key
+const CHIP = { auto: "One tap", manual: "By hand", critical: "Last resort" };
+
+(function clock() { const d = new Date(); $("clock").textContent = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); })();
 
 fetch("/v1/samples").then((r) => r.json()).then((d) => {
   SAMPLES = d.samples || [];
-  SAMPLES.forEach((s, i) => { const o = document.createElement("option"); o.value = i; o.textContent = `${s.id || "no ref"} · ${s.query.slice(0, 70)}`; $("samples").appendChild(o); });
-  // demo helper: ?sample=N runs a sample complaint; &verify=1 also taps Open + Verify on the first action
+  SAMPLES.forEach((s, i) => { const o = document.createElement("option"); o.value = i; o.textContent = `${i + 1}. ${s.query.slice(0, 70)}`; $("samples").appendChild(o); });
+  // demo helper: ?sample=N runs an official complaint; &verify=1 also taps Open and Verify on the first action
   const params = new URLSearchParams(location.search);
   if (params.has("sample") && SAMPLES[+params.get("sample")]) {
     $("samples").value = params.get("sample");
@@ -156,8 +264,11 @@ $("samples").onchange = () => {
   if (!s) return;
   $("q").value = s.query;
   $("siis").value = s.siis_response ? JSON.stringify(s.siis_response) : "";
-  $("siisBox").open = !!s.siis_response;
+  $("siisBox").open = false;                        // the article is sent; keep the phone view clean
 };
+document.querySelectorAll("[data-try]").forEach((b) => b.onclick = () => {
+  $("q").value = b.dataset.try; $("siis").value = ""; $("siisBox").open = false; $("samples").value = ""; run();
+});
 
 function siisPayload() {
   const t = $("siis").value.trim();
@@ -177,92 +288,122 @@ async function troubleshoot(query, siis) {
 
 function useArticle(article, note) {
   $("siis").value = JSON.stringify(article.siis_response);
-  $("kb").innerHTML = `<div class="kbbar">📚 ${esc(note)}: <b>${esc(article.title)}</b> (match ${Math.round(article.score * 100)}%)</div>`;
+  $("kb").innerHTML = `<div class="kbbar">${esc(note)}: <b>${esc(article.title)}</b> (${Math.round(article.score * 100)}% match)</div>`;
 }
 
 async function run() {
   const query = $("q").value.trim();
-  if (!query) return;
-  $("go").disabled = true; $("go").textContent = "Thinking…";
-  $("kb").innerHTML = "";
-  const t0 = performance.now();
+  if (!query) { $("q").focus(); return; }
+  $("go").disabled = true; $("go").textContent = "Finding…";
+  $("kb").innerHTML = ""; $("understood").innerHTML = "";
   try {
     let env = await troubleshoot(query, siisPayload());
-    // A new complaint with no article and no cached plan: find the matching article in the knowledge base
+    // A new complaint with no article and no stored plan: find the matching article in the knowledge base
     // (the official kit's articles) and run the full grounded pipeline on it. The API contract is unchanged.
     if (env.meta?.fallback === "no_siis_context" && siisPayload() === undefined) {
       const kb = await (await fetch("/v1/kb/search?q=" + encodeURIComponent(query))).json();
       const best = (kb.results || [])[0];
       if (best && best.score >= KB_AUTO) {
-        useArticle(best, "Matched knowledge-base article");
+        useArticle(best, "Found a matching support article");
         env = await troubleshoot(query, best.siis_response);
       } else if (best) {
-        $("kb").innerHTML = `<div class="kbbar">📚 No close match in the knowledge base for this complaint. Closest articles:<br>` +
+        $("kb").innerHTML = `<div class="kbbar">No support article clearly covers this. The closest ones:<br>` +
           kb.results.slice(0, 2).map((r, i) => `<button data-k="${i}">${esc(r.title)} (${Math.round(r.score * 100)}%)</button>`).join("") + `</div>`;
         document.querySelectorAll("#kb button").forEach((b) => b.onclick = async () => {
           const r = kb.results[+b.dataset.k];
-          useArticle(r, "Using knowledge-base article");
+          useArticle(r, "Using support article");
           const e2 = await troubleshoot(query, r.siis_response);
-          renderEngine(e2); renderPlan(e2);
+          render(e2);
         });
       }
     }
-    renderEngine(env, performance.now() - t0);
-    renderPlan(env);
+    render(env);
   } catch (e) {
-    $("plan").innerHTML = `<div class="empty">Could not reach the engine.</div>`;
+    $("plan").innerHTML = `<div class="empty">The engine didn't answer. Check that the server is running, then try again.</div>`;
   } finally { $("go").disabled = false; $("go").textContent = "Find fix"; }
 }
 $("go").onclick = run;
 $("q").addEventListener("input", () => { $("siis").value = ""; $("siisBox").open = false; });   // a new complaint starts fresh
 $("q").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) run(); });
 
-function renderEngine(env, wallMs) {
-  const m = env.meta || {}, tr = env.trace || {};
-  const hit = m.cache_hit;
-  // L2 is only consulted after an L1 miss, so a trace with cache_l2 on a hit means the L2 lookup served it
-  const how = hit ? (tr.cache_l2 ? "L2 hit (normalised complaint)" : `L1 ${tr.cache?.how || "hit"}`) : "miss";
-  const llmUsed = m.model && !m.model.startsWith("rules");
-  const ex = tr.llm_extract;
+function render(env) { renderEngine(env); renderPlan(env); }
+
+/* ---------- engine view: the signal path ---------- */
+function pathNodes(env) {
+  const m = env.meta || {}, tr = env.trace || {}, model = m.model || "";
+  const hit = !!m.cache_hit, fb = m.fallback;
   const acts = (env.response?.contexts || []).flatMap((c) => c.actions);
   const links = acts.filter((a) => a.stepGroups[0]?.actionableDeeplink);
   const dummies = links.filter((a) => a.stepGroups[0].actionableDeeplink.deeplink.endsWith("dummy_positive"));
-  const stages = [
-    ["Fast-path cache", hit ? `✅ ${how}` : `➖ ${how}${tr.cache ? ` (sim ${tr.cache.similarity})` : ""}`],
-    ["Enrichment", hit ? "served from cache" : (llmUsed ? (tr.llm_enrich ? "rules (LLM slow)" : "LLM + rules") : "rules (offline)")],
-    ["Grounded extraction", hit ? "served from cache" : (ex ? `LLM · ${ex.problems.length} problem(s) · ${ex.dropped_ungrounded_steps.length} unsupported step(s) dropped` : "rules parser (offline)")],
-    ["Deeplink mapping", `${links.length - dummies.length} catalog link(s)${dummies.length ? ` + ${dummies.length} placeholder` : ""}`],
-    ["Contract gate", (tr.gate_rejections ? "❌ rejected" : "✅ passed") + (m.fallback ? ` · ${m.fallback}` : "")],
+  const ex = tr.llm_extract;
+  const fellBack = model.includes("llm fallback"), abstained = model.includes("llm abstained");
+  const llmBuilt = !model.startsWith("rules");
+  const lang = tr.lang;
+  const how = tr.cache_l2 ? "Found by meaning (normalised)" : tr.cache?.how === "exact" ? "Exact match" : `Found by meaning (${tr.cache?.similarity ?? "–"})`;
+  const noArticle = fb === "no_siis_context";
+  const N = (name, state, detail) => ({ name, state, detail });
+  return [
+    N("Language", lang && !lang.english ? "warn" : "ran", lang ? (lang.english ? `${lang.detected === "hindi" ? "Hindi" : "Hinglish"} to English` : "Hindi needs the AI") : "English"),
+    N("Memory", hit ? "ran" : "skip", hit ? how : `Not seen before${tr.cache ? ` (closest ${tr.cache.similarity})` : ""}`),
+    N("Understand", hit ? "skip" : "ran", hit ? "Skipped" : (llmBuilt ? "AI and rules" : "Rules")),
+    N("Extract", hit || noArticle ? "skip" : (fellBack || abstained ? "warn" : "ran"),
+      hit ? "Skipped" : noArticle ? "No article sent" : ex ? `AI with citations, ${ex.dropped_ungrounded_steps.length} unsupported step(s) dropped`
+        : fellBack ? "Rules (AI unavailable)" : abstained ? "Rules (AI saw no fix)" : fb === "no_match" ? "No fix in the article" : "Rules parser"),
+    N("Deeplinks", hit || noArticle || fb === "no_match" ? "skip" : "ran",
+      hit ? "Stored with the plan" : noArticle || fb === "no_match" ? "Not needed" : `${links.length - dummies.length} from the catalog${dummies.length ? `, ${dummies.length} placeholder` : ""}`),
+    N("Contract gate", tr.gate_rejections ? "warn" : (hit || noArticle ? "skip" : "ran"), hit ? "Checked when stored" : noArticle ? "Not needed" : tr.gate_rejections ? "Dropped a part" : "Passed"),
+    N("Answer", acts.length ? "ran" : "warn", acts.length ? `${acts.length} step${acts.length > 1 ? "s" : ""}` : (fb || "empty")),
   ];
-  $("stages").innerHTML = stages.map(([b, s]) => `<div class="stage"><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join("");
-  $("k-lat").textContent = `${m.latency_ms} ms`;
-  $("k-hit").textContent = hit ? "yes" : "no";
-  $("k-cost").textContent = `$${Number(m.cost_usd || 0).toFixed(5)}`;
-  $("k-model").textContent = m.model || "–";
-  const clean = { ...env }; delete clean.trace;
-  $("raw").textContent = JSON.stringify(clean, null, 2);
 }
 
+function verdictText(env) {
+  const m = env.meta || {}, model = m.model || "";
+  const t = m.latency_ms < 1000 ? `${m.latency_ms} ms` : `${(m.latency_ms / 1000).toFixed(1)} s`;
+  if (m.cache_hit) return `Answered from memory in ${t}, no AI needed, cost $0.`;
+  if (m.fallback === "no_siis_context") return `Not seen before and no article sent, so nothing was invented (${t}).`;
+  if (m.fallback === "no_match") return `The article doesn't fix this problem, so no steps are suggested (${t}).`;
+  if (!model.startsWith("rules")) return `Gemini built a new plan in ${t} for $${Number(m.cost_usd || 0).toFixed(4)}, now saved to memory.`;
+  return `The rules engine built a new plan in ${t} at no cost, now saved to memory.`;
+}
+
+function renderEngine(env) {
+  const m = env.meta || {};
+  $("verdict").textContent = verdictText(env);
+  $("path").innerHTML = pathNodes(env).map((n, i) =>
+    `<li class="node ${n.state} lit" style="--d:${i * 0.07}s"><div class="dot">${n.state === "ran" ? "✓" : n.state === "warn" ? "!" : ""}</div><b>${esc(n.name)}</b><span>${esc(n.detail)}</span></li>`).join("");
+  const target = m.cache_hit ? 300 : 8000;
+  $("k-lat").textContent = m.latency_ms < 1000 ? `${m.latency_ms} ms` : `${(m.latency_ms / 1000).toFixed(1)} s`;
+  $("k-bar").style.width = `${Math.max(2, Math.min(100, (m.latency_ms / target) * 100))}%`;
+  $("k-target").textContent = `of the ${m.cache_hit ? "300 ms memory" : "8 s new-plan"} target`;
+  $("k-cost").textContent = `$${Number(m.cost_usd || 0).toFixed(5)}`;
+  $("k-model").textContent = (m.model || "–").replace("+bge-small-en-v1.5", " + local search");
+  const clean = { ...env }; delete clean.trace;
+  $("raw").textContent = JSON.stringify(clean, null, 2);
+  const lang = env.trace?.lang;
+  $("understood").innerHTML = lang && lang.english ? `<p class="understood">Understood as: <b>“${esc(lang.english)}”</b></p>` : "";
+}
+
+/* ---------- phone view: the plan ---------- */
 function renderPlan(env) {
   const ctx = env.response?.contexts || [];
   if (!ctx.length) {
     const fb = env.meta?.fallback;
-    const msg = fb === "no_siis_context" ? "I haven't seen this problem before and no reference article was supplied. Add one, or contact support."
-      : fb === "no_match" ? "The reference article doesn't cover this problem, so no steps are suggested (nothing is invented)."
+    const msg = fb === "no_siis_context" ? "This problem isn't in memory yet and no support article was given. Add the article, or contact support."
+      : fb === "no_match" ? "The support article doesn't cover this problem, so no steps are suggested. Nothing is made up."
       : "No plan available.";
     $("plan").innerHTML = `<div class="empty">${esc(msg)}</div>`;
     return;
   }
   let html = "";
   ctx.forEach((c, ci) => {
-    html += `<div class="goal"><h2>${esc(c.title)}</h2><div class="sub">${esc(c.goal)} · confidence ${Math.round(c.score * 100)}%</div></div>`;
-    html += `<div class="guided" id="guide-${ci}">Guided mode: try step 1 first. <button data-g="${ci}" data-i="0" class="gstart">Start guided fix</button></div>`;
+    html += `<div class="goal"><h2>${esc(c.title)}</h2><div class="sub">${c.actions.length === 1 ? "1 step" : `${c.actions.length} steps, gentlest first`}. Confidence ${Math.round(c.score * 100)}%.</div></div>`;
+    html += `<div class="guided" id="guide-${ci}">Not sure where to start? <button data-g="${ci}" class="gstart">Guide me step by step</button></div>`;
     c.actions.forEach((a, ai) => {
       const sg = a.stepGroups[0] || {};
       const link = sg.actionableDeeplink, val = sg.validationDeeplink;
-      const btn = link ? `<button class="open" data-c="${ci}" data-a="${ai}">${a.category === "critical" ? "Open (confirm)" : "Open"}</button>` : "";
-      const vbtn = val ? `<button class="check" data-c="${ci}" data-a="${ai}">Verify</button>` : "";
-      html += `<div class="card" id="card-${ci}-${ai}"><h3><span>${ai + 1}. ${esc(a.actionName)}</span><span class="tag ${a.category}">${a.category}</span></h3>
+      const btn = link ? `<button class="open" data-c="${ci}" data-a="${ai}">${a.category === "critical" ? "Open (asks first)" : "Open setting"}</button>` : "";
+      const vbtn = val ? `<button class="check" data-c="${ci}" data-a="${ai}">Check it worked</button>` : "";
+      html += `<div class="card" id="card-${ci}-${ai}"><h3><span><span class="n">${ai + 1}</span>${esc(a.actionName)}</span><span class="chip ${a.category}" title="category: ${a.category}">${CHIP[a.category] || a.category}</span></h3>
         <div class="desc">${esc(a.description)}</div>
         <ol>${(sg.steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
         <div class="row">${btn}${vbtn}</div><div class="verify" id="v-${ci}-${ai}"></div></div>`;
@@ -271,25 +412,31 @@ function renderPlan(env) {
   $("plan").innerHTML = html;
   const get = (el) => ctx[el.dataset.c].actions[el.dataset.a];
   document.querySelectorAll("button.open").forEach((b) => b.onclick = () => {
-    const a = get(b), sg = a.stepGroups[0], link = sg.actionableDeeplink;
-    if (a.category === "critical" && !confirm(`${a.actionName}\n\nThis step is disruptive (restart / reset). Back up your data first. Continue?`)) return;
-    const val = sg.validationDeeplink;
+    const a = get(b), out = $(`v-${b.dataset.c}-${b.dataset.a}`);
+    if (a.category === "critical" && !b.dataset.confirmed) {
+      out.className = "verify";
+      out.innerHTML = `<div class="confirm">This step restarts or resets the device. Back up your data first.<div class="row"><button class="primary" id="yes-${b.dataset.c}-${b.dataset.a}">Continue</button><button id="no-${b.dataset.c}-${b.dataset.a}">Cancel</button></div></div>`;
+      $(`yes-${b.dataset.c}-${b.dataset.a}`).onclick = () => { b.dataset.confirmed = "1"; b.click(); };
+      $(`no-${b.dataset.c}-${b.dataset.a}`).onclick = () => { out.innerHTML = ""; };
+      return;
+    }
+    const sg = a.stepGroups[0], link = sg.actionableDeeplink, val = sg.validationDeeplink;
     if (val && val.key) {                                   // simulate the setting change the deeplink performs
       if (link.originalType === "onURL") device[val.key] = "True";
       else if (link.originalType === "offURL") device[val.key] = "False";
       else device[val.key] = device[val.key] ?? "opened";
     }
-    $(`v-${b.dataset.c}-${b.dataset.a}`).className = "verify";
-    $(`v-${b.dataset.c}-${b.dataset.a}`).textContent = `Opened ${link.deeplink.endsWith("dummy_positive") ? "the Settings screen" : link.message} (${link.deeplink})`;
+    out.className = "verify";
+    out.innerHTML = `Opened ${esc(link.deeplink.endsWith("dummy_positive") ? "the Settings screen" : link.message)}<small>${esc(link.deeplink)}</small>`;
   });
   document.querySelectorAll("button.check").forEach((b) => b.onclick = () => {
     const a = get(b), val = a.stepGroups[0].validationDeeplink, el = $(`v-${b.dataset.c}-${b.dataset.a}`);
     const cur = device[val.key];
-    let ok;
-    if (val.resultType === "boolean" && val.condition === "equal") ok = String(cur) === String(val.value);
-    else ok = cur !== undefined;
+    const ok = val.resultType === "boolean" && val.condition === "equal" ? String(cur) === String(val.value) : cur !== undefined;
     el.className = "verify " + (ok ? "ok" : "no");
-    el.textContent = ok ? `✓ Verified via ${val.deeplink}: "${val.key}" is ${cur}` : `✗ Not applied yet: "${val.key}" ${cur === undefined ? "unchanged" : "= " + cur}. Tap Open first.`;
+    el.innerHTML = ok
+      ? `<span class="tick">✓</span> Confirmed on the device: ${esc(val.key)} is ${esc(cur === "True" ? "on" : cur === "False" ? "off" : cur)}.<small>${esc(val.deeplink)}</small>`
+      : `Not applied yet: ${esc(val.key)} is ${cur === undefined ? "unchanged" : esc(cur)}. Tap Open setting first.`;
     if (ok) $(`card-${b.dataset.c}-${b.dataset.a}`).classList.add("done");
   });
   document.querySelectorAll("button.gstart").forEach((b) => b.onclick = () => guide(ctx, +b.dataset.g, 0));
@@ -297,36 +444,65 @@ function renderPlan(env) {
 
 function guide(ctx, ci, i) {
   const acts = ctx[ci].actions, box = $(`guide-${ci}`);
-  document.querySelectorAll(`[id^="card-${ci}-"]`).forEach((el, k) => el.style.opacity = k === i ? "1" : ".45");
+  const cards = document.querySelectorAll(`[id^="card-${ci}-"]`);
+  cards.forEach((el, k) => el.style.opacity = k === i ? "1" : ".4");
   if (i >= acts.length) {
-    box.innerHTML = "Still not fixed after every step? Contact Customer Support with the steps you tried.";
-    document.querySelectorAll(`[id^="card-${ci}-"]`).forEach((el) => el.style.opacity = "1");
+    box.innerHTML = "Still not fixed after every step? Contact Customer Support and tell them which steps you tried.";
+    cards.forEach((el) => el.style.opacity = "1");
     return;
   }
   $(`card-${ci}-${i}`).scrollIntoView({ behavior: "smooth", block: "center" });
   box.innerHTML = `Step ${i + 1} of ${acts.length}: <b>${esc(acts[i].actionName)}</b>. Did it fix the problem?
-    <div class="row" style="margin-top:6px"><button class="primary" id="gy-${ci}">Yes, fixed</button><button id="gn-${ci}">No, next step</button></div>`;
-  $(`gy-${ci}`).onclick = () => { box.innerHTML = `Great, fixed at step ${i + 1} without anything more disruptive.`; document.querySelectorAll(`[id^="card-${ci}-"]`).forEach((el) => el.style.opacity = "1"); };
+    <div class="progress"><i style="width:${((i + 1) / acts.length) * 100}%"></i></div>
+    <div class="row" style="margin-top:6px"><button class="primary" id="gy-${ci}">Yes, it's fixed</button><button id="gn-${ci}">No, next step</button></div>`;
+  $(`gy-${ci}`).onclick = () => { box.innerHTML = `Fixed at step ${i + 1}, without anything more disruptive.`; cards.forEach((el) => el.style.opacity = "1"); };
   $(`gn-${ci}`).onclick = () => guide(ctx, ci, i + 1);
 }
 
-// voice input (browser speech recognition, where available)
+/* ---------- teach a new problem ---------- */
+$("teach").onclick = async () => {
+  const q = $("t-q").value.trim(), title = $("t-title").value.trim(), content = $("t-body").value.trim();
+  const out = $("t-result");
+  if (!q || !content) { out.className = "result no"; out.textContent = "Add a complaint and the article text first."; return; }
+  $("teach").disabled = true; out.className = "result"; out.textContent = "Reading the article…";
+  try {
+    const env = await troubleshoot(q, { title, content });
+    $("q").value = q; $("siis").value = JSON.stringify({ title, content }); $("siisBox").open = false;
+    $("understood").innerHTML = ""; $("kb").innerHTML = "";
+    render(env);
+    const n = (env.response?.contexts || []).reduce((s, c) => s + c.actions.length, 0);
+    const t = env.meta.latency_ms < 1000 ? `${env.meta.latency_ms} ms` : `${(env.meta.latency_ms / 1000).toFixed(1)} s`;
+    if (n) { out.className = "result ok"; out.textContent = `Learned a ${n}-step plan in ${t}, cost $${Number(env.meta.cost_usd || 0).toFixed(4)}. Now ask it in different words.`; }
+    else { out.className = "result no"; out.textContent = "The article has no fix for this complaint, so nothing was saved."; }
+  } catch (e) {
+    out.className = "result no"; out.textContent = "The engine didn't answer. Check that the server is running.";
+  } finally { $("teach").disabled = false; }
+};
+$("t-go").onclick = () => {
+  const q = $("t-ask").value.trim();
+  if (!q) return;
+  $("q").value = q; $("siis").value = ""; $("siisBox").open = false; $("samples").value = "";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  run();
+};
+
+/* ---------- voice input (browser speech recognition, where available) ---------- */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 const micMsg = (t, err = false) => { $("micmsg").textContent = t; $("micmsg").className = "micmsg" + (err ? " err" : ""); };
 if (!SR) {
-  $("mic").onclick = () => micMsg("Voice input needs Chrome or Edge (this browser has no speech recognition). You can type instead.", true);
+  $("mic").onclick = () => micMsg("Voice input needs Chrome or Edge. You can type instead.", true);
 } else {
   const rec = new SR(); rec.lang = "en-IN"; rec.interimResults = true; rec.continuous = false;
   let on = false, heard = false, failed = false;
   const ERR = {
-    "not-allowed": "Microphone blocked. Click the camera/mic icon in the address bar, allow the microphone, and try again.",
+    "not-allowed": "Microphone blocked. Click the microphone icon in the address bar, allow it, and try again.",
     "service-not-allowed": "Microphone blocked. Allow the microphone for this site in the browser settings.",
     "no-speech": "Didn't hear anything. Click 🎤 and speak right away.",
-    "audio-capture": "No microphone found. Check that a microphone is connected and selected in Windows sound settings.",
+    "audio-capture": "No microphone found. Check that one is connected and selected in Windows sound settings.",
     "network": "The browser's speech service is unreachable (it needs internet). Type the complaint instead.",
     "aborted": "Listening stopped.",
   };
-  rec.onstart = () => { micMsg("Listening… describe the problem, then pause."); };
+  rec.onstart = () => { micMsg("Listening. Describe the problem, then pause."); };
   rec.onresult = (e) => {
     heard = true;
     $("q").value = Array.from(e.results).map((r) => r[0].transcript).join(" ");

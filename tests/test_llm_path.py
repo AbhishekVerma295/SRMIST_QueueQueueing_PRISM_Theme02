@@ -168,3 +168,11 @@ def test_a_slow_model_cannot_use_the_whole_time_budget(monkeypatch):
     assert out == {"ok": True} and usage.model == "model-b"
     assert calls[0][0] == "model-a" and calls[0][1] <= 4.01          # at most half of the 8 s budget
     assert llm._candidates()[-1] == "model-a"                        # the slow model now goes last
+
+
+def test_provider_off_forces_offline_mode_even_with_a_key(monkeypatch):
+    monkeypatch.setattr(llm, "API_KEY", "some-key")
+    monkeypatch.setattr(llm, "PROVIDER", "off")
+    assert not llm.enabled()
+    monkeypatch.setattr(llm, "PROVIDER", "gemini")
+    assert llm.enabled()

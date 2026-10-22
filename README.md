@@ -39,12 +39,13 @@ uvicorn app.main:app --port 8000                    # Windows: .venv\Scripts\pyt
 ```
 
 ## Using the demo UI (http://localhost:8000)
-- **Left, phone view:** type or speak a complaint (or pick one of the 20 official complaints) and press **Find fix**.
+- **Left, phone view:** type or speak a complaint in English or Hinglish (or pick one of the 20 official complaints) and press **Find fix**. Hinglish is translated first and shown as "Understood as: …".
   - The plan appears as cards, least disruptive first.
-  - **Open** applies a Settings step (simulated), and **Verify** checks it with the step's validation deeplink.
+  - **Open setting** applies a Settings step (simulated), and **Check it worked** confirms it with the step's validation deeplink.
   - Restart and reset steps ask for confirmation.
-  - **Start guided fix** walks one step at a time ("Fixed?" / "Next step").
-- **Right, engine view:** which path answered (cache, LLM or rules), latency, cost, deeplinks, contract gate, and the raw JSON.
+  - **Guide me step by step** walks one step at a time, with a progress bar ("Yes, it's fixed" / "No, next step").
+- **Right, How FixFlow answered:** a signal path (Language → Memory → Understand → Extract → Deeplinks → Contract gate → Answer) that lights the stages that ran and shows the ones a cache hit skipped, plus time against the target, cost, the model, and the raw JSON.
+- **Right, Teach FixFlow a new problem:** paste a complaint and its support article once; every later wording is answered from memory (no code changes).
 - **New complaint, no article:** the API answers only from the pre-validated cache, as the contract requires. If nothing matches, the UI searches the knowledge base (the official kit's articles, via `/v1/kb/search`) and runs the full grounded pipeline on the best article.
   - A strong match (65% or more) is used automatically.
   - Otherwise the two closest articles are offered as buttons, and the UI never invents a plan.
