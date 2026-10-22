@@ -49,7 +49,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "App-triggered flash/blank in Gmail; email-app cache/data clearing and Safe mode are the fixes that fit. Storage screen of one app is not in the catalog, so dummy_positive."
  },
  {
@@ -95,7 +95,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": ""
  },
  {
@@ -148,7 +148,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Fingerprint/Kids PIN/lock sections are irrelevant: a Screen lock deeplink here is a false positive."
  },
  {
@@ -194,7 +194,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": ""
  },
  {
@@ -219,7 +219,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Blank screen while scanning the QR code: the wired transfer method avoids the QR step (partial fit)."
  },
  {
@@ -229,7 +229,7 @@
   "relevant": false,
   "expected_actions": [],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Multi window / App pairs article does not address a dark screen with unresponsive icons."
  },
  {
@@ -239,7 +239,7 @@
   "relevant": false,
   "expected_actions": [],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Screen-mirroring article; its aspect-ratio tip is about the TV image, not the phone's main screen."
  },
  {
@@ -278,7 +278,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Inner screen dead: HDMI/mouse data access then service."
  },
  {
@@ -296,7 +296,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Camera-video flicker steps don't fit a fold-triggered display flicker; only the damage/service advice applies."
  },
  {
@@ -349,7 +349,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Half-black display: damage check, force restart, data access via mouse, service."
  },
  {
@@ -359,7 +359,7 @@
   "relevant": false,
   "expected_actions": [],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Floating shortcut circle is the accessibility assistant menu; the Multi window article does not cover it."
  },
  {
@@ -405,7 +405,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": ""
  },
  {
@@ -423,7 +423,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Service options only; no Settings deeplink in the article."
  },
  {
@@ -469,7 +469,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": ""
  },
  {
@@ -515,7 +515,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Charger-triggered flashing; the blank-display article's damage/charger checks and escalation still apply (partial fit)."
  },
  {
@@ -568,7 +568,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Same article as row_3."
  },
  {
@@ -586,7 +586,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Three complaints; the cracked-screen article only offers repair/service. One context (or identical contexts merged) expected."
  },
  {
@@ -625,7 +625,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Distortion on a new phone: rotation-specific steps (orientation, test app rotation) don't apply; factory reset optional."
  },
  {
@@ -694,7 +694,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": "Touch sensitivity: enable with a protector (disable twin accepted). Navigation bar -> Buttons disables full-screen gestures."
  },
  {
@@ -740,7 +740,7 @@
    }
   ],
   "reviewed": true,
-  "annotator": "claude (from reference text; human spot-check recommended)",
+  "annotator": "ai-assisted (from reference text; human spot-check recommended)",
   "notes": ""
  }
 ]

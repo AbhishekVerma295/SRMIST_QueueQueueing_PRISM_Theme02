@@ -258,7 +258,7 @@ D2b: plans {g2b['plans']}/{g2b['lines']} · actions {g2b['actions']} (auto {g2b[
 | Abstention accuracy (no_match exactly when the reference text doesn't fit) | 0 - 100% | {fmt(s1['abstention_accuracy'])} | {fmt(s2['abstention_accuracy'])} | {fmt(s2b['abstention_accuracy'])} |
 
 D1 is scored on results.jsonl (the shipped, pre-warmed plans). The same D1 lines re-run cold in this mode score: step accuracy {f2(s1_cold['step_accuracy'], 0)}, deeplink relevance {f2(s1_cold['deeplink_relevance'], 0)}, precision {fmt(s1_cold['link_precision'])}, abstention {fmt(s1_cold['abstention_accuracy'])}.
-*Step-accuracy proxy = required gold actions found (0-1) + emitted actions that gold expects (0-1) + contract order respected (0-1); actions match by exact deeplink id or fuzzy name (token-set ratio >= 70). Gold labels: D1 by one annotator (Claude, spot-check pending); D2 written with its reference texts.
+*Step-accuracy proxy = required gold actions found (0-1) + emitted actions that gold expects (0-1) + contract order respected (0-1); actions match by exact deeplink id or fuzzy name (token-set ratio >= 70). Gold labels: D1 by one annotator (AI-assisted, human spot-check pending); D2 written with its reference texts.
 **LLM judge = {judge['judge_model'] if judge else 'n/a'} (a stronger model than the Flash-Lite plan writer), temperature 0. It sees only the complaint, the reference article and the plan, never our gold labels, and grades completeness, correctness and ordering 0 / 0.5 / 1 each (eval/llm_judge.py, eval/runs/judge.json). D2 and D2b plans for the judge come from the deterministic offline engine.
 
 ---
@@ -305,7 +305,7 @@ Extraction is held fixed (offline rules) so only the deeplink mapper changes; D1
 * D2 was used for error analysis, so it is a development set; D2b is the strict held-out scenario set.
 * row_8 (a TV aspect-ratio article for a phone complaint) still gets a plan from the LLM; gold says the article does not fit.
 * Offline rules relevance is coarse (e.g. row_16 abstains although the blank-display article partly fits). The LLM path decides relevance per problem.
-* Gold labels for D1 were written by one annotator (Claude) with a human spot-check pending; the LLM judge is reported next to the gold proxy for that reason.
+* Gold labels for D1 were written by one annotator (AI-assisted) with a human spot-check pending; the LLM judge is reported next to the gold proxy for that reason.
 * The LLM judge is itself noisy: with the same complaint and article it sometimes flips its "article has a fix" verdict between runs, and it scores lower than the gold proxy overall (it penalises missing optional sections). We report it as a second opinion, not ground truth.
 * D3c (final unseen paraphrases) is below the 80% target: 75% hit, 62.5% same-article plan. Two hits went to the wrong plan through the normalised-complaint (L2) lookup ("pitch black" and "won't light up" got the flicker plan, which shares the black-screen symptom). We did not tune on D3c after seeing this.
 """

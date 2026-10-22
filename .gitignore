@@ -25,3 +25,7 @@ starter_kit/_unofficial_public_copy/
 
 # local tool config (machine-specific paths)
 .claude/
+
+# local assistant notes and planning (kept on this machine, not published)
+CLAUDE.md
+PLAN_Theme2_Submission.md

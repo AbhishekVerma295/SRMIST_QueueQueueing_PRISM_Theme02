@@ -249,7 +249,7 @@ def main() -> None:
              ("docker", "Delivery", "Docker + docker-compose · model and cache baked in · /health"),
              ("flask", "Quality", "pytest (53 hermetic tests) · eval harness · LLM judge · ablation · gold labels"),
              ("mobile", "Demo UI", "Static HTML/JS served at / · Web Speech API for voice input"),
-             ("rocket", "Built with", "Claude Code as the engineering assistant")]
+             ("rocket", "Built with", "An AI coding assistant, disclosed in the AI usage form")]
     for i, (ic, h, d) in enumerate(stack):
         x = 0.92 + (i % 2) * 5.85; y = 1.8 + (i // 2) * 1.27
         box(s, x, y, 5.6, 1.08, "FFFFFF", LINE)
